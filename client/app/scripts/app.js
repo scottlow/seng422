@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('clientApp', [
-  'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'ipCookie'
 ])
   .config(function ($routeProvider) {
     $routeProvider

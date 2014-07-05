@@ -9,19 +9,23 @@
  */
 angular.module('clientApp')
   .controller('ClientCtrl', function ($scope, AuthService) {
-  	$scope.init = function() {
-  		if(AuthService.isAuthenticated()) {
 
-  		} else {
-  			$location.path('/');
-  		}
-  	}
+    $scope.init = function() {
+      if(AuthService.isAuthenticated()) {
 
-  	$scope.init();
+      } else {
+        //$location.path('/');
+      }
+    };
 
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    $scope.isAuthenticated = function() {
+      return AuthService.isAuthenticated();
+    };
+
+    $scope.signOut = function() {
+      AuthService.logout();
+      //$scope.$apply();
+    };
+
+    $scope.init();
   });

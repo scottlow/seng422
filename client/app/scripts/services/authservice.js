@@ -44,6 +44,6 @@ app.service('AuthService', ['$http','ipCookie', '$location', function ($http, ip
     ipCookie.remove('studyToken');
     delete $http.defaults.headers.common.Authorization;
     // $angularCacheFactory.get('defaultCache').remove('http://localhost:8000/users/profile');
-    $location.path('/');
+    //$location.path('/');
   };
 }]);

@@ -10,18 +10,23 @@
       <a class="navbar-brand" href="#">Project name</a>
     </div>
     <div class="navbar-collapse collapse">
-      <form name="loginForm" class="navbar-form navbar-right" role="form">
+      <form name="loginForm" class="navbar-form navbar-right" role="form" ng-hide="isAuthenticated()">
         <div class="form-group">
           <label class="sr-only" for="username_entry">Username</label>
           <input ng-model="username" type="text" placeholder="Username" class="form-control" id="username_entry" required>
         </div>
         <div class="form-group">
-        <label class="sr-only" for="password_entry">Password</label>
+          <label class="sr-only" for="password_entry">Password</label>
           <input type="password" ng-model="password" placeholder="Password" class="form-control" id="password_entry" required>
         </div>
         <button type="submit" ng-click="signIn()" class="btn btn-success">Sign in</button>
       </form>
-    </div><!--/.navbar-collapse -->
+      <div class="navbar-right ng-hide" ng-show="isAuthenticated()">
+        <p class="navbar-text">LoggedIn!</p>
+        <button type="button" class="btn btn-success navbar-btn" ng-click="signOut()">SignOut</button>
+      </div>
+    </div>
+    <!--/.navbar-collapse -->
   </div>
 </div>
 

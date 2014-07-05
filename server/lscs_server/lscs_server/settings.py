@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders',    
+    'corsheaders',
+    'rest_api',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -89,6 +90,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+AUTH_USER_MODEL = 'rest_api.LSCSUser'
 
 
 # Static files (CSS, JavaScript, Images)

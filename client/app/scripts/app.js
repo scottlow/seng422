@@ -26,7 +26,7 @@ angular.module('clientApp', [
     // Define the default action to be taken if an unrecognized route is taken.
     $urlRouterProvider.otherwise('/');
   })
-  .run(function ($rootScope, $state, $http, AuthService) {
+  .run(function ($rootScope, $state, $http, AuthService, ipCookie, StateService) {
 
     // // Set up the cache
     // $angularCacheFactory('defaultCache', {
@@ -41,8 +41,13 @@ angular.module('clientApp', [
       if(toState.url === '/') {
         // We are hitting the root of the page. If this is happeneing, we should check to see if the user has the cookie set to login.
         if(AuthService.isAuthenticated() === true) {
-          // TODO: Curerntly, this makes no distinguishment between different user types. A potential solution (without requerying the database) would be to store all user information in a cookie. THOUGHTS?
-          $state.transitionTo('client', null, {location: 'replace'});
+
+          // Retrieve information from cookies and put into local profile
+          StateService.setProfileFromCookie();
+
+          if(StateService.getUserType() === 'SUR') {
+            $state.transitionTo('client', null, {location: 'replace'});
+          }
           event.preventDefault();
         }
       }

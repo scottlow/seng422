@@ -13,7 +13,10 @@ angular.module('clientApp')
     $scope.StateService = StateService;
 
     $scope.$on('$stateChangeSuccess', function() {
-      $scope.isLoggedIn = true;           
+      if(AuthService.isAuthenticated()) {
+        $scope.isLoggedIn = true;
+        StateService.setProfileFromCookie();
+      }
     });
 
     $scope.signOut = function() {

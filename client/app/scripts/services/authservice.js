@@ -10,6 +10,9 @@ app.service('AuthService', ['$http','ipCookie', '$location', 'StateService', fun
       // This is a success, so we can set the cookie.
       if(response.data.token) {
         ipCookie('lscsToken', response.data.token, {expires: 14});
+        ipCookie('lscsUserType', response.data.userType, {expires: 14});
+        ipCookie('lscsUsername', response.data.username, {expires: 14});        
+        ipCookie('lscsEmail', response.data.email, {expires: 14});         
         $http.defaults.headers.common.Authorization = 'Token ' + response.data.token;
         StateService.setProfile(response.data.username, response.data.email, response.data.userType);
       } else {
@@ -43,6 +46,7 @@ app.service('AuthService', ['$http','ipCookie', '$location', 'StateService', fun
   // Log the user out and clean up the session a bit by deleting the Authorization header, and clearing the cached profile data.
   this.logout = function() {
     ipCookie.remove('lscsToken');
+    ipCookie.remove('lscsUserType');    
     delete $http.defaults.headers.common.Authorization;
     // $angularCacheFactory.get('defaultCache').remove('http://localhost:8000/users/profile');
     $location.path('/');

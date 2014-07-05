@@ -21,6 +21,12 @@ angular.module('clientApp', [
       templateUrl: 'views/client.html',
       controller: 'ClientCtrl',
       authenticate: true
+    })
+    .state('manager', {
+      url: '/manager',
+      templateUrl: 'views/manager.html',
+      controller: 'ManagerCtrl',
+      authenticate: true
     });
 
     // Define the default action to be taken if an unrecognized route is taken.
@@ -47,6 +53,8 @@ angular.module('clientApp', [
 
           if(StateService.getUserType() === 'SUR') {
             $state.transitionTo('client', null, {location: 'replace'});
+          } if(StateService.getUserType() === 'MAN') {
+            $state.transitionTo('manager', null, {location: 'replace'});      
           }
           event.preventDefault();
         }

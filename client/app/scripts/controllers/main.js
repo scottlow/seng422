@@ -15,8 +15,8 @@ angular.module('clientApp')
             $scope.loginError = false;
             if(StateService.getUserType() === 'SUR') {
               $location.path('/client');
-            } else {
-              alert('You\'re a manager and we don\'t have a view for you yet!');
+            } else if(StateService.getUserType() === 'MAN') {
+              $location.path('/manager');
             }
           }
         });

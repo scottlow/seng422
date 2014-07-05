@@ -8,24 +8,16 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('ClientCtrl', function ($scope, AuthService) {
+  .controller('ClientCtrl', function ($scope, AuthService, $location, StateService) {
 
-    $scope.init = function() {
-      if(AuthService.isAuthenticated()) {
+    $scope.StateService = StateService;
 
-      } else {
-        //$location.path('/');
-      }
-    };
-
-    $scope.isAuthenticated = function() {
-      return AuthService.isAuthenticated();
-    };
+    $scope.$on('$stateChangeSuccess', function() {
+      $scope.isLoggedIn = true;           
+    });
 
     $scope.signOut = function() {
       AuthService.logout();
-      //$scope.$apply();
+      $scope.isLoggedIn = false;
     };
-
-    $scope.init();
   });

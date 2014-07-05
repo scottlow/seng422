@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, AuthService) {
+  .controller('MainCtrl', function ($scope, AuthService, $location, StateService) {
     $scope.username = '';
     $scope.password = '';
 
@@ -13,8 +13,11 @@ angular.module('clientApp')
             window.alert('I don\'t think those credentials were right!');
           } else {
             $scope.loginError = false;
-            // Just for Demonstration
-            window.alert('Logged in: ' + AuthService.isAuthenticated());
+            if(StateService.getUserType() === 'SUR') {
+              $location.path('/client');
+            } else {
+              alert('You\'re a manager and we don\'t have a view for you yet!');
+            }
           }
         });
       } else {

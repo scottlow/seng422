@@ -24,7 +24,7 @@
  	  <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
  	  	<ul class="nav navbar-nav">
           <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
-          <li><a href="#checklists" role="tab" data-toggle="tab">Checklists</a></li>
+          <li><a href="#checklists" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklists</a></li>
           <li><a href="#surveyors" role="tab" data-toggle="tab">Surveyors</a></li> 	  	
  	  	</ul>
  	  </div>
@@ -47,6 +47,9 @@
 
 <div class="tab-content">
   <div class="tab-pane active" id="overview">
+    Overview
+  </div>
+  <div class="tab-pane" id="checklists">
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-12 main" style="padding-bottom:0px">
@@ -56,7 +59,7 @@
               <button type="button" class="btn btn-success btn-lg" style="margin-top: -2px">New Checklist</button>
             </div>
           </div>
-          <p style="margin-top: 20px" class="well well-sm">Wecome to the LSCS manager dashboard. Please select a checklist from the list below to view weather and geographical information for the each checklist's project. If you want to create a new checklist, please click the New Checklist button.</p>
+          <p style="margin-top: 20px" class="well well-sm">Please select a checklist from the list below to view weather and geographical information for the each checklist's project. To modify or delete an existing checklist, please click one of the action buttons corresponding to the checklist in the table below. Finally, if you want to create a new checklist, please click the New Checklist button.</p>
         </div>
       </div>
       <div class="row">
@@ -198,8 +201,51 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>    
   </div>
-  <div class="tab-pane" id="checklists"></div>
-  <div class="tab-pane" id="surveyors">Surveyors</div>    
+  <div class="tab-pane" id="surveyors">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 main" style="padding-bottom:0px">
+          <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
+            <h1 class="pull-left" style="margin: 0px;">Surveyors</h1>
+            <div class="pull-right">
+              <button type="button" class="btn btn-success btn-lg" style="margin-top: -2px">New Surveyor</button>
+            </div>
+          </div>
+          <p style="margin-top: 20px" class="well well-sm">Below is a list of surveyors currently registered in the LSCS system. To modify an existing surveyor account, please click one of the action buttons cooresponding to the account you wish to modify in the table below. To create a new surveyor, please click the New Surveyor button.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="container" style="margin: 0px; width:100%;">
+          <div class="col-sm-12">  
+            <h3 class="sub-header" style="margin: 0px;">Registered Surveyors</h3>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Actions</th>                  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>SomeName</td>
+                    <td>somename</td>
+                    <td>someemail@test.com</td>
+                    <td>
+                      <button type="button" class="btn btn-primary btn-sm" style="margin-top: -2px">Edit User</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>    
+  </div>    
 </div>

@@ -23,4 +23,9 @@ angular.module('clientApp')
       AuthService.logout();
       $scope.isLoggedIn = false;
     };
+
+    $scope.refreshMap = function() {
+      $scope.$broadcast('fixMap');
+    }
+
   });

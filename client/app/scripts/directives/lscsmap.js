@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('lscsMap', function () {
+  .directive('lscsMap', function ($timeout) {
     return {
       scope: {
         lat: '=', // latitude of the map
@@ -27,10 +27,18 @@ angular.module('clientApp')
           mapTypeControl: false,
           zoom: zoom,
           center: new google.maps.LatLng(latitude, longitude)
-      };
+        };
 
-      map = new google.maps.Map(elem[0], mapOptions);
+        map = new google.maps.Map(elem[0], mapOptions);
 
+        $scope.$on('fixMap', function() {      
+          $timeout(function() {
+            google.maps.event.trigger(map, 'resize');
+            // var center = new google.maps.LatLng($scope.lat, $scope.long);
+            var center = new google.maps.LatLng(48.4630959, -123.3121053);
+            map.setCenter(center);
+          });
+        });
       }
     };
   });

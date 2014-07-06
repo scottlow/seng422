@@ -5,7 +5,7 @@ var app = angular.module('clientApp');
 app.service('AuthService', ['$http','ipCookie', '$location', 'StateService', function ($http, ipCookie, $location, StateService) {
   // Log the user in. If you're confused, I recommend reading up on $q and angular promises.
   this.login = function(username, password) {
-    var promise = $http.post('http://localhost:8000/' + 'verify_credentials/', {username: username, password: password})
+    var promise = $http.post('http://localhost:8000/' + 'users/verify_credentials/', {username: username, password: password})
     .then(function(response) {
       // This is a success, so we can set the cookie.
       if(response.data.token) {

@@ -49,5 +49,19 @@ class CreateUser(generics.CreateAPIView):
         
         return Response("", status=status.HTTP_403_FORBIDDEN)
 
+class ListSurveyors(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    #def get(self, request, *args, **kwargs):
+    #    if request.user.userType == LSCSUser.MANAGER:
+    #        super.get(self, request, args, kwargs)
+    #    else:
+    #        return Response("", status=status.HTTP_403_FORBIDDEN)
+
+    def get_queryset(self):
+        return LSCSUser.objects.filter(userType=LSCSUser.SURVEYOR)
+
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 create_user = CreateUser.as_view();
+list_surveyors = ListSurveyors.as_view();

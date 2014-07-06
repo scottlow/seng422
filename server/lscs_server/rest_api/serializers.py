@@ -5,6 +5,7 @@ import rest_api.models
 class LSCSUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = rest_api.models.LSCSUser
+        fields = ('id', 'username', 'email', 'userType')
 
 class LSCSUserRegisterSerializer(serializers.ModelSerializer):
     class Meta:

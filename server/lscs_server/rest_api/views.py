@@ -52,6 +52,7 @@ class CreateUser(generics.CreateAPIView):
 class ListSurveyors(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+    serializer_class = LSCSUserSerializer
 
     #def get(self, request, *args, **kwargs):
     #    if request.user.userType == LSCSUser.MANAGER:

@@ -9,5 +9,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),  
 	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-	url(r'^verify_credentials/?', 'rest_api.views.obtain_auth_token_user_type'),
+	url(r'^users/verify_credentials/?', 'rest_api.views.obtain_auth_token_user_type'),
+	url(r'^users/create/?', 'rest_api.views.create_user'),
 )

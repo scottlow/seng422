@@ -1,5 +1,5 @@
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container">
+  <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -21,13 +21,32 @@
         </div>
         <button type="submit" ng-click="signIn()" class="btn btn-success">Sign in</button>
       </form>
-      <div class="navbar-right ng-hide" ng-show="isLoggedIn">
-        <p class="navbar-text">Welcome, {{ StateService.getUsername() }}</p>
-        <button type="button" class="btn btn-success navbar-btn" ng-click="signOut()">Sign out</button>
-      </div>
+ 	  <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
+ 	  	<ul class="nav navbar-nav">
+          <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
+          <li><a href="#checklists" role="tab" data-toggle="tab">Checklists</a></li>
+          <li><a href="#surveyors" role="tab" data-toggle="tab">Surveyors</a></li> 	  	
+ 	  	</ul>
+ 	  </div>
+      <div class="nav navbar-nav navbar-right" ng-show="isLoggedIn">
+        <ul class="nav navbar-nav">
+          <li><p class="navbar-text">Welcome, {{StateService.getUsername()}}</p></li>             
+          <li class="padding-fix dropdown">
+            <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h4 glyphicon glyphicon-cog"></span></a>
+            <ul class="dropdown-menu">          
+              <li><a>Edit Profile</a></li>
+              <li><a ng-click="signOut()" href="">Sign Out</a></li>            
+            </ul>
+          </li>
+        </ul>
+      </div>      
     </div>
     <!--/.navbar-collapse -->
   </div>
 </div>
 
-<p>This is the manager view.</p>
+<div class="tab-content">
+  <div class="tab-pane active" id="overview">Overview</div>
+  <div class="tab-pane" id="checklists">Checklists</div>  
+  <div class="tab-pane" id="surveyors">Surveyors</div>    
+</div>

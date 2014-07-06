@@ -53,8 +53,9 @@ angular.module('clientApp', [
 
           if(StateService.getUserType() === 'SUR') {
             $state.transitionTo('client', null, {location: 'replace'});
-          } if(StateService.getUserType() === 'MAN') {
-            $state.transitionTo('manager', null, {location: 'replace'});      
+          }
+          if(StateService.getUserType() === 'MAN') {
+            $state.transitionTo('manager', null, {location: 'replace'});
           }
           event.preventDefault();
         }

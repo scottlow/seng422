@@ -40,7 +40,7 @@ app.service('AuthService', ['$http','ipCookie', '$location', 'StateService', fun
   };
 
   this.checkPassword = function(username, password) {
-    return $http.post('http://localhost:8000/' + 'verify_credentials/', {username: username, password: password});
+    return $http.post('http://localhost:8000/' + 'users/verify_credentials/', {username: username, password: password});
   };
 
   // Log the user out and clean up the session a bit by deleting the Authorization header, and clearing the cached profile data.

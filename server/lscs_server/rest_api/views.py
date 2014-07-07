@@ -43,6 +43,36 @@ class CreateUser(ManagerSecurityMixin, generics.CreateAPIView):
                     header["Error-Message"] = "Email {0} already exists.".format(serializer.init_data['email'])
             return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)
 
+class UpdateSurveyor(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = rest_api.serializers.LSCSUserRegisterSerializer(fields=request.DATA.keys(), data=request.DATA)
+        if serializer.is_valid():
+            user = LSCSUser.objects.get(pk=serializer.init_data['id'])
+            if('password' in request.DATA.keys()):
+                user.set_password(serializer.init_data['password'])
+            if('email' in request.DATA.keys()):
+                user.email = serializer.init_data['email']
+            if('first_name' in request.DATA.keys()):
+                user.first_name = serializer.init_data['first_name']
+            if('last_name' in request.DATA.keys()):
+                user.last_name = serializer.init_data['last_name']                
+            user.save()
+            return HttpResponse("success") 
+        else:
+            header = {"Access-Control-Expose-Headers": "Error-Message, Error-Type"}
+            errors = serializer.errors["non_field_errors"]
+            if errors:
+                if errors[0] == "username":
+                    header["Error-Type"] = errors[0]
+                    header["Error-Message"] = "Username {0} already exists".format(serializer.init_data['username'])                  
+                elif errors[0] == "email":
+                    header['Error-Type'] = errors[0]
+                    header["Error-Message"] = "Email {0} already exists".format(serializer.init_data['email'])
+            return Response(headers=header, status=400)    
+
 class ListSurveyors(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -72,6 +102,7 @@ class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 
 create_user = CreateUser.as_view();
+update_surveyor = UpdateSurveyor.as_view();
 list_surveyors = ListSurveyors.as_view();
 manager_checklists = ListManagerChecklists.as_view();
 

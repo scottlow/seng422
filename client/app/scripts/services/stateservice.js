@@ -39,6 +39,15 @@ angular.module('clientApp')
       return surveyorList;
     }
 
+    this.setUserId = function(id, username) {
+      for(var i = 0; i < surveyorList.length; i ++) {
+        if(surveyorList[i].username === username) {
+          surveyorList[i].id = id;
+          break;
+        }
+      }
+    }
+
     this.getUserList = function() {
       $http.get('http://localhost:8000/' + 'users/list_surveyors/')
       .success(function(data) {
@@ -47,6 +56,14 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('There was an error getting user information');
       });
+    }
+
+    this.getUserById = function(id) {
+      for(var i = 0; i < surveyorList.length; i++) {
+        if(surveyorList[i].id === id) {
+          return surveyorList[i];
+        }
+      }
     }
 
   });

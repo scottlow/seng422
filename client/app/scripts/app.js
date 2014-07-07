@@ -59,7 +59,12 @@ angular.module('clientApp', [
           }
           event.preventDefault();
         }
+      } else if (toState.url === '/manager' && StateService.getUserType() === 'SUR') {
+        $state.transitionTo('client', null, {location: 'relplace'});
+      } else if (toState.url === '/client' && StateService.getUserType() === 'MAN') {
+        $state.transitionTo('manager', null, {location: 'relplace'});
       }
+
       if (toState.authenticate && !AuthService.isAuthenticated()){
         // User isn’t authenticated
         $state.transitionTo('main');

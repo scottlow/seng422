@@ -10,6 +10,10 @@ from rest_api.mixins import *
 from rest_api.serializers import *
 from rest_api.models import *
 
+##############################
+# --------- Users! --------- #
+##############################
+
 class ObtainAuthTokenAndUserType(ObtainAuthToken):
     def post(self, request):
         serializer = self.serializer_class(data=request.DATA)
@@ -60,7 +64,9 @@ class UpdateSurveyor(ManagerSecurityMixin, generics.CreateAPIView):
             if('last_name' in request.DATA.keys()):
                 user.last_name = serializer.init_data['last_name']                
             user.save()
-            return HttpResponse("success") 
+
+            serializer = LSCSUserSerializer(user)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED);
         else:
             header = {"Access-Control-Expose-Headers": "Error-Message, Error-Type"}
             errors = serializer.errors["non_field_errors"]
@@ -71,7 +77,7 @@ class UpdateSurveyor(ManagerSecurityMixin, generics.CreateAPIView):
                 elif errors[0] == "email":
                     header['Error-Type'] = errors[0]
                     header["Error-Message"] = "Email {0} already exists".format(serializer.init_data['email'])
-            return Response(headers=header, status=400)    
+            return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)    
 
 class ListSurveyors(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -80,6 +86,30 @@ class ListSurveyors(ManagerSecurityMixin, generics.ListAPIView):
 
     def get_queryset(self):
         return LSCSUser.objects.filter(userType=LSCSUser.SURVEYOR)
+
+###################################
+# --------- Checklists! --------- #
+###################################
+
+class CreateChecklistType(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = ChecklistTypeSerializer(data=request.DATA);
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED);
+        return Response(status=status.HTTP_400_BAD_REQUEST);
+
+class ListChecklistTypes(ManagerSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChecklistTypeSerializer
+
+    def get_queryset(self):
+        return ChecklistType.objects.all()
 
 class ListManagerChecklists(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -105,5 +135,7 @@ create_user = CreateUser.as_view();
 update_surveyor = UpdateSurveyor.as_view();
 list_surveyors = ListSurveyors.as_view();
 manager_checklists = ListManagerChecklists.as_view();
+manager_list_checklist_types = ListChecklistTypes.as_view();
+manager_create_checklist_type = CreateChecklistType.as_view();
 
 surveyor_checklists = ListSurveyorChecklists.as_view();

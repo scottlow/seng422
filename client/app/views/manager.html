@@ -34,7 +34,7 @@
           <li class="padding-fix dropdown">
             <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h4 glyphicon glyphicon-cog"></span></a>
             <ul class="dropdown-menu">          
-              <li><a>Edit Profile</a></li>
+              <li><a data-toggle="modal" data-target="#editSurveyorModal" ng-click="setEditInformation(StateService.getCurrentUser())" href="#">Edit Profile</a></li>
               <li><a ng-click="signOut()" href="">Sign Out</a></li>            
             </ul>
           </li>

@@ -27,7 +27,7 @@ angular.module('clientApp')
 
     $scope.refreshMap = function() {
       $scope.$broadcast('fixMap');
-    }
+    };
 
     $scope.cleanUpNewDialog = function() {
       $scope.newUsername = '';
@@ -41,7 +41,7 @@ angular.module('clientApp')
       $scope.emailPostError = false;  
       $scope.usernameErrorMessage = '';
       $scope.emailErrorMessage = '';
-    }
+    };
 
     $scope.submitCreateUser = function() {
       $scope.newSurveyorForm.verifyPassword.$error.passwordMatch = false;  
@@ -71,7 +71,7 @@ angular.module('clientApp')
             console.log("Created a new user.");       
             angular.element('#newSurveyorModal').modal('hide');   
             $scope.hasSubmitted = false;
-            // StateService.setUserId(data.id, data.username);
+            StateService.setUserId(data.id, data.username);
           })
           .error(function (data, status, headers, config) {
             // If there's been an error, time to display it back to the user on the form. (These are where server side errors are set)
@@ -85,7 +85,7 @@ angular.module('clientApp')
             }
         });
       }
-    }
+    };
 
     $scope.checkUpdatePasswords = function() {
       // Set up the deferred promise
@@ -124,7 +124,7 @@ angular.module('clientApp')
         deferred.resolve(false); // We know for certain that we won't have to make a REST API call yet. Thus we can return false.
       }
       return deferred.promise;
-    }
+    };
 
     $scope.submitSurveyorUpdate = function() {
       var params = {}; // Parameters to send to the REST API (only parameters specified will be updated)
@@ -225,13 +225,13 @@ angular.module('clientApp')
       $scope.emailEditPostError = false;
       $scope.emailEditErrorMessage = ''; 
       $scope.cleanUpPasswords();  
-    }
+    };
 
     $scope.cleanUpPasswords = function() {
       $scope.editVerifyPassword = '';
       $scope.editNewPassword = '';
       $scope.managerPassword = '';   
-    }
+    };
 
     $scope.checkMatchingPasswords = function() {
       if($scope.newPassword !== $scope.verifyPassword) {
@@ -242,7 +242,7 @@ angular.module('clientApp')
       } else {
         return true;
       }
-    }
+    };
 
     $scope.setEditInformation = function(user) {
       $scope.cleanUpEditModal(); 
@@ -252,6 +252,6 @@ angular.module('clientApp')
       $scope.edit_last_name = user.last_name;
       $scope.edit_email = user.email;
       $scope.edit_id = user.id;
-    }
+    };
 
   });

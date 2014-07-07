@@ -44,6 +44,13 @@ angular.module('clientApp', [
 
     // This will be called every time we start to change state (navigate to a new URL)
     $rootScope.$on('$stateChangeStart', function(event, toState){
+
+      if(StateService.getCurrentUser() === undefined) {
+        if(AuthService.isAuthenticated() === true) {
+          StateService.setProfileFromCookie();
+        }
+      }
+
       if(toState.url === '/') {
         // We are hitting the root of the page. If this is happeneing, we should check to see if the user has the cookie set to login.
         if(AuthService.isAuthenticated() === true) {
@@ -60,9 +67,9 @@ angular.module('clientApp', [
           event.preventDefault();
         }
       } else if (toState.url === '/manager' && StateService.getUserType() === 'SUR') {
-        $state.transitionTo('client', null, {location: 'relplace'});
+        $state.transitionTo('client', null, {location: 'replace'});
       } else if (toState.url === '/client' && StateService.getUserType() === 'MAN') {
-        $state.transitionTo('manager', null, {location: 'relplace'});
+        $state.transitionTo('manager', null, {location: 'replace'});
       }
 
       if (toState.authenticate && !AuthService.isAuthenticated()){

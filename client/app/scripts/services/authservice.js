@@ -10,11 +10,9 @@ app.service('AuthService', ['$http','ipCookie', '$location', 'StateService', fun
       // This is a success, so we can set the cookie.
       if(response.data.token) {
         ipCookie('lscsToken', response.data.token, {expires: 14});
-        ipCookie('lscsUserType', response.data.userType, {expires: 14});
-        ipCookie('lscsUsername', response.data.username, {expires: 14});
-        ipCookie('lscsEmail', response.data.email, {expires: 14});
+        ipCookie('lscsUser', response.data, {expires: 14});       
         $http.defaults.headers.common.Authorization = 'Token ' + response.data.token;
-        StateService.setProfile(response.data.username, response.data.email, response.data.userType);
+        StateService.setProfile(response.data);
       } else {
         // We should never get here
         console.log('Invalid token format.');

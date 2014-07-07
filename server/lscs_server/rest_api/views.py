@@ -16,7 +16,7 @@ class ObtainAuthTokenAndUserType(ObtainAuthToken):
         if serializer.is_valid():
             user = LSCSUser.objects.get(id=serializer.object['user'].id)
             token, created = Token.objects.get_or_create(user=serializer.object['user'])
-            return Response({'token': token.key, 'username': serializer.object['user'].username, 'email' : serializer.object['user'].email, 'userType' : serializer.object['user'].userType})
+            return Response({'id' : user.id, 'token': token.key, 'username': serializer.object['user'].username, 'email' : serializer.object['user'].email, 'userType' : serializer.object['user'].userType, 'first_name' : user.first_name, 'last_name' : user.last_name})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateUser(ManagerSecurityMixin, generics.CreateAPIView):

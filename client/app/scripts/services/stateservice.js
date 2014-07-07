@@ -2,33 +2,35 @@
 
 angular.module('clientApp')
   .service('StateService', function ($http, ipCookie) {
-    var username;
-    var password;
-    var userType;
+    var currentUser;
     var surveyorList;
 
     this.clearState = function() {
-      username = '';
-      password = '';
-      userType = '';
+      currentUser = {};
     };
 
-    this.setProfile = function(u, p, uT) {
-      username = u;
-      password = p;
-      userType = uT;
+    this.setProfile = function(u) {
+      currentUser = u;
     };
+
+    this.getCurrentUser = function() {
+      return currentUser;
+    }
 
     this.getUsername = function() {
-      return username;
+      return currentUser.username;
     };
 
+    this.getUserId = function() {
+      return currentUser.id;
+    }
+
     this.getUserType = function() {
-      return userType;
+      return currentUser.userType;
     };
 
     this.setProfileFromCookie = function() {
-      this.setProfile(ipCookie('lscsUsername'), ipCookie('lscsEmail'), ipCookie('lscsUserType'));
+      this.setProfile(ipCookie('lscsUser'));
     };
 
     this.addUser = function(user) {
@@ -59,9 +61,14 @@ angular.module('clientApp')
     }
 
     this.getUserById = function(id) {
-      for(var i = 0; i < surveyorList.length; i++) {
-        if(surveyorList[i].id === id) {
-          return surveyorList[i];
+
+      if(currentUser.id === id) {
+        return currentUser
+      } else {
+        for(var i = 0; i < surveyorList.length; i++) {
+          if(surveyorList[i].id === id) {
+            return surveyorList[i];
+          }
         }
       }
     }

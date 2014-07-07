@@ -16,6 +16,7 @@ angular.module('clientApp')
       if(AuthService.isAuthenticated()) {
         $scope.isLoggedIn = true;
         StateService.setProfileFromCookie();
+        StateService.getUserList(); 
       }
     });
 

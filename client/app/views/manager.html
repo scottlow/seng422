@@ -210,7 +210,7 @@
           <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
             <h1 class="pull-left" style="margin: 0px;">Surveyors</h1>
             <div class="pull-right">
-              <button type="button" class="btn btn-success btn-lg" style="margin-top: -2px">New Surveyor</button>
+              <button type="button" data-toggle="modal" data-target="#newSurveyorModal" href="" class="btn btn-success btn-lg" style="margin-top: -2px">New Surveyor</button>
             </div>
           </div>
           <p style="margin-top: 20px" class="well well-sm">Below is a list of surveyors currently registered in the LSCS system. To modify an existing surveyor account, please click one of the action buttons cooresponding to the account you wish to modify in the table below. To create a new surveyor, please click the New Surveyor button.</p>
@@ -231,13 +231,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>SomeName</td>
-                    <td>somename</td>
-                    <td>someemail@test.com</td>
-                    <td>
-                      <button type="button" class="btn btn-primary btn-sm" style="margin-top: -2px">Edit User</button>
-                    </td>
+                  <tr data-ng-repeat="surveyor in StateService.getSurveyorList()">
+                    <th>N/A</th>
+                    <th>{{surveyor.username}}</th>
+                    <th>{{surveyor.email}}</th>
+                    <th><button type="button" class="btn btn-primary btn-sm" style="margin-top: -2px">Edit User</button></th>
                   </tr>
                 </tbody>
               </table>
@@ -248,4 +246,63 @@
     </div>
   </div>    
   </div>    
+</div>
+
+<div class="modal fade" id="newSurveyorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add New Surveyor<br /><small>Please complete the following fields to create a new user.</small></h4>
+      </div>
+      <div class="modal-body">
+        <form name="newSurveyorForm" class="form-horizontal" role="form" ng-submit="createNewSurveyor()" novalidate>
+          <!-- Username -->
+          <div class="form-group">
+              <label class="col-sm-2 control-label">Username</label> 
+              <div class="col-sm-10">
+                <input class="form-control" style="cursor: default" placeholder="Username" type="text">       
+              </div>
+          </div>        
+          <!-- Full Name -->
+          <div class="form-group">
+              <label class="col-sm-2 control-label">Full Name</label> 
+              <div class="col-sm-10">
+                <input type="text" name="name" class="form-control" ng-model="newFirstName" placeholder="Full Name">
+              </div>
+          </div>
+          <!-- Email -->
+          <div class="form-group" ng-class="{ 'has-error' : newSurveyorForm.email.$invalid && hasSubmitted || emailPostError }">
+            <label class="col-sm-2 control-label">Email</label> 
+            <div class="col-sm-10">
+              <input type="email" name="email" class="form-control" ng-model="newEmail" required placeholder="Email">
+              <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>          
+              <p ng-show="newSurveyorForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
+            </div>                                       
+          </div>
+          <!-- New Password -->
+          <div class="form-group" ng-class="{ 'has-error' : showChangePassword && newSurveyorForm.newPassword.$invalid && hasSubmitted }">                 
+            <label class="col-sm-2 control-label">New Password</label>               
+            <div class="col-sm-10">                            
+              <input type="password" name="newPassword" class="form-control" ng-model="newPassword" ng-required="showChangePassword">
+              <p ng-show="newSurveyorForm.newPassword.$error.required && hasSubmitted" class="help-block">Please enter a new password.</p>
+            </div> 
+          </div>  
+          <!-- Confirm Password -->
+          <div class="form-group" ng-class="{ 'has-error' : showChangePassword && newSurveyorForm.verifyPassword.$invalid && hasSubmitted }">                 
+            <label class="col-sm-2 control-label">Verify Password</label>               
+            <div class="col-sm-10">                            
+              <input type="password" name="verifyPassword" class="form-control" ng-model="verifyPassword" ng-required="showChangePassword">
+              <p ng-show="newSurveyorForm.verifyPassword.$error.required && hasSubmitted" class="help-block">Please verify your new password.</p>
+              <p ng-show="newSurveyorForm.verifyPassword.$error.passwordMatch && hasSubmitted" class="help-block">The passwords you entered do not match!</p>                    
+            </div> 
+          </div>                                                   
+        </form>      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="submitAccountUpdate()" class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
 </div>

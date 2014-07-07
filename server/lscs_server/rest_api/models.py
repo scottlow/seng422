@@ -12,7 +12,7 @@ class LSCSUser(AbstractUser):
         (SURVEYOR, 'Surveyor'),
         (MANAGER, 'Manager'),
     )
-
+    
     userType = models.CharField(max_length=3, choices=USER_TYPES, default=SURVEYOR)
 
 class ChecklistType(models.Model):

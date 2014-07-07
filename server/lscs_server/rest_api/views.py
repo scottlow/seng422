@@ -4,6 +4,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.http import HttpResponse, HttpResponseServerError, Http404
 from rest_framework import generics, status, viewsets, mixins
 from rest_api.serializers import *
 from rest_api.models import *
@@ -31,13 +32,15 @@ class CreateUser(generics.CreateAPIView):
                     username=serializer.init_data["username"],
                     password=serializer.init_data["password"],
                     email=serializer.init_data["email"],
+                    first_name=serializer.init_data["first_name"],
+                    last_name=serializer.init_data["last_name"],
                 )
-                user.userType=serializer.init_data["userType"]
+                # user.userType=serializer.init_data["userType"] #I'm commenting this out for now because allowing the client to specify the user type opens us up for injection. We can remove once the must-be-manager rule is enforced.
                 user.save()
                 return Response(status=status.HTTP_201_CREATED);
         else:
             header = {"Access-Control-Expose-Headers": "Error-Message, Error-Type"}
-            error = serializer.errors["non_field_errors"]
+            errors = serializer.errors["non_field_errors"]
             if errors:
                 if errors[0] == "username":
                     header["Error-Type"] = errors[0]
@@ -45,7 +48,7 @@ class CreateUser(generics.CreateAPIView):
                 elif errors[0] == "email":
                     header["Error-Type"] = errors[0]
                     header["Error-Message"] = "Email {0} already exists.".format(serializer.init_data['email'])
-            return Response(headers=header, status=HTTP_400_BAD_REQUEST)
+            return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)
         
         return Response("", status=status.HTTP_403_FORBIDDEN)
 

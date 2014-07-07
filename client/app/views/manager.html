@@ -232,7 +232,7 @@
                 </thead>
                 <tbody>
                   <tr data-ng-repeat="surveyor in StateService.getSurveyorList()">
-                    <th>N/A</th>
+                    <th>{{surveyor.first_name == '' ? 'N' : surveyor.first_name}}{{surveyor.last_name == '' ? '/A' : ' ' + surveyor.first_name}}</th>
                     <th>{{surveyor.username}}</th>
                     <th>{{surveyor.email}}</th>
                     <th><button type="button" class="btn btn-primary btn-sm" style="margin-top: -2px">Edit User</button></th>
@@ -249,59 +249,70 @@
 </div>
 
 <div class="modal fade" id="newSurveyorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="width: 608px;">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Add New Surveyor<br /><small>Please complete the following fields to create a new user.</small></h4>
       </div>
       <div class="modal-body">
-        <form name="newSurveyorForm" class="form-horizontal" role="form" ng-submit="createNewSurveyor()" novalidate>
+        <form name="newSurveyorForm" class="well form-horizontal" role="form" ng-submit="createNewSurveyor()" novalidate>
           <!-- Username -->
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Username</label> 
-              <div class="col-sm-10">
-                <input class="form-control" style="cursor: default" placeholder="Username" type="text">       
+          <div class="form-group" ng-class="{ 'has-error' : (newSurveyorForm.username.$invalid || usernamePostError) && hasSubmitted }">
+              <label class="col-sm-3 control-label">Username</label> 
+              <div class="col-sm-9">
+                <input type="text" name="username" class="form-control" ng-model="newUsername" required>
+                <p ng-show="usernamePostError" class="help-block">{{usernameErrorMessage}}</p>                  
+                <p ng-show="newSurveyorForm.username.$invalid && hasSubmitted" class="help-block">Please enter a username</p>
               </div>
           </div>        
-          <!-- Full Name -->
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Full Name</label> 
-              <div class="col-sm-10">
-                <input type="text" name="name" class="form-control" ng-model="newFirstName" placeholder="Full Name">
+          <!-- First Name -->
+          <div class="form-group" ng-class="{ 'has-error' : newSurveyorForm.firstName.$invalid && hasSubmitted }">
+              <label class="col-sm-3 control-label">First Name</label> 
+              <div class="col-sm-9">
+                <input type="text" name="firstName" class="form-control" ng-model="newFirstName" required>
+                <p ng-show="newSurveyorForm.firstName.$invalid && hasSubmitted" class="help-block">Please enter the new surveyor's first name.</p>
               </div>
           </div>
+          <!-- Last Name -->
+          <div class="form-group" ng-class="{ 'has-error' : newSurveyorForm.lastName.$invalid && hasSubmitted }">
+              <label class="col-sm-3 control-label">Last Name</label> 
+              <div class="col-sm-9">
+                <input type="text" name="lastName" class="form-control" ng-model="newLastName" required>
+                <p ng-show="newSurveyorForm.lastName.$invalid && hasSubmitted" class="help-block">Please enter the new surveyor's last name.</p>
+              </div>
+          </div>          
           <!-- Email -->
-          <div class="form-group" ng-class="{ 'has-error' : newSurveyorForm.email.$invalid && hasSubmitted || emailPostError }">
-            <label class="col-sm-2 control-label">Email</label> 
-            <div class="col-sm-10">
-              <input type="email" name="email" class="form-control" ng-model="newEmail" required placeholder="Email">
-              <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>          
+          <div class="form-group" ng-class="{ 'has-error' : (newSurveyorForm.email.$invalid || emailPostError) && hasSubmitted }">
+            <label class="col-sm-3 control-label">Email</label> 
+            <div class="col-sm-9">
+              <input type="email" name="email" class="form-control" ng-model="newEmail" required>
+              <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>
               <p ng-show="newSurveyorForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
-            </div>                                       
+            </div>
           </div>
           <!-- New Password -->
-          <div class="form-group" ng-class="{ 'has-error' : showChangePassword && newSurveyorForm.newPassword.$invalid && hasSubmitted }">                 
-            <label class="col-sm-2 control-label">New Password</label>               
-            <div class="col-sm-10">                            
-              <input type="password" name="newPassword" class="form-control" ng-model="newPassword" ng-required="showChangePassword">
+          <div class="form-group" ng-class="{ 'has-error' : newSurveyorForm.newPassword.$invalid && hasSubmitted }">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">                            
+              <input type="password" name="newPassword" class="form-control" ng-model="newPassword" required>
               <p ng-show="newSurveyorForm.newPassword.$error.required && hasSubmitted" class="help-block">Please enter a new password.</p>
             </div> 
           </div>  
           <!-- Confirm Password -->
-          <div class="form-group" ng-class="{ 'has-error' : showChangePassword && newSurveyorForm.verifyPassword.$invalid && hasSubmitted }">                 
-            <label class="col-sm-2 control-label">Verify Password</label>               
-            <div class="col-sm-10">                            
-              <input type="password" name="verifyPassword" class="form-control" ng-model="verifyPassword" ng-required="showChangePassword">
-              <p ng-show="newSurveyorForm.verifyPassword.$error.required && hasSubmitted" class="help-block">Please verify your new password.</p>
-              <p ng-show="newSurveyorForm.verifyPassword.$error.passwordMatch && hasSubmitted" class="help-block">The passwords you entered do not match!</p>                    
+          <div class="form-group" ng-class="{ 'has-error' : (newSurveyorForm.verifyPassword.$invalid || newSurveyorForm.verifyPassword.$error.passwordMatch) && hasSubmitted }">
+            <label class="col-sm-3 control-label">Verify Password</label>
+            <div class="col-sm-9">
+              <input type="password" name="verifyPassword" class="form-control" ng-model="verifyPassword" required>
+              <p ng-show="newSurveyorForm.verifyPassword.$error.required && !newSurveyorForm.verifyPassword.$error.passwordMatch && hasSubmitted" class="help-block">Please verify your new password.</p>
+              <p ng-show="newSurveyorForm.verifyPassword.$error.passwordMatch && hasSubmitted" class="help-block">The passwords you entered do not match!</p>
             </div> 
-          </div>                                                   
-        </form>      
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" ng-click="submitAccountUpdate()" class="btn btn-primary">Save Changes</button>
+        <button type="button" ng-click="submitCreateUser()" class="btn btn-primary">Save Changes</button>
       </div>
     </div>
   </div>

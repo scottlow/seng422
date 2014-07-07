@@ -13,6 +13,8 @@ urlpatterns = patterns('',
 	url(r'^users/create/?', 'rest_api.views.create_user'),
 	url(r'^users/update/?', 'rest_api.views.update_surveyor'),	
 	url(r'^users/list_surveyors/', 'rest_api.views.list_surveyors'),
+	url(r'^manager/create_checklist_type/', 'rest_api.views.manager_create_checklist_type'),
+	url(r'^manager/list_checklist_types', 'rest_api.views.manager_list_checklist_types'),
 	url(r'^manager/checklists/', 'rest_api.views.manager_checklists'),
 	url(r'^surveyor/checklists/', 'rest_api.views.surveyor_checklists'),
 )

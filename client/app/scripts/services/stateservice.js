@@ -31,6 +31,10 @@ angular.module('clientApp')
       this.setProfile(ipCookie('lscsUsername'), ipCookie('lscsEmail'), ipCookie('lscsUserType'));
     };
 
+    this.addUser = function(user) {
+      surveyorList.push(user);
+    }
+
     this.getSurveyorList = function() {
       return surveyorList;
     }

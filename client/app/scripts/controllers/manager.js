@@ -42,7 +42,17 @@ angular.module('clientApp')
         $scope.newSurveyorForm.newPassword.$invalid = false;
         $scope.newSurveyorForm.verifyPassword.$invalid = false;
 
-        $http.post('http://localhost:8000/' + 'users/create/', {'username' : $scope.newUsername, 'first_name' : $scope.newFirstName, 'last_name' : $scope.newLastName, 'email' : $scope.newEmail, 'password' : $scope.newPassword })
+        var userParam = {
+          'username' : $scope.newUsername, 
+          'first_name' : $scope.newFirstName, 
+          'last_name' : $scope.newLastName, 
+          'email' : $scope.newEmail, 
+          'password' : $scope.newPassword
+        }
+
+        StateService.addUser(userParam);
+
+        $http.post('http://localhost:8000/' + 'users/create/', userParam)
           .success(function (status) {           
             console.log("Created a new user.");       
             angular.element('#newSurveyorModal').modal('hide');  

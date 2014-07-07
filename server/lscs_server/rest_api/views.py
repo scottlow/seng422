@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseServerError, Http404
 from rest_framework import generics, status, viewsets, mixins
+from rest_api.mixins import *
 from rest_api.serializers import *
 from rest_api.models import *
 
@@ -18,7 +19,7 @@ class ObtainAuthTokenAndUserType(ObtainAuthToken):
             return Response({'token': token.key, 'username': serializer.object['user'].username, 'email' : serializer.object['user'].email, 'userType' : serializer.object['user'].userType})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CreateUser(generics.CreateAPIView):
+class CreateUser(ManagerSecurityMixin, generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -26,18 +27,10 @@ class CreateUser(generics.CreateAPIView):
         
         serializer = LSCSUserRegisterSerializer(data=request.DATA);
         if serializer.is_valid():
-            #callingUser = LSCSUser.objects.get(pk=request.user.id)
-            if request.user.userType == LSCSUser.MANAGER:
-                user = LSCSUser.objects.create_user(
-                    username=serializer.init_data["username"],
-                    password=serializer.init_data["password"],
-                    email=serializer.init_data["email"],
-                    first_name=serializer.init_data["first_name"],
-                    last_name=serializer.init_data["last_name"],
-                )
-                # user.userType=serializer.init_data["userType"] #I'm commenting this out for now because allowing the client to specify the user type opens us up for injection. We can remove once the must-be-manager rule is enforced.
-                user.save()
-                return Response(status=status.HTTP_201_CREATED);
+            serializer.save()
+
+            serializer = LSCSUserSerializer(serializer.object)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED);
         else:
             header = {"Access-Control-Expose-Headers": "Error-Message, Error-Type"}
             errors = serializer.errors["non_field_errors"]
@@ -49,23 +42,37 @@ class CreateUser(generics.CreateAPIView):
                     header["Error-Type"] = errors[0]
                     header["Error-Message"] = "Email {0} already exists.".format(serializer.init_data['email'])
             return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response("", status=status.HTTP_403_FORBIDDEN)
 
-class ListSurveyors(generics.ListAPIView):
+class ListSurveyors(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     serializer_class = LSCSUserSerializer
 
-    #def get(self, request, *args, **kwargs):
-    #    if request.user.userType == LSCSUser.MANAGER:
-    #        super.get(self, request, args, kwargs)
-    #    else:
-    #        return Response("", status=status.HTTP_403_FORBIDDEN)
-
     def get_queryset(self):
         return LSCSUser.objects.filter(userType=LSCSUser.SURVEYOR)
 
+class ListManagerChecklists(ManagerSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CreatedChecklistSerializerLight
+
+    #TODO: Each checklist should show a set of assigned users.
+
+    def get_queryset(self):
+        return CreatedChecklists.objects.filter(manager__pk=request.user.id)
+
+class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AssignedChecklistSerializerLight
+
+    def get_queryset(self):
+        return AssignedChecklists.objects.filter(surveyor__pk=request.user.id)
+
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
+
 create_user = CreateUser.as_view();
 list_surveyors = ListSurveyors.as_view();
+manager_checklists = ListManagerChecklists.as_view();
+
+surveyor_checklists = ListSurveyorChecklists.as_view();

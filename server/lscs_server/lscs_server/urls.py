@@ -12,4 +12,6 @@ urlpatterns = patterns('',
 	url(r'^users/verify_credentials/?', 'rest_api.views.obtain_auth_token_user_type'),
 	url(r'^users/create/?', 'rest_api.views.create_user'),
 	url(r'^users/list_surveyors/', 'rest_api.views.list_surveyors'),
+	url(r'^manager/checklists/', 'rest_api.views.manager_checklists'),
+	url(r'^surveyor/checklists/', 'rest_api.views.surveyor_checklists'),
 )

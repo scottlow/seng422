@@ -70,3 +70,14 @@ class AssignedChecklistSerializerLight(serializers.ModelSerializer):
     class Meta:
         model = rest_api.models.CreatedChecklists
         fields = ('checklist', 'seen')
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class SetPasswordSerializer(serializers.Serializer):
+    new_password1 = serializers.CharField(max_length=128)
+    new_password2 = serializers.CharField(max_length=128)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        return super(SetPasswordSerializer, self).__init__(*args, **kwargs)    

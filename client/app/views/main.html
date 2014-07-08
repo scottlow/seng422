@@ -18,7 +18,10 @@
           <input type="password" ng-model="password" placeholder="Password" class="form-control" required>
         </div>
         <button type="submit" ng-click="signIn()" class="btn btn-success">Sign in</button>
-      </form>  
+      </form> 
+      <ul class="nav navbar-nav pull-right"> 
+        <li><a class="nav-text" href="#" data-toggle="modal" data-target="#recoverInfoModal">Forgot Login Information</a></li>
+      </ul>  
     </div><!--/.navbar-collapse -->
   </div>
 </div>
@@ -58,3 +61,33 @@
     <p>&copy; Company 2014</p>
   </footer>
 </div> <!-- /container -->
+
+<!-- Recover User Info Modal -->
+<div class="modal fade" id="recoverInfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Recover Username/Password<br /><small>Please enter your email into the field below to recover your login information.</small></h4>
+      </div>
+      <div class="modal-body">
+        <form name="recoverInfoForm" class="well form-horizontal" role="form" ng-submit="createNewSurveyor()" novalidate>        
+          <div style="margin-bottom: 0px;" class="form-group" ng-class="{ 'has-error' : (recoverInfoForm.email.$invalid || emailRecoverError) && recoverHasSubmitted }">
+              <label class="col-sm-1 control-label">Email</label>             
+              <div class="col-sm-11">
+                <input type="email" name="email" class="form-control" ng-model="recoverEmail" required>
+                <p ng-show="emailRecoverError" class="help-block">{{emailRecoverMessage}}</p>                  
+                <p ng-show="recoverInfoForm.email.$invalid && recoverHasSubmitted" class="help-block" style="margin-bottom: 0px">Please enter a valid email</p>
+              </div>
+            </div>
+          </form>
+          <p>An email containing password reset instructions will be sent to the email you specify above.</p>
+        </div>
+        <div class="modal-footer" style="margin-top: 0px">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" ng-click="recoverInformation()" class="btn btn-primary">Send</button>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>

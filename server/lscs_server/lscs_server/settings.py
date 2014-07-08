@@ -98,3 +98,14 @@ AUTH_USER_MODEL = 'rest_api.LSCSUser'
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#Email settings
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'lscs.system@gmail.com'
+EMAIL_HOST_PASSWORD = 'LSCS4l!fe'
+ 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER

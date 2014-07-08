@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from rest_api.views import PasswordReset
+from django.views.generic.base import RedirectView
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -17,4 +19,7 @@ urlpatterns = patterns('',
 	url(r'^manager/list_checklist_types', 'rest_api.views.manager_list_checklist_types'),
 	url(r'^manager/checklists/', 'rest_api.views.manager_checklists'),
 	url(r'^surveyor/checklists/', 'rest_api.views.surveyor_checklists'),
+    url(r'^users/password/reset/$', PasswordReset.as_view(), name='password_reset'),
+    url(r'^users/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', 'rest_api.views.reset_confirm', name='password_reset_confirm'),
+    url(r'^redirect_to_login/$', RedirectView.as_view(url='http://127.0.0.1:9000'), name='password_reset_complete'),    
 )

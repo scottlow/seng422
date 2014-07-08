@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 	url(r'^users/list_surveyors/', 'rest_api.views.list_surveyors'),
 	url(r'^manager/create_checklist_type/', 'rest_api.views.manager_create_checklist_type'),
 	url(r'^manager/list_checklist_types', 'rest_api.views.manager_list_checklist_types'),
+	url(r'^manager/create_checklist', 'rest_api.views.manager_create_checklist'),
 	url(r'^manager/checklists/', 'rest_api.views.manager_checklists'),
 	url(r'^surveyor/checklists/', 'rest_api.views.surveyor_checklists'),
 )

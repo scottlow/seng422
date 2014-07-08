@@ -37,36 +37,25 @@ class ChecklistTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = rest_api.models.ChecklistType
 
+class ChecklistCreateSerializer(serializers.ModelSerializer):
+    manager = serializers.PrimaryKeyRelatedField()
+    checklistType = serializers.PrimaryKeyRelatedField()
+    class Meta:
+        model = rest_api.models.Checklist
+        fields = ('id', 'manager', 'checklistType', 'title', 'address')
+
 class ChecklistSerializer(serializers.ModelSerializer):
-    checklist_type = ChecklistTypeSerializer();
-    class Meta:
-        model = rest_api.models.Checklist
-
-class ChecklistSerializerLight(serializers.ModelSerializer):
-    class Meta:
-        model = rest_api.models.Checklist
-        fields = ('id', 'dateCreated', 'title', 'address', 'state')
-
-class CreatedChecklistSerializer(serializers.ModelSerializer):
+    checklistType = ChecklistTypeSerializer()
     manager = LSCSUserSerializer()
-    checklist = ChecklistSerializer()
+    surveyors = LSCSUserSerializer(required=False, many=True)
     class Meta:
-        model = rest_api.models.CreatedChecklists
+        model = rest_api.models.Checklist
+        depth = 1
 
-class CreatedChecklistSerializerLight(serializers.ModelSerializer):
-    checklist = ChecklistSerializerLight()
-    class Meta:
-        model = rest_api.models.CreatedChecklists
-        fields = ('checklist', 'seen')
-
-class AssignedChecklistSerializer(serializers.ModelSerializer):
-    surveyor = LSCSUserSerializer()
-    checklist = ChecklistSerializer()
-    class Meta:
-        model = rest_api.models.AssignedChecklists
-
-class AssignedChecklistSerializerLight(serializers.ModelSerializer):
-    checklist = ChecklistSerializerLight()
-    class Meta:
-        model = rest_api.models.CreatedChecklists
-        fields = ('checklist', 'seen')
+    # def validate_manager(self, attrs, source):
+    #     user = rest_api.models.LSCSUser.objects.filter(id=attrs[source])
+    #     if not user.exists():
+    #         raise ValidationError("Creating user does not exist!")
+    #     elif not user.userType == LSCSUser.MANAGER:
+    #         raise ValidationError("Creating user is not a manager!")
+    #     return attrs

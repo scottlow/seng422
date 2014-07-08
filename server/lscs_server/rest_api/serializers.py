@@ -52,10 +52,13 @@ class ChecklistSerializer(serializers.ModelSerializer):
         model = rest_api.models.Checklist
         depth = 1
 
-    # def validate_manager(self, attrs, source):
-    #     user = rest_api.models.LSCSUser.objects.filter(id=attrs[source])
-    #     if not user.exists():
-    #         raise ValidationError("Creating user does not exist!")
-    #     elif not user.userType == LSCSUser.MANAGER:
-    #         raise ValidationError("Creating user is not a manager!")
-    #     return attrs
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class SetPasswordSerializer(serializers.Serializer):
+    new_password1 = serializers.CharField(max_length=128)
+    new_password2 = serializers.CharField(max_length=128)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        return super(SetPasswordSerializer, self).__init__(*args, **kwargs)

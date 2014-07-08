@@ -2,13 +2,19 @@ from django.shortcuts import render
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseServerError, Http404
 from rest_framework import generics, status, viewsets, mixins
 from rest_api.mixins import *
 from rest_api.serializers import *
 from rest_api.models import *
+from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.conf import settings
+from django.contrib.auth.views import password_reset, password_reset_confirm
+from django.core.exceptions import ObjectDoesNotExist
 
 ##############################
 # --------- Users! --------- #
@@ -140,6 +146,66 @@ class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
 
     def get_queryset(self):
         return AssignedChecklists.objects.filter(surveyors__pk=request.user.id)
+
+# Password reset code taken from https://github.com/Tivix/django-rest-auth/blob/master/rest_auth/views.py
+# since our group wanted to use the password reset endpoints, but not the entire API.
+
+class LoggedOutRESTAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+class PasswordReset(LoggedOutRESTAPIView, GenericAPIView):
+    permission_classes = (AllowAny,)    
+
+    """
+    Calls Django Auth PasswordResetForm save method.
+
+    Accepts the following POST parameters: email
+    Returns the success/fail message.
+    """
+
+    serializer_class = PasswordResetSerializer
+
+    def post(self, request):
+        # Create a serializer with request.DATA     
+        serializer = self.serializer_class(data=request.DATA)
+
+        try:
+            user = LSCSUser.objects.get(email=request.DATA['email']);
+        except ObjectDoesNotExist:
+            header = {"Access-Control-Expose-Headers": "Error-Message, Error-Type"}
+            header["Error-Type"] = "email"
+            header["Error-Message"] = "No user with this email exists in the system."
+            return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+            # Create PasswordResetForm with the serializer
+            reset_form = PasswordResetForm(data=serializer.data)
+
+            if reset_form.is_valid():
+                # Sett some values to trigger the send_email method.
+                opts = {
+                    'use_https': request.is_secure(),
+                    'from_email': getattr(settings, 'DEFAULT_FROM_EMAIL'),
+                    'request': request,
+                }
+
+                reset_form.save(**opts)
+
+                # Return the success message with OK HTTP status
+                return Response(
+                    {"success": "Password reset e-mail has been sent."},
+                    status=status.HTTP_200_OK)
+
+            else:
+                return Response(reset_form._errors,
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+def reset_confirm(request, uidb64=None, token=None):
+    return password_reset_confirm(request, uidb64=uidb64, token=token)                                       
 
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 

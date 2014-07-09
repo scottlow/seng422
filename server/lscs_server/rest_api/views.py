@@ -134,10 +134,10 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView):
 class ListManagerChecklists(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    serializer_class = ChecklistSerializer
+    serializer_class = ChecklistManagerSerializer
 
-    def get_queryset(self):
-        return Checklists.objects.filter(manager__pk=request.user.id)
+    def get_queryset(self):    
+        return Checklist.objects.filter(manager__pk=self.request.user.id)
 
 class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -145,7 +145,7 @@ class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
     serializer_class = ChecklistSerializer
 
     def get_queryset(self):
-        return AssignedChecklists.objects.filter(surveyors__pk=request.user.id)
+        return AssignedChecklists.objects.filter(surveyors__pk=self.request.user.id)
 
 # Password reset code taken from https://github.com/Tivix/django-rest-auth/blob/master/rest_auth/views.py
 # since our group wanted to use the password reset endpoints, but not the entire API.

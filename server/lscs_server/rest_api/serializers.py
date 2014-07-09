@@ -44,13 +44,21 @@ class ChecklistCreateSerializer(serializers.ModelSerializer):
         model = rest_api.models.Checklist
         fields = ('id', 'manager', 'checklistType', 'title', 'address')
 
+class ChecklistManagerSerializer(serializers.ModelSerializer):
+    checklistType = ChecklistTypeSerializer()
+    surveyors = LSCSUserSerializer(required=False, many=True)
+    class Meta:
+        model = rest_api.models.Checklist
+        depth = 1
+        fields = ('id', 'surveyors', 'checklistType', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'dateCreated', 'dateLastModified', 'state')
+
 class ChecklistSerializer(serializers.ModelSerializer):
     checklistType = ChecklistTypeSerializer()
     manager = LSCSUserSerializer()
     surveyors = LSCSUserSerializer(required=False, many=True)
     class Meta:
         model = rest_api.models.Checklist
-        depth = 1
+        depth = 1        
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()

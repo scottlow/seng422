@@ -4,10 +4,25 @@ angular.module('clientApp')
   .service('StateService', function ($http, ipCookie) {
     var currentUser;
     var surveyorList;
+    var checklists;
 
     this.clearState = function() {
       currentUser = {};
     };
+
+    this.getManagerChecklists = function() {
+      return $http.get('http://localhost:8000/' + 'manager/checklists/')
+      .success(function(data) {
+        checklists = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving checklists');
+      });
+    }
+
+    this.getChecklists = function() {
+      return checklists;
+    }
 
     this.setProfile = function(u) {
       currentUser = u;

@@ -56,7 +56,7 @@
           <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
             <h1 class="pull-left" style="margin: 0px;">Checklists</h1>
             <div class="pull-right">
-              <button type="button" class="btn btn-success btn-lg" style="margin-top: -2px">New Checklist</button>
+              <button type="button" data-toggle="modal" data-target="#newChecklistModal" class="btn btn-success btn-lg" style="margin-top: -2px">New Checklist</button>
             </div>
           </div>
           <p style="margin-top: 20px" class="well well-sm">Please select a checklist from the list below to view weather and geographical information for the each checklist's project. To modify or delete an existing checklist, please click one of the action buttons corresponding to the checklist in the table below. Finally, if you want to create a new checklist, please click the New Checklist button.</p>
@@ -67,7 +67,7 @@
           <div class="col-sm-6">
             <div class="weather-data"></div>
             <h3 class="sub-header" style="margin: 0px;">Checklist Map Data</h3>          
-            <div class="manager-map" lscs-map></div>
+            <div class="manager-map" lat="48.4630959" long="-123.3121053" lscs-map zoom="13"></div>
           </div>
           <div class="col-sm-6" style="padding-left: 30px">  
             <h3 class="sub-header" style="margin: 0px;">Created Checklists</h3>
@@ -75,125 +75,22 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                    <th>Header</th>
+                    <th>File Number</th>
+                    <th>Title</th>
+                    <th>Checklist Type</th>
+                    <th>Land District</th>
+                    <th>State</th>
+                    <th>Assigned To:</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1,001</td>
-                    <td>Lorem</td>
-                    <td>ipsum</td>
-                    <td>dolor</td>
-                    <td>sit</td>
-                  </tr>
-                  <tr>
-                    <td>1,002</td>
-                    <td>amet</td>
-                    <td>consectetur</td>
-                    <td>adipiscing</td>
-                    <td>elit</td>
-                  </tr>
-                  <tr>
-                    <td>1,003</td>
-                    <td>Integer</td>
-                    <td>nec</td>
-                    <td>odio</td>
-                    <td>Praesent</td>
-                  </tr>
-                  <tr>
-                    <td>1,003</td>
-                    <td>libero</td>
-                    <td>Sed</td>
-                    <td>cursus</td>
-                    <td>ante</td>
-                  </tr>
-                  <tr>
-                    <td>1,004</td>
-                    <td>dapibus</td>
-                    <td>diam</td>
-                    <td>Sed</td>
-                    <td>nisi</td>
-                  </tr>
-                  <tr>
-                    <td>1,005</td>
-                    <td>Nulla</td>
-                    <td>quis</td>
-                    <td>sem</td>
-                    <td>at</td>
-                  </tr>
-                  <tr>
-                    <td>1,006</td>
-                    <td>nibh</td>
-                    <td>elementum</td>
-                    <td>imperdiet</td>
-                    <td>Duis</td>
-                  </tr>
-                  <tr>
-                    <td>1,007</td>
-                    <td>sagittis</td>
-                    <td>ipsum</td>
-                    <td>Praesent</td>
-                    <td>mauris</td>
-                  </tr>
-                  <tr>
-                    <td>1,008</td>
-                    <td>Fusce</td>
-                    <td>nec</td>
-                    <td>tellus</td>
-                    <td>sed</td>
-                  </tr>
-                  <tr>
-                    <td>1,009</td>
-                    <td>augue</td>
-                    <td>semper</td>
-                    <td>porta</td>
-                    <td>Mauris</td>
-                  </tr>
-                  <tr>
-                    <td>1,010</td>
-                    <td>massa</td>
-                    <td>Vestibulum</td>
-                    <td>lacinia</td>
-                    <td>arcu</td>
-                  </tr>
-                  <tr>
-                    <td>1,011</td>
-                    <td>eget</td>
-                    <td>nulla</td>
-                    <td>Class</td>
-                    <td>aptent</td>
-                  </tr>
-                  <tr>
-                    <td>1,012</td>
-                    <td>taciti</td>
-                    <td>sociosqu</td>
-                    <td>ad</td>
-                    <td>litora</td>
-                  </tr>
-                  <tr>
-                    <td>1,013</td>
-                    <td>torquent</td>
-                    <td>per</td>
-                    <td>conubia</td>
-                    <td>nostra</td>
-                  </tr>
-                  <tr>
-                    <td>1,014</td>
-                    <td>per</td>
-                    <td>inceptos</td>
-                    <td>himenaeos</td>
-                    <td>Curabitur</td>
-                  </tr>
-                  <tr>
-                    <td>1,015</td>
-                    <td>sodales</td>
-                    <td>ligula</td>
-                    <td>in</td>
-                    <td>libero</td>
+                  <tr ng-repeat="checklist in StateService.getChecklists()">
+                    <td>{{checklist.fileNumber}}</td>
+                    <td>{{checklist.title}}</td>
+                    <td>{{checklist.checklistType.name}}</td>
+                    <td>{{checklist.landDistrict}}</td>
+                    <td>{{checklist.state}}</td>
+                    <td>{{checklist.surveyors[0].name}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -248,6 +145,37 @@
   </div>    
 </div>
 
+<!-- New Checklist Modal -->
+
+<div class="modal fade" id="newChecklistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">
+  <div class="modal-dialog" style="width: 608px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Create a New Checklist<br /><small>Please complete the following fields to create a new checklist.</small></h4>
+      </div>
+      <div class="modal-body">
+        <div class="new_checklist_map" lat="newChecklistModalLat" long="newChecklistModalLong" zoom="13" lscs-map></div>      
+        <form name="newChecklistForm" class="well form-horizontal" role="form" ng-submit="createNewSurveyor()" novalidate>
+          <!-- Address -->
+          <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.username.$invalid ) && newChecklistHasSubmitted }">
+              <label class="col-sm-3 control-label">Address</label> 
+              <div class="col-sm-9">
+                <input type="text" name="username" class="form-control" ng-model="addressSearchText" required>              
+                <p ng-show="newChecklistForm.username.$invalid && newChecklistHasSubmitted" class="help-block">Please enter an address</p>
+              </div>
+          </div>        
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="submitCreateChecklist()" class="btn btn-primary">Create Checklist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Surveyor Modal -->
 <div class="modal fade" id="newSurveyorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">
   <div class="modal-dialog" style="width: 608px;">
     <div class="modal-content">

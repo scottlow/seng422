@@ -8,6 +8,13 @@ body {
   margin: 0px !important;
 }
 
+.new_checklist_map {
+  display: block;
+  width:100%;
+  height:200px;
+  margin-bottom: 20px;
+}
+
 .padding-fix {
   padding-right: 15px;
 }

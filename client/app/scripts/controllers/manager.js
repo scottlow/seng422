@@ -8,25 +8,59 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('ManagerCtrl', function ($scope, $http, $q, AuthService, $location, StateService) {
-
+  .controller('ManagerCtrl', function ($scope, $http, $q, AuthService, $location, StateService, $timeout) {  
     $scope.StateService = StateService;
+    $scope.selectedChecklist;
+    $scope.addressSearchText;
+    var geocoder = new google.maps.Geocoder();
+    $scope.newChecklistModalLat = 48.4630958;
+    $scope.newChecklistModalLong = -123.3121052;
+
+    $scope.formatAddress = function(address) {
+      return address.replace(' ', '+');
+    }
+
+    // Put a delay on address searching
+    var tempSearchText = '', searchTextTimeout;
+    $scope.$watch('addressSearchText', function (newVal, oldVal) {
+        if(newVal === oldVal) return;
+        if (searchTextTimeout) $timeout.cancel(searchTextTimeout);
+
+        tempSearchText = newVal;
+        searchTextTimeout = $timeout(function() {
+          $scope.addressSearchText = tempSearchText;
+          if($scope.addressSearchText !== undefined) {
+            geocoder.geocode( { 'address': $scope.formatAddress($scope.addressSearchText)}, function(results, status) {
+              if (status == google.maps.GeocoderStatus.OK) {
+                $timeout(function() {
+                  $scope.newChecklistModalLat = results[0].geometry.location.k;
+                  $scope.newChecklistModalLong = results[0].geometry.location.B;
+                });
+              }
+            });
+          }
+        }, 500);
+    });
 
     $scope.$on('$stateChangeSuccess', function() {
       if(AuthService.isAuthenticated()) {
         $scope.isLoggedIn = true;
         StateService.setProfileFromCookie();
-        StateService.getUserList(); 
+        if(StateService.getUserType() === "MAN") {
+          StateService.getUserList();
+          StateService.getManagerChecklists();
+        }
       }
     });
+
+    $scope.setDefaultModalMapLocation = function() {
+      $scope.newChecklistModalLat = 48.4630959;
+      $scope.newChecklistModalLong = -123.3121053;
+    }
 
     $scope.signOut = function() {
       AuthService.logout();
       $scope.isLoggedIn = false;
-    };
-
-    $scope.refreshMap = function() {
-      $scope.$broadcast('fixMap');
     };
 
     $scope.cleanUpNewDialog = function() {
@@ -124,7 +158,11 @@ angular.module('clientApp')
         deferred.resolve(false); // We know for certain that we won't have to make a REST API call yet. Thus we can return false.
       }
       return deferred.promise;
-    };
+    };  
+
+    $scope.submitCreateChecklist = function() {
+      $scope.newChecklistHasSubmitted = true;
+    }
 
     $scope.submitSurveyorUpdate = function() {
       var params = {}; // Parameters to send to the REST API (only parameters specified will be updated)
@@ -254,4 +292,9 @@ angular.module('clientApp')
       $scope.edit_id = user.id;
     };
 
+    angular.element('#newChecklistModal').on('shown.bs.modal', function() {
+      $timeout(function(){
+        $scope.setDefaultModalMapLocation();
+      });
+    });
   });

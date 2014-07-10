@@ -22,6 +22,13 @@ class ChecklistType(models.Model):
     def __unicode__(self):
         return '%s' % (self.name)
 
+class ChecklistQuestion(models.Model):
+    checklistType = models.ForeignKey(ChecklistType, related_name='questions')
+    question = models.CharField(max_length=4096)
+
+    def __unicode__(self):
+        return '%s' % (self.question)
+
 class Checklist(models.Model):
     DRAFT = 'DR'
     UNASSIGNED = 'UA'
@@ -57,6 +64,20 @@ class Checklist(models.Model):
     dateCreated = models.DateTimeField(default=datetime.now())
     dateLastModified = models.DateTimeField(default=datetime.now())
     state = models.CharField(max_length=2, choices=STATE_CHOICES, default=DRAFT)
+
+class ChecklistAnswer(models.Model):
+    checklist = models.ForeignKey(Checklist, related_name='answers')
+    question = models.ForeignKey(ChecklistQuestion)
+
+    UNANSWERED = 'UA'
+    COMPLETED = 'CM'
+    INCOMPLETE = 'UC'
+    ANSWER_CHOICES = (
+        (UNANSWERED, 'Unanswered'),
+        (COMPLETED, 'Completed'),
+        (INCOMPLETE, 'Incomplete')
+    )
+    answer = models.CharField(max_length=2, choices=ANSWER_CHOICES, default=UNANSWERED)
 
 @receiver(post_save, sender=LSCSUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

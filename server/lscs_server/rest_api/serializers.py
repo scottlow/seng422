@@ -2,6 +2,10 @@ from rest_framework import serializers
 from django.core.exceptions import ValidationError
 import rest_api.models
 
+##############################
+# --------- Users! --------- #
+##############################
+
 class LSCSUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = rest_api.models.LSCSUser
@@ -44,9 +48,28 @@ class SetPasswordSerializer(serializers.Serializer):
         self.user = kwargs.pop('user', None)
         return super(SetPasswordSerializer, self).__init__(*args, **kwargs)
 
-class ChecklistTypeSerializer(serializers.ModelSerializer):
+###################################
+# --------- Checklists! --------- #
+###################################
+
+class ChecklistTypeSerializerLight(serializers.ModelSerializer):
     class Meta:
         model = rest_api.models.ChecklistType
+
+class ChecklistQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = rest_api.models.ChecklistQuestion
+        fields = ('id', 'question')
+
+class ChecklistTypeSerializer(serializers.ModelSerializer):
+    questions = ChecklistQuestionSerializer(many=True)
+    class Meta:
+        model = rest_api.models.ChecklistType
+
+class ChecklistQuestionCreateSerializer(serializers.ModelSerializer):
+    checklistType = serializers.PrimaryKeyRelatedField()
+    class Meta:
+        model = rest_api.models.ChecklistQuestion
 
 class ChecklistCreateSerializer(serializers.ModelSerializer):
     manager = serializers.PrimaryKeyRelatedField()

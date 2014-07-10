@@ -164,27 +164,48 @@ class CreateChecklistType(ManagerSecurityMixin, generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        serializer = ChecklistTypeSerializer(data=request.DATA);
+        serializer = ChecklistTypeSerializerLight(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ListChecklistTypes(ManagerSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChecklistTypeSerializerLight
+
+    def get_queryset(self):
+        return ChecklistType.objects.all()
+
+class CreateChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = ChecklistQuestionCreateSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ViewChecklistType(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     serializer_class = ChecklistTypeSerializer
 
     def get_queryset(self):
-        return ChecklistType.objects.all()
+        typeId = self.kwargs['id']
+        return ChecklistType.objects.filter(id=typeId)
 
 class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        checklist = Checklist(dateCreated=datetime.now(), dateLastModified=datetime.now())
+        checklist = Checklist(manager=request.user, dateCreated=datetime.now(), dateLastModified=datetime.now())
         serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -217,7 +238,7 @@ class ListManagerChecklists(ManagerSecurityMixin, generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChecklistManagerSerializer
 
-    def get_queryset(self):    
+    def get_queryset(self):
         return Checklist.objects.filter(manager__pk=self.request.user.id)
 
 class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):

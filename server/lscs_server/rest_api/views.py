@@ -4,6 +4,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
 from django.http import HttpResponse, HttpResponseServerError, Http404
 from rest_framework import generics, status, viewsets, mixins
 from rest_api.mixins import *
@@ -93,60 +95,6 @@ class ListSurveyors(ManagerSecurityMixin, generics.ListAPIView):
     def get_queryset(self):
         return LSCSUser.objects.filter(userType=LSCSUser.SURVEYOR)
 
-###################################
-# --------- Checklists! --------- #
-###################################
-
-class CreateChecklistType(ManagerSecurityMixin, generics.CreateAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, request):
-        serializer = ChecklistTypeSerializer(data=request.DATA);
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
-
-class ListChecklistTypes(ManagerSecurityMixin, generics.ListAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ChecklistTypeSerializer
-
-    def get_queryset(self):
-        return ChecklistType.objects.all()
-
-class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, request):
-        checklist = Checklist(dateCreated=datetime.now(), dateLastModified=datetime.now())
-        serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
-        if serializer.is_valid():
-            #return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-            serializer.save()
-
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
-
-class ListManagerChecklists(ManagerSecurityMixin, generics.ListAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ChecklistManagerSerializer
-
-    def get_queryset(self):    
-        return Checklist.objects.filter(manager__pk=self.request.user.id)
-
-class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ChecklistSerializer
-
-    def get_queryset(self):
-        return AssignedChecklists.objects.filter(surveyors__pk=self.request.user.id)
-
 # Password reset code taken from https://github.com/Tivix/django-rest-auth/blob/master/rest_auth/views.py
 # since our group wanted to use the password reset endpoints, but not the entire API.
 
@@ -205,7 +153,80 @@ class PasswordReset(LoggedOutRESTAPIView, GenericAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
 def reset_confirm(request, uidb64=None, token=None):
-    return password_reset_confirm(request, uidb64=uidb64, token=token)                                       
+    return password_reset_confirm(request, uidb64=uidb64, token=token)
+
+###################################
+# --------- Checklists! --------- #
+###################################
+
+class CreateChecklistType(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = ChecklistTypeSerializer(data=request.DATA);
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
+
+class ListChecklistTypes(ManagerSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChecklistTypeSerializer
+
+    def get_queryset(self):
+        return ChecklistType.objects.all()
+
+class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        checklist = Checklist(dateCreated=datetime.now(), dateLastModified=datetime.now())
+        serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
+
+class AssignSurveyors(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        print(request.DATA)
+
+        if "checklist" in request.DATA and "surveyors" in request.DATA:
+            checklist = Checklist.objects.get(id=request.DATA['checklist'])
+            if checklist != None:
+                for userId in request.DATA['surveyors']:
+                    surveyor = LSCSUser.objects.get(id=userId)
+                    if surveyor != None:
+                        if surveyor.userType == LSCSUser.SURVEYOR:
+                            checklist.surveyors.add(surveyor)
+
+                serializer = ChecklistSerializer(checklist)
+                return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class ListManagerChecklists(ManagerSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChecklistManagerSerializer
+
+    def get_queryset(self):    
+        return Checklist.objects.filter(manager__pk=self.request.user.id)
+
+class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChecklistSerializer
+
+    def get_queryset(self):
+        return AssignedChecklists.objects.filter(surveyors__pk=self.request.user.id)                                       
 
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 
@@ -214,6 +235,7 @@ update_surveyor = UpdateSurveyor.as_view();
 list_surveyors = ListSurveyors.as_view();
 manager_checklists = ListManagerChecklists.as_view();
 manager_create_checklist = CreateChecklist.as_view();
+manager_assign_surveyors = AssignSurveyors.as_view();
 manager_list_checklist_types = ListChecklistTypes.as_view();
 manager_create_checklist_type = CreateChecklistType.as_view();
 

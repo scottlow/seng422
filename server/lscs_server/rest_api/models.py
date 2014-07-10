@@ -52,6 +52,8 @@ class Checklist(models.Model):
     description = models.CharField(max_length=256, null=True)
     landDistrict = models.CharField(max_length=256, null=True)
     address = models.CharField(max_length=256)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
     dateCreated = models.DateTimeField(default=datetime.now())
     dateLastModified = models.DateTimeField(default=datetime.now())
     state = models.CharField(max_length=2, choices=STATE_CHOICES, default=DRAFT)

@@ -12,8 +12,8 @@ angular.module('clientApp')
     $scope.StateService = StateService;
     $scope.selectedChecklist;
     $scope.addressSearchText;
-    $scope.newChecklistModalLat = 48.4630958;
-    $scope.newChecklistModalLong = -123.3121052;
+    $scope.newChecklistModalLat = 0;
+    $scope.newChecklistModalLong = 0;
 
     var geocoder = new google.maps.Geocoder();
 
@@ -67,8 +67,10 @@ angular.module('clientApp')
     })
 
     $scope.setDefaultModalMapLocation = function() {
-      $scope.newChecklistModalLat = 48.4630959;
-      $scope.newChecklistModalLong = -123.3121053;
+      if($scope.newChecklistModalLat === 0 || $scope.newChecklistModalLong === 0) {
+        $scope.newChecklistModalLat = 48.4630959;
+        $scope.newChecklistModalLong = -123.3121053;
+      }
     }
 
     $scope.signOut = function() {

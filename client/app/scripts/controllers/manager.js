@@ -54,6 +54,18 @@ angular.module('clientApp')
       }
     });
 
+    $scope.$watchCollection(function() {
+      return StateService.getSurveyorList();
+    },
+    function(newVal, oldVal) {
+      if(newVal === oldVal) return;
+      $timeout(function() {
+        angular.element('.multiselect').multiselect({
+          numberDisplayed : 2,
+        }); 
+      });
+    })
+
     $scope.setDefaultModalMapLocation = function() {
       $scope.newChecklistModalLat = 48.4630959;
       $scope.newChecklistModalLong = -123.3121053;
@@ -284,7 +296,7 @@ angular.module('clientApp')
     };
 
     $scope.setEditInformation = function(user) {
-      $scope.cleanUpEditModal(); 
+      $scope.cleanUpEditModal();
 
       $scope.edit_username = user.username;
       $scope.edit_first_name = user.first_name;
@@ -294,7 +306,7 @@ angular.module('clientApp')
     };
 
     angular.element('#newChecklistModal').on('shown.bs.modal', function() {
-      $timeout(function(){
+      $timeout(function(){      
         $scope.setDefaultModalMapLocation();
       });
     });

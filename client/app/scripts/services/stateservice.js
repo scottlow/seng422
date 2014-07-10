@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .service('StateService', function ($http, ipCookie) {
+  .service('StateService', function ($http, ipCookie, $rootScope) {
     var currentUser;
     var surveyorList;
     var checklists;
@@ -64,11 +64,11 @@ angular.module('clientApp')
         }
       }
     }
-
+    
     this.getUserList = function() {
-      $http.get('http://localhost:8000/' + 'users/list_surveyors/')
+      return $http.get('http://localhost:8000/' + 'users/list_surveyors/')
       .success(function(data) {
-        surveyorList = data;
+        surveyorList = data;        
       })
       .error(function(data) {
         console.log('There was an error getting user information');

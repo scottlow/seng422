@@ -24,7 +24,7 @@
  	  <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
  	  	<ul class="nav navbar-nav">
           <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
-          <li><a href="#checklists" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklists</a></li>
+          <li><a href="#checklists" role="tab" data-toggle="tab">Checklists</a></li>
           <li><a href="#surveyors" role="tab" data-toggle="tab">Surveyors</a></li> 	  	
  	  	</ul>
  	  </div>
@@ -158,15 +158,72 @@
       </div>
       <div class="modal-body">
         <div class="new_checklist_map" lat="newChecklistModalLat" long="newChecklistModalLong" zoom="13" lscs-map></div>      
-        <form name="newChecklistForm" class="well form-horizontal" role="form" ng-submit="createNewSurveyor()" novalidate>
-          <!-- Address -->
-          <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.username.$invalid ) && newChecklistHasSubmitted }">
-              <label class="col-sm-3 control-label">Address</label> 
-              <div class="col-sm-9">
-                <input type="text" name="username" class="form-control" ng-model="addressSearchText" required>              
-                <p ng-show="newChecklistForm.username.$invalid && newChecklistHasSubmitted" class="help-block">Please enter an address</p>
+        <form name="newChecklistForm" class="well" role="form" ng-submit="createNewSurveyor()" novalidate>
+          <div class="row">
+            <div class="col-sm-4">
+              <!-- Title -->
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistTitle.$invalid ) && newChecklistHasSubmitted }">
+                <label class="control-label">Title</label> 
+                  <input type="text" name="checklistTitle" class="form-control" ng-model="newChecklistTitle" required>              
+                  <p ng-show="newChecklistForm.checklistTitle.$invalid && newChecklistHasSubmitted" class="help-block">Please enter a title.</p>
+              </div>  
+            </div>
+            <div class="col-sm-4">
+            <!-- File Number -->
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistFileNumber.$invalid ) && newChecklistHasSubmitted }">
+                  <label class="control-label">File Number</label> 
+                    <input type="text" name="checklistFileNumber" class="form-control" ng-model="newChecklistFileNumber" required>              
+                    <p ng-show="newChecklistForm.checklistFileNumber.$invalid && newChecklistHasSubmitted" class="help-block">Please enter a file number.</p>
+              </div> 
+            </div> 
+            <div class="col-sm-4">
+            <!-- Checklist Type -->
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistType.$invalid ) && newChecklistHasSubmitted }">
+                  <label class="control-label">Checklist Type</label> 
+                    <select name="checklistType" class="form-control" ng-model="newChecklistType" ng-options="type.name for type in checklistTypes" required></select>
+                    <p ng-show="newChecklistForm.checklistType.$invalid && newChecklistHasSubmitted" class="help-block">Please choose a checklist type.</p>
+              </div> 
+            </div>                              
+          </div>
+          <div class="row">
+           <div class="col-sm-6">
+              <!-- Address -->
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistTitle.$invalid ) && newChecklistHasSubmitted }">
+                <label class="control-label">Address</label> 
+                  <input type="text" name="checklistTitle" class="form-control" ng-model="addressSearchText" required>              
+                  <p ng-show="newChecklistForm.checklistTitle.$invalid && newChecklistHasSubmitted" class="help-block">Please enter an address.</p>
               </div>
-          </div>        
+            </div>
+           <div class="col-sm-6">
+              <!-- Land District -->
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistLandDistrict.$invalid ) && newChecklistHasSubmitted }">
+                <label class="control-label">Land District</label> 
+                  <input type="text" name="checklistLandDistrict" class="form-control" ng-model="newChecklistLandDistrict" required>              
+                  <p ng-show="newChecklistForm.checklistLandDistrict.$invalid && newChecklistHasSubmitted" class="help-block">Please enter a land district.</p>
+              </div>
+            </div>            
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <!-- Description -->
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistDescription.$invalid ) && newChecklistHasSubmitted }">
+                <label class="control-label">Description (Optional)</label> 
+                  <textarea name="checklistDescription" class="form-control" ng-model="newChecklistDescription"></textarea>             
+              </div>    
+            </div>          
+            <div class="col-sm-6">
+              <!-- Assigned Surveyors -->
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistSurveyors.$invalid ) && newChecklistHasSubmitted }">
+                <label class="control-label">Assigned Surveyors</label> 
+                <div>         
+                  <select name="checklistSurveyors" class="multiselect" multiple="multiple" ng-model="newChecklistSurveyors" required>
+                    <option ng-repeat="surveyor in StateService.getSurveyorList()" value="{{surveyor.id}}">{{surveyor.first_name}} {{surveyor.last_name}}</option>
+                  </select>
+                </div>
+                <p ng-show="newChecklistForm.checklistSurveyors.$invalid && newChecklistHasSubmitted" class="help-block">Please select at least one surveyor.</p>               
+              </div>
+            </div>            
+          </div>
         </form>
       </div>
       <div class="modal-footer">

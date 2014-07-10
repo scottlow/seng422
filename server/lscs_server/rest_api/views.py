@@ -197,6 +197,7 @@ class ViewChecklistType(ManagerSecurityMixin, generics.ListAPIView):
     serializer_class = ChecklistTypeSerializer
 
     def get_queryset(self):
+        print(self.kwargs)
         typeId = self.kwargs['id']
         return ChecklistType.objects.filter(id=typeId)
 
@@ -218,8 +219,6 @@ class AssignSurveyors(ManagerSecurityMixin, generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        print(request.DATA)
-
         if "checklist" in request.DATA and "surveyors" in request.DATA:
             checklist = Checklist.objects.get(id=request.DATA['checklist'])
             if checklist != None:
@@ -254,10 +253,14 @@ obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 create_user = CreateUser.as_view();
 update_surveyor = UpdateSurveyor.as_view();
 list_surveyors = ListSurveyors.as_view();
-manager_checklists = ListManagerChecklists.as_view();
+
+manager_create_checklist_type = CreateChecklistType.as_view();
+manager_list_checklist_types = ListChecklistTypes.as_view();
+manager_create_checklist_question = CreateChecklistQuestion.as_view();
+manager_view_checklist_type = ViewChecklistType.as_view();
+
 manager_create_checklist = CreateChecklist.as_view();
 manager_assign_surveyors = AssignSurveyors.as_view();
-manager_list_checklist_types = ListChecklistTypes.as_view();
-manager_create_checklist_type = CreateChecklistType.as_view();
+manager_checklists = ListManagerChecklists.as_view();
 
 surveyor_checklists = ListSurveyorChecklists.as_view();

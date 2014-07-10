@@ -14,7 +14,7 @@ angular.module('clientApp')
           latitude = $scope.lat,
           longitude = $scope.long,
           zoom = $scope.zoom,
-          map,
+          map, marker;
 
         latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
         longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
@@ -34,6 +34,10 @@ angular.module('clientApp')
         // If lat, long or zoom parameters on the map change (remember, these are passed in from HTML), update it accordingly.
         $scope.$watchCollection('[lat, long, zoom]', function(newValues, oldValues) {
 
+          if(marker !== undefined) {
+            marker.setMap(null);
+          }
+
           var center = new google.maps.LatLng(newValues[0], newValues[1]);
           map.panTo(center);
           map.setZoom(newValues[2]);        
@@ -42,7 +46,7 @@ angular.module('clientApp')
           $timeout(function() {
             google.maps.event.trigger(map, 'resize');
             var center = new google.maps.LatLng($scope.lat, $scope.long);
-            var marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
               position: center,
               map: map
             });        

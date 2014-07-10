@@ -50,6 +50,10 @@ angular.module('clientApp')
         if(StateService.getUserType() === "MAN") {
           StateService.getUserList();
           StateService.getManagerChecklists();
+          StateService.getChecklistTypes().then(function() {
+            $scope.checklistTypes = StateService.getChecklistTypesList();
+            $scope.newChecklistType = $scope.checklistTypes[0];
+          });
         }
       }
     });
@@ -69,7 +73,7 @@ angular.module('clientApp')
     $scope.setDefaultModalMapLocation = function() {
       if($scope.newChecklistModalLat === 0 || $scope.newChecklistModalLong === 0) {
         $scope.newChecklistModalLat = 48.4630959;
-        $scope.newChecklistModalLong = -123.3121053;
+        $scope.newChecklistModalLong = -123.3121053;          
       }
     }
 

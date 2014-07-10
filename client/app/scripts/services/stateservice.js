@@ -5,6 +5,7 @@ angular.module('clientApp')
     var currentUser;
     var surveyorList;
     var checklists;
+    var checklistTypes;    
 
     this.clearState = function() {
       currentUser = {};
@@ -18,6 +19,10 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('Error retrieving checklists');
       });
+    }
+
+    this.getChecklistTypesList = function() {
+      return checklistTypes;
     }
 
     this.getChecklists = function() {
@@ -64,7 +69,7 @@ angular.module('clientApp')
         }
       }
     }
-    
+
     this.getUserList = function() {
       return $http.get('http://localhost:8000/' + 'users/list_surveyors/')
       .success(function(data) {
@@ -74,6 +79,16 @@ angular.module('clientApp')
         console.log('There was an error getting user information');
       });
     }
+
+    this.getChecklistTypes = function() {
+      return $http.get('http://localhost:8000/' + 'manager/list_checklist_types/')
+      .success(function(data) {
+        checklistTypes = data;        
+      })
+      .error(function(data) {
+        console.log('There was an error getting user information');
+      });
+    }    
 
     this.getUserById = function(id) {
 

@@ -180,8 +180,8 @@
             <!-- Checklist Type -->
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistType.$invalid ) && newChecklistHasSubmitted }">
                   <label class="control-label">Checklist Type</label> 
-                    <input type="text" name="checklistType" class="form-control" ng-model="newChecklistType" required>              
-                    <p ng-show="newChecklistForm.checklistType.$invalid && newChecklistHasSubmitted" class="help-block">Please enter a title.</p>
+                    <select name="checklistType" class="form-control" ng-model="newChecklistType" ng-options="type.name for type in checklistTypes" required></select>
+                    <p ng-show="newChecklistForm.checklistType.$invalid && newChecklistHasSubmitted" class="help-block">Please choose a checklist type.</p>
               </div> 
             </div>                              
           </div>

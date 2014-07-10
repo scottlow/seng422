@@ -33,33 +33,6 @@ class LSCSUserRegisterSerializer(serializers.ModelSerializer):
         else:
             return attrs;
 
-class ChecklistTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = rest_api.models.ChecklistType
-
-class ChecklistCreateSerializer(serializers.ModelSerializer):
-    manager = serializers.PrimaryKeyRelatedField()
-    checklistType = serializers.PrimaryKeyRelatedField()
-    class Meta:
-        model = rest_api.models.Checklist
-        fields = ('id', 'manager', 'checklistType', 'title', 'address')
-
-class ChecklistManagerSerializer(serializers.ModelSerializer):
-    checklistType = ChecklistTypeSerializer()
-    surveyors = LSCSUserSerializer(required=False, many=True)
-    class Meta:
-        model = rest_api.models.Checklist
-        depth = 1
-        fields = ('id', 'surveyors', 'checklistType', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'dateCreated', 'dateLastModified', 'state')
-
-class ChecklistSerializer(serializers.ModelSerializer):
-    checklistType = ChecklistTypeSerializer()
-    manager = LSCSUserSerializer()
-    surveyors = LSCSUserSerializer(required=False, many=True)
-    class Meta:
-        model = rest_api.models.Checklist
-        depth = 1        
-
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
@@ -70,3 +43,30 @@ class SetPasswordSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         return super(SetPasswordSerializer, self).__init__(*args, **kwargs)
+
+class ChecklistTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = rest_api.models.ChecklistType
+
+class ChecklistCreateSerializer(serializers.ModelSerializer):
+    manager = serializers.PrimaryKeyRelatedField()
+    checklistType = serializers.PrimaryKeyRelatedField()
+    surveyors = serializers.PrimaryKeyRelatedField(required=False, many=True)
+    class Meta:
+        model = rest_api.models.Checklist
+
+class ChecklistManagerSerializer(serializers.ModelSerializer):
+    checklistType = ChecklistTypeSerializer()
+    surveyors = LSCSUserSerializer(required=False, many=True)
+    class Meta:
+        model = rest_api.models.Checklist
+        depth = 1
+        fields = ('id', 'surveyors', 'checklistType', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'latitude', 'longitude','dateCreated', 'dateLastModified', 'state')
+
+class ChecklistSerializer(serializers.ModelSerializer):
+    checklistType = ChecklistTypeSerializer()
+    manager = LSCSUserSerializer()
+    surveyors = LSCSUserSerializer(required=False, many=True)
+    class Meta:
+        model = rest_api.models.Checklist
+        depth = 1

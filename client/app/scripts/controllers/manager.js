@@ -12,9 +12,10 @@ angular.module('clientApp')
     $scope.StateService = StateService;
     $scope.selectedChecklist;
     $scope.addressSearchText;
-    var geocoder = new google.maps.Geocoder();
     $scope.newChecklistModalLat = 48.4630958;
     $scope.newChecklistModalLong = -123.3121052;
+
+    var geocoder = new google.maps.Geocoder();
 
     $scope.formatAddress = function(address) {
       return address.replace(' ', '+');

@@ -59,17 +59,17 @@
               <button type="button" data-toggle="modal" data-target="#newChecklistModal" class="btn btn-success btn-lg" style="margin-top: -2px">New Checklist</button>
             </div>
           </div>
-          <p style="margin-top: 20px" class="well well-sm">Please select a checklist from the list below to view weather and geographical information for the each checklist's project. To modify or delete an existing checklist, please click one of the action buttons corresponding to the checklist in the table below. Finally, if you want to create a new checklist, please click the New Checklist button.</p>
+          <p style="margin-top: 20px" class="well well-sm">Please select a checklist from the list below to view weather and geographical information for the each checklist's project. To view or delete an existing checklist, please click one of the action buttons corresponding to the checklist in the table below. Finally, if you want to create a new checklist, please click the New Checklist button.</p>
         </div>
       </div>
       <div class="row">
         <div class="container" style="margin: 0px; width:100%;">
-          <div class="col-sm-6">
+          <div class="col-sm-4">
             <div class="weather-data"></div>
             <h3 class="sub-header" style="margin: 0px;">Checklist Map Data</h3>          
             <div class="manager-map" lat="48.4630959" long="-123.3121053" lscs-map zoom="13"></div>
           </div>
-          <div class="col-sm-6" style="padding-left: 30px">  
+          <div class="col-sm-8" style="padding-left: 30px">  
             <h3 class="sub-header" style="margin: 0px;">Created Checklists</h3>
             <div class="table-responsive">
               <table class="table table-striped">
@@ -80,7 +80,8 @@
                     <th>Checklist Type</th>
                     <th>Land District</th>
                     <th>State</th>
-                    <th>Assigned To:</th>
+                    <th>Assigned To</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -91,6 +92,7 @@
                     <td>{{checklist.landDistrict}}</td>
                     <td>{{checklist.state}}</td>
                     <td>{{checklist.surveyors[0].name}}</td>
+                    <th><button style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" style="margin-top: -2px">View Data</button><button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button></th>                  
                   </tr>
                 </tbody>
               </table>

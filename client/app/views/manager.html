@@ -67,7 +67,7 @@
           <div class="col-sm-4">
             <div class="weather-data"></div>
             <h3 class="sub-header" style="margin: 0px;">Checklist Map Data</h3>          
-            <div class="manager-map" lat="48.4630959" long="-123.3121053" lscs-map zoom="13"></div>
+            <div class="manager-map" lat="managerMapLat" long="managerMapLong" lscs-map zoom="13"></div>
           </div>
           <div class="col-sm-8" style="padding-left: 30px">
             <h3 class="sub-header" style="margin: 0px;">Created Checklists</h3>
@@ -85,14 +85,14 @@
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
-                  <tr ng-repeat="checklist in StateService.getChecklists()">
+                  <tr ng-mouseover="setMapLocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat="checklist in StateService.getChecklists()">
                     <td>{{checklist.fileNumber}}</td>
                     <td>{{checklist.title}}</td>
                     <td>{{checklist.checklistType.name}}</td>
                     <td>{{checklist.landDistrict}}</td>
                     <td>{{checklist.state}}</td>
                     <td>{{checklist.surveyors[0].name}}</td>
-                    <th><button style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" style="margin-top: -2px">View Data</button><button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button></th>                  
+                    <td><button style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" style="margin-top: -2px">View Data</button><button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button></td>                  
                   </tr>
                 </tbody>
               </table>

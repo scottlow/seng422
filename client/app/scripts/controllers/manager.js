@@ -14,6 +14,8 @@ angular.module('clientApp')
     $scope.addressSearchText;
     $scope.newChecklistModalLat = 0;
     $scope.newChecklistModalLong = 0;
+    $scope.managerMapLat = 0;
+    $scope.managerMapLong = 0;
 
     var geocoder = new google.maps.Geocoder();
 
@@ -42,6 +44,11 @@ angular.module('clientApp')
           }
         }, 500);
     });
+
+    $scope.setMapLocation = function(lat, long) {
+      $scope.managerMapLat = lat;
+      $scope.managerMapLong = long;
+    }
 
     // Set up the page
     $scope.$on('$stateChangeSuccess', function() {

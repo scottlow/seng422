@@ -15,12 +15,24 @@ body {
   margin-bottom: 20px;
 }
 
+.table-striped > tbody > tr:nth-child(odd) > td {
+  background-color: transparent !important;
+}
+
+.table-striped > tbody > tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
 .manager-table-container {
   max-height: 600px; 
   overflow-y: scroll;
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;  
   border-bottom: 1px solid #eee;  
+}
+
+.checklist-row:hover {
+  background-color: #EFEFEF !important;
 }
 
 .padding-fix {

@@ -72,7 +72,7 @@
           <div class="col-xs-12 col-sm-12 col-md-8">
             <h3 class="sub-header" style="margin: 0px;">Created Checklists</h3>
             <div class="table-responsive manager-table-container">
-              <table class="table table-striped">
+              <table class="table table-manager table-striped">
                 <thead>
                   <tr>
                     <th>File Number</th>
@@ -81,19 +81,43 @@
                     <th>Land District</th>
                     <th>State</th>
                     <th>Assigned To</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
-                  <tr ng-mouseover="setMapLocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat="checklist in StateService.getChecklists()">
+                  <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setMapLocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getChecklists()">
                     <td>{{checklist.fileNumber}}</td>
                     <td>{{checklist.title}}</td>
                     <td>{{checklist.checklistType.name}}</td>
                     <td>{{checklist.landDistrict}}</td>
                     <td>{{checklist.state}}</td>
-                    <td>{{checklist.surveyors[0].name}}</td>
-                    <td><button style="margin-right: 5px;" type="button" class="btn btn-primary btn-sm" style="margin-top: -2px">View Data</button><button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button></td>                  
+                    <td class="userListRoot"><span ng-repeat="user in checklist.surveyors">{{user.first_name}}</span></td>               
                   </tr>
+                  <tr ng-repeat-end>
+                    <td colspan="7" class="hiddenRow">
+                      <div class="accordian-body collapse table-details" id="details{{$index}}">
+                        <div class="row well well-sm well-details">
+                          <div class="col-md-2">
+                            <label class="control-label">Address</label>
+                            <p>
+                              {{checklist.address}}
+                            </p>
+                          </div>
+                          <div class="col-md-7">
+                            <label class="control-label">Description</label>
+                            <p>
+                              {{checklist.description}}
+                            </p>
+                          </div>  
+                          <div class="col-md-3">
+                            <label class="control-label">Actions</label>
+                            <p>
+                              <button style="margin-right: 5px; margin-top: -2px;" type="button" class="btn btn-primary btn-sm">View</button><button style="margin-right: 5px; margin-top: -2px;" type="button" class="btn btn-success btn-sm">Edit</button><button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button>
+                            </p>
+                          </div>                                                   
+                        </div>
+                      </div>
+                    </td>
+                  </tr>                  
                 </tbody>
               </table>
             </div>

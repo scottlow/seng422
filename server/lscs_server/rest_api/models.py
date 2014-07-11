@@ -65,6 +65,11 @@ class Checklist(models.Model):
     dateLastModified = models.DateTimeField(default=datetime.now())
     state = models.CharField(max_length=2, choices=STATE_CHOICES, default=DRAFT)
 
+    def get_state_display(self):
+        for choice in self.STATE_CHOICES:
+            if choice[0] == self.state:
+                return choice[1]
+
 class ChecklistAnswer(models.Model):
     checklist = models.ForeignKey(Checklist, related_name='answers')
     question = models.ForeignKey(ChecklistQuestion)
@@ -78,6 +83,11 @@ class ChecklistAnswer(models.Model):
         (INCOMPLETE, 'Incomplete')
     )
     answer = models.CharField(max_length=2, choices=ANSWER_CHOICES, default=UNANSWERED)
+
+    def get_answer_display(self):
+        for choice in self.ANSWER_CHOICES:
+            if choice[0] == self.answer:
+                return choice[1]
 
 @receiver(post_save, sender=LSCSUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

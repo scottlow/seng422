@@ -188,6 +188,12 @@ class CreateChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView):
         if serializer.is_valid():
             serializer.save()
 
+            serializer.object
+            checklists = Checklist.objects.filter(checklistType__pk=serializer.object.checklistType.id)
+            for checklist in checklists:
+                answer = ChecklistAnswer(checklist=checklist, question=serializer.object)
+                answer.save()
+
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -210,6 +216,11 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView):
         serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
         if serializer.is_valid():
             serializer.save()
+
+            checklist_questions = ChecklistQuestion.objects.filter(checklistType__pk=checklist.checklistType.id)
+            for question in checklist_questions:
+                answer = ChecklistAnswer(checklist=checklist, question=question)
+                answer.save()
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);

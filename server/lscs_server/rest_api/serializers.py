@@ -81,6 +81,7 @@ class ChecklistCreateSerializer(serializers.ModelSerializer):
 class ChecklistManagerSerializer(serializers.ModelSerializer):
     checklistType = ChecklistTypeSerializerLight()
     surveyors = LSCSUserSerializer(required=False, many=True)
+    state = serializers.CharField(source='get_state_display')
     class Meta:
         model = rest_api.models.Checklist
         depth = 1

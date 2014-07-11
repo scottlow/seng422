@@ -69,9 +69,9 @@
             <h3 class="sub-header" style="margin: 0px;">Checklist Map Data</h3>          
             <div class="manager-map" lat="48.4630959" long="-123.3121053" lscs-map zoom="13"></div>
           </div>
-          <div class="col-sm-8" style="padding-left: 30px">  
+          <div class="col-sm-8" style="padding-left: 30px">
             <h3 class="sub-header" style="margin: 0px;">Created Checklists</h3>
-            <div class="table-responsive">
+            <div class="table-responsive" style="wdith:756px">
               <table class="table table-striped">
                 <thead>
                   <tr>
@@ -84,7 +84,7 @@
                     <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="scrollContent">
                   <tr ng-repeat="checklist in StateService.getChecklists()">
                     <td>{{checklist.fileNumber}}</td>
                     <td>{{checklist.title}}</td>
@@ -109,7 +109,7 @@
           <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
             <h1 class="pull-left" style="margin: 0px;">Surveyors</h1>
             <div class="pull-right">
-              <button type="button" data-toggle="modal" data-target="#newSurveyorModal" href="" ng-click="cleanUpNewDialog()" class="btn btn-success btn-lg" style="margin-top: -2px">New Surveyor</button>
+              <button type="button" data-toggle="modal" data-target="#newSurveyorModal" href="" ng-click="cleanUpNewUserDialog()" class="btn btn-success btn-lg" style="margin-top: -2px">New Surveyor</button>
             </div>
           </div>
           <p style="margin-top: 20px" class="well well-sm">Below is a list of surveyors currently registered in the LSCS system. To modify an existing surveyor account, please click one of the action buttons cooresponding to the account you wish to modify in the table below. To create a new surveyor, please click the New Surveyor button.</p>
@@ -188,7 +188,7 @@
           <div class="row">
            <div class="col-sm-6">
               <!-- Address -->
-              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistTitle.$invalid ) && newChecklistHasSubmitted }">
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.addressSearchText.$invalid ) && newChecklistHasSubmitted }">
                 <label class="control-label">Address</label> 
                   <input type="text" name="checklistTitle" class="form-control" ng-model="addressSearchText" required>              
                   <p ng-show="newChecklistForm.checklistTitle.$invalid && newChecklistHasSubmitted" class="help-block">Please enter an address.</p>

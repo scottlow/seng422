@@ -25,6 +25,20 @@ angular.module('clientApp')
       return checklistTypes;
     }
 
+    this.addLocalChecklist = function(checklist) {
+      checklists.push(checklist);
+    }
+
+    this.setChecklistId = function(id, checklist) {
+      var stringCheck = JSON.stringify(checklist);
+      for(var i = 0; i < checklists.length; i++) {
+        if(JSON.stringify(checklists[i]) === stringCheck) { // This is nasty, but it works.
+          console.log('Found match');
+          checklists[i].id = id;
+        }
+      }
+    }
+
     this.getChecklists = function() {
       return checklists;
     }

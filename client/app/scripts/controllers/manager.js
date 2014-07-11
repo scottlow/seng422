@@ -43,6 +43,7 @@ angular.module('clientApp')
         }, 500);
     });
 
+    // Set up the page
     $scope.$on('$stateChangeSuccess', function() {
       if(AuthService.isAuthenticated()) {
         $scope.isLoggedIn = true;
@@ -82,7 +83,7 @@ angular.module('clientApp')
       $scope.isLoggedIn = false;
     };
 
-    $scope.cleanUpNewDialog = function() {
+    $scope.cleanUpNewSurveyorDialog = function() {
       $scope.newUsername = '';
       $scope.newFirstName = '';
       $scope.newLastName = '';
@@ -181,6 +182,46 @@ angular.module('clientApp')
 
     $scope.submitCreateChecklist = function() {
       $scope.newChecklistHasSubmitted = true;
+
+      if($scope.newChecklistForm.$valid) {
+
+        var checklist = {
+          title: $scope.newChecklistTitle,
+          fileNumber: $scope.newChecklistFileNumber,
+          checklistType: $scope.newChecklistType.id,
+          address: $scope.addressSearchText,
+          landDistrict: $scope.newChecklistLandDistrict,
+          description: $scope.newChecklistDescription,
+          surveyors: $scope.newChecklistSurveyors,
+          latitude: $scope.newChecklistModalLat,
+          longitude: $scope.newChecklistModalLong,
+        }
+
+        var local_checklist = {
+          title: $scope.newChecklistTitle,
+          fileNumber: $scope.newChecklistFileNumber,
+          checklistType: $scope.newChecklistType,
+          address: $scope.addressSearchText,
+          landDistrict: $scope.newChecklistLandDistrict,
+          description: $scope.newChecklistDescription,
+          surveyors: $scope.newChecklistSurveyors,
+          latitude: $scope.newChecklistModalLat,
+          longitude: $scope.newChecklistModalLong,
+        }        
+
+        $http.post('http://localhost:8000/' + 'manager/create_checklist/', checklist)
+          .success(function (data, status) {           
+            console.log("Created a new checklist.");       
+            angular.element('#newChecklistModal').modal('hide');
+            StateService.setChecklistId(data.id, local_checklist);
+            $scope.newChecklistHasSubmitted = false;
+          })
+          .error(function (data, status, headers, config) {
+            console.log('Error creating checklist!');
+        });      
+
+        StateService.addLocalChecklist(local_checklist);        
+      }
     }
 
     $scope.submitSurveyorUpdate = function() {

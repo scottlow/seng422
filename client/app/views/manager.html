@@ -24,7 +24,7 @@
  	  <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
  	  	<ul class="nav navbar-nav">
           <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
-          <li><a href="#checklists" role="tab" data-toggle="tab">Checklists</a></li>
+          <li><a href="#checklists" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklists</a></li>
           <li><a href="#surveyors" role="tab" data-toggle="tab">Surveyors</a></li> 	  	
  	  	</ul>
  	  </div>
@@ -111,7 +111,9 @@
                           <div class="col-md-3">
                             <label class="control-label">Actions</label>
                             <p>
-                              <button style="margin-right: 5px; margin-top: -2px;" type="button" class="btn btn-primary btn-sm">View</button><button style="margin-right: 5px; margin-top: -2px;" type="button" class="btn btn-success btn-sm">Edit</button><button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button>
+                              <button style="margin-right: 2px; margin-top: -2px;" type="button" class="btn btn-primary btn-sm">View</button>
+                              <button style="margin-right: 2px; margin-top: -2px;" type="button" class="btn btn-success btn-sm">Edit</button>
+                              <button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button>
                             </p>
                           </div>                                                   
                         </div>
@@ -172,7 +174,6 @@
 </div>
 
 <!-- New Checklist Modal -->
-
 <div class="modal fade" id="newChecklistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">
   <div class="modal-dialog" style="width: 608px;">
     <div class="modal-content">

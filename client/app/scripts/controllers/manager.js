@@ -45,6 +45,15 @@ angular.module('clientApp')
         }, 500);
     });
 
+    $scope.refreshMap = function() {
+      var firstChecklist = StateService.getChecklists()[0];
+      if(firstChecklist !== undefined) {
+        $scope.setMapLocation(firstChecklist.latitude, firstChecklist.longitude);
+      } else {
+        $scope.setMapLocation(48.4630959, -123.3121053);
+      }
+    }
+
     $scope.setMapLocation = function(lat, long) {
       $scope.managerMapLat = lat;
       $scope.managerMapLong = long;

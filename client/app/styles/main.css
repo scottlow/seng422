@@ -15,6 +15,14 @@ body {
   margin-bottom: 20px;
 }
 
+.manager-table-container {
+  max-height: 600px; 
+  overflow-y: scroll;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;  
+  border-bottom: 1px solid #eee;  
+}
+
 .padding-fix {
   padding-right: 15px;
 }
@@ -22,7 +30,7 @@ body {
 .manager-map {
   position: absolute;
   width: 100%;
-  height: 500px; /* Todo: JS hackery to get this value not hardcoded */
+  height: 600px; /* Todo: JS hackery to get this value not hardcoded */
 }
 
 /*

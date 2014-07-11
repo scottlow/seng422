@@ -135,7 +135,7 @@
           <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
             <h1 class="pull-left" style="margin: 0px;">Surveyors</h1>
             <div class="pull-right">
-              <button type="button" data-toggle="modal" data-target="#newSurveyorModal" href="" ng-click="cleanUpNewUserDialog()" class="btn btn-success btn-lg" style="margin-top: -2px">New Surveyor</button>
+              <button type="button" data-toggle="modal" data-target="#newSurveyorModal" class="btn btn-success btn-lg" style="margin-top: -2px">New Surveyor</button>
             </div>
           </div>
           <p style="margin-top: 20px" class="well well-sm">Below is a list of surveyors currently registered in the LSCS system. To modify an existing surveyor account, please click one of the action buttons cooresponding to the account you wish to modify in the table below. To create a new surveyor, please click the New Surveyor button.</p>
@@ -241,7 +241,7 @@
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistSurveyors.$invalid ) && newChecklistHasSubmitted }">
                 <label class="control-label">Assigned Surveyors</label> 
                 <div>         
-                  <select name="checklistSurveyors" class="multiselect" multiple="multiple" ng-model="newChecklistSurveyors" required>
+                  <select id="surveyorsMultiSelect" name="checklistSurveyors" class="multiselect" multiple="multiple" ng-model="newChecklistSurveyors" required>
                     <option ng-repeat="surveyor in StateService.getSurveyorList()" value="{{surveyor.id}}">{{surveyor.first_name}} {{surveyor.last_name}}</option>
                   </select>
                 </div>

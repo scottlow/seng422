@@ -46,9 +46,9 @@ angular.module('clientApp')
     });
 
     $scope.refreshMap = function() {
-      var firstChecklist = StateService.getChecklists()[0];
-      if(firstChecklist !== undefined) {
-        $scope.setMapLocation(firstChecklist.latitude, firstChecklist.longitude);
+      var checklists = StateService.getChecklists();
+      if(checklists !== undefined && checklists.length !== 0) {
+        $scope.setMapLocation(checklists[0].latitude, checklists[0].longitude);
       } else {
         $scope.setMapLocation(48.4630959, -123.3121053);
       }
@@ -57,6 +57,23 @@ angular.module('clientApp')
     $scope.setMapLocation = function(lat, long) {
       $scope.managerMapLat = lat;
       $scope.managerMapLong = long;
+    }
+
+    $scope.cleanUpNewChecklistDialog = function() {
+      $scope.newChecklistType = $scope.checklistTypes[0];
+      $scope.newChecklistTitle = '';
+      $scope.newChecklistFileNumber = '';
+      $scope.addressSearchText = '';
+      $scope.newChecklistLandDistrict = '';
+      $scope.newChecklistDescription = '';
+      $scope.newChecklistSurveyors = [];
+      $scope.setDefaultModalMapLocation();
+
+      var e = angular.element('#surveyorsMultiSelect');
+
+      angular.element('option', e).each(function(element) {
+        e.multiselect('deselect', angular.element(this).val());
+      });
     }
 
     // Set up the page
@@ -105,6 +122,7 @@ angular.module('clientApp')
       $scope.newLastName = '';
       $scope.newEmail = '';
       $scope.newPassword = '';
+      $scope.verifyPassword = '';
 
       $scope.newSurveyorForm.verifyPassword.$error.passwordMatch = false;  
       $scope.usernamePostError = false;
@@ -142,6 +160,7 @@ angular.module('clientApp')
             angular.element('#newSurveyorModal').modal('hide');   
             $scope.hasSubmitted = false;
             StateService.setUserId(data.id, data.username);
+            $scope.cleanUpNewSurveyorDialog();
           })
           .error(function (data, status, headers, config) {
             // If there's been an error, time to display it back to the user on the form. (These are where server side errors are set)
@@ -231,6 +250,7 @@ angular.module('clientApp')
             angular.element('#newChecklistModal').modal('hide');
             StateService.setChecklistId(data.id, local_checklist);
             $scope.newChecklistHasSubmitted = false;
+            $scope.cleanUpNewChecklistDialog();
           })
           .error(function (data, status, headers, config) {
             console.log('Error creating checklist!');

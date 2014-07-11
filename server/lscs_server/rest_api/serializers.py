@@ -79,7 +79,7 @@ class ChecklistCreateSerializer(serializers.ModelSerializer):
         model = rest_api.models.Checklist
 
 class ChecklistManagerSerializer(serializers.ModelSerializer):
-    checklistType = ChecklistTypeSerializer()
+    checklistType = ChecklistTypeSerializerLight()
     surveyors = LSCSUserSerializer(required=False, many=True)
     class Meta:
         model = rest_api.models.Checklist

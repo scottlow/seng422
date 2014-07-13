@@ -21,13 +21,19 @@
         </div>
         <button type="submit" ng-click="signIn()" class="btn btn-success">Sign in</button>
       </form>
+    <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
+      <ul class="nav navbar-nav">
+          <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
+          <li><a href="#checklists" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklists</a></li>     
+      </ul>
+    </div>
       <div class="nav navbar-nav navbar-right" ng-show="isLoggedIn">
         <ul class="nav navbar-nav">
-          <li><p class="navbar-text">Welcome, {{StateService.getUsername()}}</p></li>
+          <li><p class="navbar-text">Welcome, {{StateService.getUsername()}}</p></li>             
           <li class="padding-fix dropdown">
             <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h4 glyphicon glyphicon-cog"></span></a>
             <ul class="dropdown-menu">          
-              <li><a>Edit Profile</a></li>
+              <li><a data-toggle="modal" data-target="#editSurveyorModal" ng-click="setEditInformation(StateService.getCurrentUser())" href="#">Edit Profile</a></li>
               <li><a ng-click="signOut()" href="">Sign Out</a></li>            
             </ul>
           </li>
@@ -38,171 +44,116 @@
   </div>
 </div>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
-      <ul class="nav nav-sidebar">
-        <li class="active"><a href="#">Overview</a></li>
-        <li><a href="#">Reports</a></li>
-        <li><a href="#">Analytics</a></li>
-        <li><a href="#">Export</a></li>
-      </ul>
-      <ul class="nav nav-sidebar">
-        <li><a href="">Nav item</a></li>
-        <li><a href="">Nav item again</a></li>
-        <li><a href="">One more nav</a></li>
-        <li><a href="">Another nav item</a></li>
-        <li><a href="">More navigation</a></li>
-      </ul>
-      <ul class="nav nav-sidebar">
-        <li><a href="">Nav item again</a></li>
-        <li><a href="">One more nav</a></li>
-        <li><a href="">Another nav item</a></li>
-      </ul>
-    </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <h1 class="page-header">Dashboard</h1>
+<!-- All tab content -->
+<div class="tab-content">
 
-      <div class="row placeholders">
-        <div class="col-xs-6 col-sm-3 placeholder">
-          <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
-          <h4>Label</h4>
-          <span class="text-muted">Something else</span>
-        </div>
-        <div class="col-xs-6 col-sm-3 placeholder">
-          <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
-          <h4>Label</h4>
-          <span class="text-muted">Something else</span>
-        </div>
-        <div class="col-xs-6 col-sm-3 placeholder">
-          <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
-          <h4>Label</h4>
-          <span class="text-muted">Something else</span>
-        </div>
-        <div class="col-xs-6 col-sm-3 placeholder">
-          <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
-          <h4>Label</h4>
-          <span class="text-muted">Something else</span>
+  <!-- Overview tab content -->
+  <div class="tab-pane" id="overview">
+    Overview stuff
+  </div>
+
+  <!-- Checklist tab content -->
+  <div class="tab-pane" id="checklists">
+    <div class="container-fluid">
+
+      <!-- Checklist title and description row-->
+      <div class="row">
+        <div class="col-sm-12 main" style="padding-bottom:0px">
+          <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
+            <h1 class="pull-left" style="margin: 0px;">Checklists</h1>
+          </div>
+          <p style="margin-top: 20px" class="well well-sm">Please hover over an existing checklist from the table below to view geographical information for the each checklist's project. To obtain more information on a specific checklist, please click the row corresponding to the checklist.</p>
         </div>
       </div>
 
-      <h2 class="sub-header">Checklists</h2>
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Date Assigned</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>State</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>24 June, 2014</td>
-              <td>Station Road Terminal</td>
-              <td>1529 Station Road, Langford B.C. Canada</td>
-              <td>Assigned</td>
-            </tr>
-            <tr>
-              <td>14 June, 2014</td>
-              <td>North Mackenzie Roundabout</td>
-              <td>2565 Mackenzie Ave. Victoria B.C. Canada</td>
-              <td>Submitted</td>
-            </tr>
-            <tr>
-              <td>29 May, 2014</td>
-              <td>University Heights</td>
-              <td>2411 Mackenzie Ave. Victoria B.C. Canada</td>
-              <td>Reviewed</td>
-            </tr>
-            <tr>
-              <td>1,003</td>
-              <td>libero</td>
-              <td>Sed</td>
-              <td>cursus</td>
-            </tr>
-            <tr>
-              <td>1,004</td>
-              <td>dapibus</td>
-              <td>diam</td>
-              <td>Sed</td>
-            </tr>
-            <tr>
-              <td>1,005</td>
-              <td>Nulla</td>
-              <td>quis</td>
-              <td>sem</td>
-            </tr>
-            <tr>
-              <td>1,006</td>
-              <td>nibh</td>
-              <td>elementum</td>
-              <td>imperdiet</td>
-            </tr>
-            <tr>
-              <td>1,007</td>
-              <td>sagittis</td>
-              <td>ipsum</td>
-              <td>Praesent</td>
-            </tr>
-            <tr>
-              <td>1,008</td>
-              <td>Fusce</td>
-              <td>nec</td>
-              <td>tellus</td>
-            </tr>
-            <tr>
-              <td>1,009</td>
-              <td>augue</td>
-              <td>semper</td>
-              <td>porta</td>
-            </tr>
-            <tr>
-              <td>1,010</td>
-              <td>massa</td>
-              <td>Vestibulum</td>
-              <td>lacinia</td>
-            </tr>
-            <tr>
-              <td>1,011</td>
-              <td>eget</td>
-              <td>nulla</td>
-              <td>Class</td>
-            </tr>
-            <tr>
-              <td>1,012</td>
-              <td>taciti</td>
-              <td>sociosqu</td>
-              <td>ad</td>
-            </tr>
-            <tr>
-              <td>1,013</td>
-              <td>torquent</td>
-              <td>per</td>
-              <td>conubia</td>
-            </tr>
-            <tr>
-              <td>1,014</td>
-              <td>per</td>
-              <td>inceptos</td>
-              <td>himenaeos</td>
-            </tr>
-            <tr>
-              <td>1,015</td>
-              <td>sodales</td>
-              <td>ligula</td>
-              <td>in</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Map/weather and Table row -->
+      <div class="row">
+        <div class="container" style="margin: 0px; width:100%;">
+          
+          <!-- Map and weather column -->
+          <div class="col -xs-12 col-sm-12 col-md-4">
+            
+            <!-- DOTO:Weather data -->
+            <div class="weather-data">
+              Weather stuff
+            </div>
+
+            <!-- Map display -->
+            <h3 class="sub-header" style="margin: 0px;">Checklist Map Data</h3>
+            <!-- Does this change for client? -->
+            <div class="manager-map" lat="managerMapLat" long="managerMapLong" lscs-map zoom="13"></div>
+
+          </div>
+
+          <!-- Checklist table column -->
+          <div class="col-xs-12 col-sm-12 col-md-8">
+            <h3 class="sub-header" style="margin: 0px;">Your Checklists</h3>
+            <div class="table-responsive manager-table-container">
+              <table clas="table table-manager table-striped">
+                <thead>
+                  <tr>
+                    <th>File Number</th>
+                    <th>Title</th>
+                    <th>Checklist Type</th>
+                    <th>Land District</th>
+                    <th>State</th>
+                  </tr>
+                </thead>
+                <tbody class="scrollContent">
+                  
+                  <!-- <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setMaplocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getCheckLists()">
+                    <td>{{checklist.fileNumber}}</td>
+                    <td>{{checklist.title}}</td>
+                    <td>{{checklist.checklistType.name}}</td>
+                    <td>{{checklist.landDistrict}}</td>
+                    <td>{{checklist.state}}</td>
+                  </tr> -->
+
+                  <!-- Dummy Checklist -->
+                  <tr data-toggle="collapse" data-target="#details{{$index}}">
+                    <td>25</td>
+                    <td>Some Title</td>
+                    <td>Some type</td>
+                    <td>Some Land</td>
+                    <td>Some state</td>
+                  </tr>
+
+                    <td colspan="7" class="hiddenRow">
+                      <div class="accordian-body collapse table-details" id="details{{$index}}">
+                        <div class="row well well-sm well-details">
+                          <div class="col-md-2">
+                            <label class="control-label">Address</label>
+                            <!-- Dummy Address -->
+                            <p>
+                              Some Address
+                            </p>
+                          </div>
+                          <div class="col-md-7">
+                            <label class="control-label">Description</label>
+                            <!-- Dummy Description -->
+                            <p>
+                              Some Description
+                            </p>
+                          </div>
+                          <div class="col-md-3">
+                            <label class="control-label">Actions</label>
+                            <p>
+                              <button style="margin-right: 2px; margin-top: -2px;" type="button" class="btn btn-success btn-sm">Edit</button>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      <hr>
-
-      <footer>
-        <p>&copy; Company 2014</p>
-      </footer>
     </div>
   </div>
+
 </div>

@@ -197,15 +197,11 @@ class CreateChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView):
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ViewChecklistType(ManagerSecurityMixin, generics.ListAPIView):
+class ViewChecklistType(ManagerSecurityMixin, generics.RetrieveAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     serializer_class = ChecklistTypeSerializer
-
-    def get_queryset(self):
-        print(self.kwargs)
-        typeId = self.kwargs['id']
-        return ChecklistType.objects.filter(id=typeId)
+    model = ChecklistType
 
 class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -253,13 +249,25 @@ class ListManagerChecklists(ManagerSecurityMixin, generics.ListAPIView):
         c = c.prefetch_related('surveyors')
         return c.filter(manager__pk=self.request.user.id)
 
-class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
+class ViewManagerChecklist(ManagerSecurityMixin, generics.RetrieveAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     serializer_class = ChecklistSerializer
+    model = Checklist
+
+class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChecklistSurveyorSerializer
 
     def get_queryset(self):
-        return AssignedChecklists.objects.filter(surveyors__pk=self.request.user.id)                                       
+        return AssignedChecklists.objects.filter(surveyors__pk=self.request.user.id)
+
+class ViewSurveyorChecklist(SurveyorSecurityMixin, generics.RetrieveAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChecklistSerializer
+    model = Checklist
 
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 
@@ -275,5 +283,7 @@ manager_view_checklist_type = ViewChecklistType.as_view();
 manager_create_checklist = CreateChecklist.as_view();
 manager_assign_surveyors = AssignSurveyors.as_view();
 manager_checklists = ListManagerChecklists.as_view();
+manager_checklist = ViewManagerChecklist.as_view();
 
 surveyor_checklists = ListSurveyorChecklists.as_view();
+surveyor_checklist = ViewSurveyorChecklist.as_view();

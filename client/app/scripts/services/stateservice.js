@@ -85,7 +85,7 @@ angular.module('clientApp')
     }
 
     this.getUserList = function() {
-      return $http.get('http://localhost:8000/' + 'users/list_surveyors/')
+      return $http.get('http://localhost:8000/' + 'manager/surveyors/')
       .success(function(data) {
         surveyorList = data;        
       })
@@ -95,7 +95,7 @@ angular.module('clientApp')
     }
 
     this.getChecklistTypes = function() {
-      return $http.get('http://localhost:8000/' + 'manager/list_checklist_types/')
+      return $http.get('http://localhost:8000/' + 'manager/checklist_types/')
       .success(function(data) {
         checklistTypes = data;        
       })

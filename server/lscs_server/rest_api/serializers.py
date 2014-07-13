@@ -71,6 +71,13 @@ class ChecklistQuestionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = rest_api.models.ChecklistQuestion
 
+class ChecklistAnswerSerializer(serializers.ModelSerializer):
+    question = ChecklistQuestionSerializer()
+    answer = serializers.CharField(source='get_answer_display')
+    class Meta:
+        model = rest_api.models.ChecklistAnswer
+        fields = ('id', 'question', 'answer')
+
 class ChecklistCreateSerializer(serializers.ModelSerializer):
     manager = serializers.PrimaryKeyRelatedField()
     checklistType = serializers.PrimaryKeyRelatedField()
@@ -87,10 +94,21 @@ class ChecklistManagerSerializer(serializers.ModelSerializer):
         depth = 1
         fields = ('id', 'surveyors', 'checklistType', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'latitude', 'longitude','dateCreated', 'dateLastModified', 'state')
 
+class ChecklistSurveyorSerializer(serializers.ModelSerializer):
+    checklistType = ChecklistTypeSerializerLight()
+    manager = LSCSUserSerializer(required=False)
+    surveyors = LSCSUserSerializer(required=False, many=True)
+    state = serializers.CharField(source='get_state_display')
+    class Meta:
+        model = rest_api.models.Checklist
+        depth = 1
+        fields = ('id', 'manager', 'surveyors', 'checklistType', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'latitude', 'longitude','dateCreated', 'dateLastModified', 'state')
+
 class ChecklistSerializer(serializers.ModelSerializer):
-    checklistType = ChecklistTypeSerializer()
+    checklistType = ChecklistTypeSerializerLight()
     manager = LSCSUserSerializer()
     surveyors = LSCSUserSerializer(required=False, many=True)
+    answers = ChecklistAnswerSerializer(many=True)
     class Meta:
         model = rest_api.models.Checklist
         depth = 1

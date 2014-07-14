@@ -31,6 +31,18 @@ angular.module('clientApp')
 
         map = new google.maps.Map(elem[0], mapOptions);
 
+        $scope.$on('forceRefreshMap', function() {
+          $timeout(function() {
+            google.maps.event.trigger(map, 'resize');
+            var center = new google.maps.LatLng($scope.lat, $scope.long);
+            marker = new google.maps.Marker({
+              position: center,
+              map: map
+            });        
+            map.setCenter(center);
+          });
+        });
+
         // If lat, long or zoom parameters on the map change (remember, these are passed in from HTML), update it accordingly.
         $scope.$watchCollection('[lat, long, zoom]', function(newValues, oldValues) {
 

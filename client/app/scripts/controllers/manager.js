@@ -45,6 +45,49 @@ angular.module('clientApp')
         }, 500);
     });
 
+    $scope.createChecklist = function() {
+      $scope.isEditing = false;
+    }
+
+    $scope.setModalSurveyors = function(surveyors) {
+      var e = angular.element('#surveyorsMultiSelect');
+      for(var i = 0; i < surveyors.length; i++) {
+        e.multiselect('select', surveyors[i].id);
+      }
+    }
+
+    $scope.getSurveyorIdList = function(surveyors) {
+      var idList = [];
+      for(var i = 0; i < surveyors.length; i++) {
+        idList.push(surveyors[i].id);
+      }
+
+      return idList;
+    }
+
+    $scope.setModalChecklistType = function(checklistType) {
+      console.log(checklistType);
+      angular.element('#modalChecklistType').val(checklistType);
+    }
+
+    $scope.editChecklist = function(checklist) {
+      $scope.deselectAllModalSurveyors();
+      $scope.newChecklistSurveyors = [];
+      $scope.isEditing = true;
+
+      $scope.newChecklistType = checklist.checklistType;
+      $scope.setModalChecklistType(checklist.checklistType);
+
+      $scope.newChecklistTitle = checklist.title;
+      $scope.newChecklistFileNumber = checklist.fileNumber;
+      $scope.addressSearchText = checklist.address;
+      $scope.newChecklistLandDistrict = checklist.landDistrict;
+      $scope.newChecklistDescription = checklist.description;
+
+      $scope.newChecklistSurveyors = $scope.getSurveyorIdList(checklist.surveyors);
+      $scope.setModalSurveyors(checklist.surveyors);
+    }
+
     $scope.refreshMap = function() {
       var checklists = StateService.getChecklists();
       if(checklists !== undefined && checklists.length !== 0) {
@@ -59,6 +102,14 @@ angular.module('clientApp')
       $scope.managerMapLong = long;
     }
 
+    $scope.deselectAllModalSurveyors = function() {
+      var e = angular.element('#surveyorsMultiSelect');
+
+      angular.element('option', e).each(function(element) {
+        e.multiselect('deselect', angular.element(this).val());
+      });      
+    }
+
     $scope.cleanUpNewChecklistDialog = function() {
       $scope.newChecklistType = $scope.checklistTypes[0];
       $scope.newChecklistTitle = '';
@@ -69,11 +120,7 @@ angular.module('clientApp')
       $scope.newChecklistSurveyors = [];
       $scope.setDefaultModalMapLocation();
 
-      var e = angular.element('#surveyorsMultiSelect');
-
-      angular.element('option', e).each(function(element) {
-        e.multiselect('deselect', angular.element(this).val());
-      });
+      $scope.deselectAllModalSurveyors();
     }
 
     // Set up the page
@@ -108,6 +155,8 @@ angular.module('clientApp')
       if($scope.newChecklistModalLat === 0 || $scope.newChecklistModalLong === 0) {
         $scope.newChecklistModalLat = 48.4630959;
         $scope.newChecklistModalLong = -123.3121053;          
+      } else {
+        $scope.$broadcast('forceRefreshMap');
       }
     }
 
@@ -155,8 +204,7 @@ angular.module('clientApp')
         StateService.addUser(userParam);
 
         $http.post('http://localhost:8000/' + 'users/create/', userParam)
-          .success(function (data, status) {           
-            console.log("Created a new user.");       
+          .success(function (data, status) {
             angular.element('#newSurveyorModal').modal('hide');   
             $scope.hasSubmitted = false;
             StateService.setUserId(data.id, data.username);

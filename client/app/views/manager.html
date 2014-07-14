@@ -23,7 +23,7 @@
       </form>
  	  <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
  	  	<ul class="nav navbar-nav">
-          <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
+            <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
           <li><a href="#checklists" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklists</a></li>
           <li><a href="#surveyors" role="tab" data-toggle="tab">Surveyors</a></li> 	  	
  	  	</ul>
@@ -56,7 +56,7 @@
           <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
             <h1 class="pull-left" style="margin: 0px;">Checklists</h1>
             <div class="pull-right">
-              <button type="button" data-toggle="modal" data-target="#newChecklistModal" class="btn btn-success btn-lg" style="margin-top: -2px">New Checklist</button>
+              <button type="button" data-toggle="modal" ng-click="createChecklist()" data-target="#newChecklistModal" class="btn btn-success btn-lg" style="margin-top: -2px">New Checklist</button>
             </div>
           </div>
           <p style="margin-top: 20px" class="well well-sm">Please hover over an existing checklist from the table below to view geographical information for the each checklist's project. To obtain more information on a specific checklist, please click the row corresponding to the checklist. Finally, if you want to create a new checklist, please click the New Checklist button.</p>
@@ -112,7 +112,7 @@
                             <label class="control-label">Actions</label>
                             <p>
                               <button style="margin-right: 2px; margin-top: -2px;" type="submit" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#checklistDetailsModal" ng-click="setSelectedChecklist(checklist)" href="#">View</button>
-                              <button style="margin-right: 2px; margin-top: -2px;" type="button" class="btn btn-success btn-sm">Edit</button>
+                              <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#newChecklistModal" ng-click="editChecklist(checklist)" type="button" class="btn btn-success btn-sm">Edit</button>
                               <button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button>
                             </p>
                           </div>                                                   
@@ -173,19 +173,20 @@
   </div>    
 </div>
 
-<!-- New Checklist Modal -->
+<!-- New/Edit Checklist Modal -->
 <div class="modal fade" id="newChecklistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">
   <div class="modal-dialog" style="width: 608px;">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Create a New Checklist<br /><small>Please complete the following fields to create a new checklist.</small></h4>
+        <h4 class="modal-title" ng-hide="isEditing" id="myModalLabel">Create a New Checklist<br /><small>Please complete the following fields to create a new checklist.</small></h4>
+        <h4 class="modal-title" ng-show="isEditing" id="myModalLabel">Edit a Checklist<br /><small>Please modify any of the fields below to update a checklist's administrative information.</small></h4>        
       </div>
       <div class="modal-body">
         <div class="new_checklist_map" lat="newChecklistModalLat" long="newChecklistModalLong" zoom="13" lscs-map></div>      
         <form name="newChecklistForm" class="well" role="form" ng-submit="createNewSurveyor()" novalidate>
           <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-5">
               <!-- Title -->
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistTitle.$invalid ) && newChecklistHasSubmitted }">
                 <label class="control-label">Title</label> 
@@ -194,24 +195,24 @@
               </div>  
             </div>
             <div class="col-sm-4">
+            <!-- Checklist Type -->
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistType.$invalid ) && newChecklistHasSubmitted }">
+                  <label class="control-label">Checklist Type</label> 
+                    <select name="checklistType" class="form-control" id="modalChecklistType" ng-model="newChecklistType" ng-options="type.name for type in checklistTypes track by checklist.id" required></select>
+                    <p ng-show="newChecklistForm.checklistType.$invalid && newChecklistHasSubmitted" class="help-block">Please choose a checklist type.</p>
+              </div> 
+            </div>             
+            <div class="col-sm-3">
             <!-- File Number -->
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistFileNumber.$invalid ) && newChecklistHasSubmitted }">
                   <label class="control-label">File Number</label> 
                     <input type="text" name="checklistFileNumber" class="form-control" ng-model="newChecklistFileNumber" required>              
                     <p ng-show="newChecklistForm.checklistFileNumber.$invalid && newChecklistHasSubmitted" class="help-block">Please enter a file number.</p>
               </div> 
-            </div> 
-            <div class="col-sm-4">
-            <!-- Checklist Type -->
-              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistType.$invalid ) && newChecklistHasSubmitted }">
-                  <label class="control-label">Checklist Type</label> 
-                    <select name="checklistType" class="form-control" ng-model="newChecklistType" ng-options="type.name for type in checklistTypes" required></select>
-                    <p ng-show="newChecklistForm.checklistType.$invalid && newChecklistHasSubmitted" class="help-block">Please choose a checklist type.</p>
-              </div> 
             </div>                              
           </div>
           <div class="row">
-           <div class="col-sm-6">
+           <div class="col-sm-7">
               <!-- Address -->
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.addressSearchText.$invalid ) && newChecklistHasSubmitted }">
                 <label class="control-label">Address</label> 
@@ -219,7 +220,7 @@
                   <p ng-show="newChecklistForm.checklistTitle.$invalid && newChecklistHasSubmitted" class="help-block">Please enter an address.</p>
               </div>
             </div>
-           <div class="col-sm-6">
+           <div class="col-sm-5">
               <!-- Land District -->
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistLandDistrict.$invalid ) && newChecklistHasSubmitted }">
                 <label class="control-label">Land District</label> 
@@ -229,14 +230,14 @@
             </div>            
           </div>
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-7">
               <!-- Description -->
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistDescription.$invalid ) && newChecklistHasSubmitted }">
                 <label class="control-label">Description (Optional)</label> 
                   <textarea name="checklistDescription" class="form-control" ng-model="newChecklistDescription"></textarea>             
               </div>    
             </div>          
-            <div class="col-sm-6">
+            <div class="col-sm-5">
               <!-- Assigned Surveyors -->
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistSurveyors.$invalid ) && newChecklistHasSubmitted }">
                 <label class="control-label">Assigned Surveyors</label> 

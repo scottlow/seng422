@@ -378,6 +378,29 @@ angular.module('clientApp')
       }
     };
 
+    $scope.setSelectedChecklist = function(selectedChecklist) {
+      $scope.cleanChecklistDetails();
+      $scope.selectedChecklistDescription = selectedChecklist.description;
+      $scope.selectedChecklistAddress = selectedChecklist.address;
+      $scope.selectedChecklistState = selectedChecklist.state;
+      $scope.selectedChecklistLandDistrict = selectedChecklist.landDistrict;
+      $scope.selectedChecklistChecklistType = selectedChecklist.checklistType.name;
+      $scope.selectedChecklistTitle = selectedChecklist.title;
+      $scope.selectedChecklistFilenumber = selectedChecklist.fileNumber;
+
+    };
+
+    $scope.cleanChecklistDetails = function() {
+      $scope.selectedChecklistDescription = '';
+      $scope.selectedChecklistAddress = '';
+      $scope.selectedChecklistState = '';
+      $scope.selectedChecklistLandDistrict = '';
+      $scope.selectedChecklistChecklistType = '';
+      $scope.selectedChecklistTitle = '';
+      $scope.selectedChecklistFilenumber = '';
+      
+    };
+
     $scope.setEditInformation = function(user) {
       $scope.cleanUpEditModal();
 

@@ -111,7 +111,7 @@
                           <div class="col-md-3">
                             <label class="control-label">Actions</label>
                             <p>
-                              <button style="margin-right: 2px; margin-top: -2px;" type="button" class="btn btn-primary btn-sm">View</button>
+                              <button style="margin-right: 2px; margin-top: -2px;" type="submit" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#checklistDetailsModal" ng-click="setSelectedChecklist(checklist)" href="#">View</button>
                               <button style="margin-right: 2px; margin-top: -2px;" type="button" class="btn btn-success btn-sm">Edit</button>
                               <button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button>
                             </p>
@@ -336,7 +336,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Edit Profile<br /><small>Please modify any of the fields below to update your StudyGroup profile.</small></h4>
+        <h4 class="modal-title" id="myModalLabel">Edit Profile<br /><small>Please modify any of the fields below to update your profile.</small></h4>
       </div>
       <div class="modal-body">
         <form name="editSurveyorForm" class="form-horizontal" role="form" ng-submit="submitRegistration()" novalidate>
@@ -418,6 +418,81 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" ng-click="submitSurveyorUpdate()" class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Checklist Details Modal -->
+<div class="modal fade" id="checklistDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 706px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">View Checklist Details<br /><small>All details can be found below.</small></h4>
+      </div>
+      <div class="modal-body">
+        <form name="checklistDetailsForm" class="form-horizontal" role="form" ng-submit="submitRegistration()" novalidate>    
+          <!-- Description -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">Description</label> 
+              <div class="col-sm-4 control-label">
+                <td>{{selectedChecklistDescription}}</td>
+              </div>
+          </div>
+          <!-- Address -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">Address</label> 
+              <div class="col-sm-4 control-label">
+                <td>{{selectedChecklistAddress}}</td>
+              </div>
+          </div>
+          <!-- State -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">State</label> 
+              <div class="col-sm-4 control-label">
+                <td>{{selectedChecklistState}}</td>
+              </div>
+          </div>
+          <!-- Land District -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">Land District</label> 
+              <div class="col-sm-4 control-label">
+                <td>{{selectedChecklistLandDistrict}}</td>
+              </div>
+          </div>
+          <!-- Checklist Type -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">Type</label> 
+              <div class="col-sm-4 control-label">
+                <td>{{selectedChecklistChecklistType}}</td>
+              </div>
+          </div>
+          <!-- Title -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">Title</label> 
+              <div class="col-sm-4 control-label">
+                <td>{{selectedChecklistTitle}}</td>
+              </div>
+          </div>
+          <!-- File Number -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">File Number</label> 
+              <div class="col-sm-4 control-label">
+                <td>{{selectedChecklistFilenumber}}</td>
+              </div>
+          </div>
+
+
+
+          <!-- ADD STUFF FOR QUESTIONS HERE ONCE THE JAVASCRIPT HAS BEEN MODIFIED TO GET IT FROM STATESERVICE -->
+
+
+
+        </form>                                       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

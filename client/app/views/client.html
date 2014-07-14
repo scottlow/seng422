@@ -157,3 +157,96 @@
   </div>
 
 </div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editSurveyorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 706px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Edit Profile<br /><small>Please modify any of the fields below to update your profile.</small></h4>
+      </div>
+      <div class="modal-body">
+        <form name="editSurveyorForm" class="form-horizontal" role="form" ng-submit="submitRegistration()" novalidate>
+          <!-- Username -->
+          <div class="form-group" ng-class="{ 'has-error' : editSurveyorForm.username.$invalid && editHasSubmitted || usernameEditErrorMessage }">
+            <label class="col-sm-3 control-label">Username</label> 
+            <div class="col-sm-9">
+              <input type="username" name="username" class="form-control" ng-model="edit_username" required placeholder="username">
+              <p ng-show="usernameEditPostError" class="help-block">{{usernameEditErrorMessage}}</p>          
+              <p ng-show="editSurveyorForm.username.$invalid && editHasSubmitted" class="help-block">Please enter a valid username.</p>
+            </div>
+          </div>      
+          <!-- First Name -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">First Name</label> 
+              <div class="col-sm-9">
+                <input type="text" name="name" class="form-control" ng-model="edit_first_name" placeholder="First Name">
+              </div>
+          </div>
+          <!-- Last Name -->
+          <div class="form-group">
+              <label class="col-sm-3 control-label">Last Name</label> 
+              <div class="col-sm-9">
+                <input type="text" name="name" class="form-control" ng-model="edit_last_name" placeholder="Last Name">
+              </div>
+          </div>          
+          <!-- Email -->
+          <div class="form-group" ng-class="{ 'has-error' : editSurveyorForm.email.$invalid && editHasSubmitted || emailEditErrorMessage }">
+            <label class="col-sm-3 control-label">Email</label> 
+            <div class="col-sm-9">
+              <input type="email" name="email" class="form-control" ng-model="edit_email" required placeholder="Email">
+              <p ng-show="emailEditPostError" class="help-block">{{emailEditErrorMessage}}</p>          
+              <p ng-show="editSurveyorForm.email.$invalid && editHasSubmitted" class="help-block">Please enter a valid email.</p>
+            </div>
+          </div>
+          <!-- Password -->
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>             
+            <div class="col-sm-9">
+              <button type="button" ng-show="!editShowChangePassword" ng-click="editShowChangePassword = true; editHasSubmitted = false;" class="btn btn-primary">Change Password</button>            
+              <div ng-show="editShowChangePassword" class="well" style="margin-bottom: 0px;">
+                <!-- Current Password -->
+                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.password.$invalid && editHasSubmitted }">              
+                  <label class="col-sm-4 control-label">Current Password</label>               
+                  <div class="col-sm-8">                            
+                    <input type="password" name="password" class="form-control" ng-model="currentPassword" ng-required="editShowChangePassword">
+                    <p ng-show="editSurveyorForm.password.$error.required && !editSurveyorForm.password.$error.passwordIncorrect && editHasSubmitted" class="help-block">Please enter your current password.</p>
+                    <p ng-show="editSurveyorForm.password.$error.passwordIncorrect && editHasSubmitted" class="help-block">The password you entered does not match the one we have on file for you! Please try again.</p>                    
+                  </div>
+                </div>
+                <!-- New Password -->
+                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.newPassword.$invalid && editHasSubmitted }">                 
+                  <label class="col-sm-4 control-label">New Password</label>               
+                  <div class="col-sm-8">                            
+                    <input type="password" name="newPassword" class="form-control" ng-model="editNewPassword" ng-required="editShowChangePassword">
+                    <p ng-show="editSurveyorForm.newPassword.$error.required && editHasSubmitted" class="help-block">Please enter a new password.</p>
+                  </div> 
+                </div>  
+                <!-- Confirm Password -->
+                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.verifyPassword.$invalid && editHasSubmitted }">                 
+                  <label class="col-sm-4 control-label">Verify Password</label>               
+                  <div class="col-sm-8">                            
+                    <input type="password" name="verifyPassword" class="form-control" ng-model="editVerifyPassword" ng-required="editShowChangePassword">
+                    <p ng-show="editSurveyorForm.verifyPassword.$error.required && editHasSubmitted" class="help-block">Please verify your new password.</p>
+                    <p ng-show="editSurveyorForm.verifyPassword.$error.passwordMatch && editHasSubmitted" class="help-block">The passwords you entered do not match!</p>                    
+                  </div> 
+                </div>
+                <!-- Hide Button -->
+                <div class="form-group" style="margin-bottom: 0px">  
+                  <div class="col-sm-12">                                
+                    <button style="float: right;" type="button" ng-click="editShowChangePassword = false; cleanUpPasswords();" class="btn btn-default">Cancel</button>   
+                  </div>
+                </div>                                        
+              </div>
+            </div>
+          </div>                                           
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="submitSurveyorUpdate()" class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>

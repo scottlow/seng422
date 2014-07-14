@@ -157,7 +157,7 @@
                 </thead>
                 <tbody>
                   <tr data-ng-repeat="surveyor in StateService.getSurveyorList()">
-                    <th>{{surveyor.first_name == '' && surveyor.last_name == '' ? 'N/A' : surveyor.first_name  + ' ' + surveyor.last_name}}</th>
+                    <th>{{surveyor.first_name == '' && surveyor.last_name == '' ? 'N/A' : surveyor.first_name  + ' ' +  surveyor.last_name}}</th>
                     <th>{{surveyor.username}}</th>
                     <th>{{surveyor.email}}</th>
                     <th><button type="button" data-toggle="modal" data-target="#editSurveyorModal" class="btn btn-primary btn-sm" ng-click="setEditInformation(surveyor)" style="margin-top: -2px">Edit User</button></th>

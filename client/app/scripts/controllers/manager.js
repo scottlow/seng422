@@ -71,6 +71,8 @@ angular.module('clientApp')
     }
 
     $scope.editChecklist = function(checklist) {
+      $scope.idToEdit = checklist.id;
+
       $scope.deselectAllModalSurveyors();
       $scope.newChecklistSurveyors = [];
       $scope.isEditing = true;
@@ -280,6 +282,10 @@ angular.module('clientApp')
           longitude: $scope.newChecklistModalLong,
         }
 
+        if($scope.isEditing === true) {
+          checklist.id = $scope.idToEdit;
+        }
+
         var local_checklist = {
           title: $scope.newChecklistTitle,
           fileNumber: $scope.newChecklistFileNumber,
@@ -292,19 +298,32 @@ angular.module('clientApp')
           longitude: $scope.newChecklistModalLong,
         }        
 
-        $http.post('http://localhost:8000/' + 'manager/create_checklist/', checklist)
-          .success(function (data, status) {           
-            console.log("Created a new checklist.");       
-            angular.element('#newChecklistModal').modal('hide');
-            StateService.setChecklistId(data.id, local_checklist);
-            $scope.newChecklistHasSubmitted = false;
-            $scope.cleanUpNewChecklistDialog();
-          })
-          .error(function (data, status, headers, config) {
-            console.log('Error creating checklist!');
-        });      
+        if($scope.isEditing === true) {
+          $http.put('http://localhost:8000/' + 'manager/create_checklist/', checklist)
+            .success(function (data, status) {           
+              console.log("Edited a checklist.");       
+              angular.element('#newChecklistModal').modal('hide');
+              $scope.newChecklistHasSubmitted = false;
+              $scope.cleanUpNewChecklistDialog();
+            })
+            .error(function (data, status, headers, config) {
+              console.log('Error editing checklist!');
+          });           
+          } else {
+            $http.post('http://localhost:8000/' + 'manager/create_checklist/', checklist)
+              .success(function (data, status) {           
+                console.log("Created a new checklist.");       
+                angular.element('#newChecklistModal').modal('hide');
+                StateService.setChecklistId(data.id, local_checklist);
+                $scope.newChecklistHasSubmitted = false;
+                $scope.cleanUpNewChecklistDialog();
+              })
+              .error(function (data, status, headers, config) {
+                console.log('Error creating checklist!');
+            });    
 
-        StateService.addLocalChecklist(local_checklist);        
+            StateService.addLocalChecklist(local_checklist); 
+        }       
       }
     }
 

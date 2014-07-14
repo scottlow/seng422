@@ -203,7 +203,7 @@ class ViewChecklistType(ManagerSecurityMixin, generics.RetrieveAPIView):
     serializer_class = ChecklistTypeSerializer
     model = ChecklistType
 
-class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView):
+class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -220,6 +220,15 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView):
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
+
+    def put(self, request):
+        checklist = Checklist(pk=request.DATA['id'], manager=request.user, dateLastModified=datetime.now())
+        serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
+        if(serializer.is_valid()):
+            serializer.save()
+
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);            
 
 class AssignSurveyors(ManagerSecurityMixin, generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)

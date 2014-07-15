@@ -70,7 +70,9 @@ class UpdateSurveyor(ManagerSecurityMixin, generics.CreateAPIView):
             if('first_name' in request.DATA.keys()):
                 user.first_name = serializer.init_data['first_name']
             if('last_name' in request.DATA.keys()):
-                user.last_name = serializer.init_data['last_name']                
+                user.last_name = serializer.init_data['last_name']      
+            if('username' in request.DATA.keys()):
+                user.username = serializer.init_data['username']                              
             user.save()
 
             serializer = LSCSUserSerializer(user)

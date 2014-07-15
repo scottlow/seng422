@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('ManagerCtrl', function ($scope, $http, $q, AuthService, $location, StateService, $timeout) {  
+  .controller('ManagerCtrl', function ($scope, $http, $q, AuthService, $location, StateService, $timeout, ipCookie) {  
     $scope.StateService = StateService;
     $scope.selectedChecklist;
     $scope.addressSearchText;
@@ -391,9 +391,18 @@ angular.module('clientApp')
           if(makeRequest) {           
             params.id = $scope.edit_id;
             $http.post('http://localhost:8000/' + 'users/update/', params)
-            .success(function (status) {           
+            .success(function (status) {     
               console.log("Changed user information");
-              StateService.getUserById($scope.edit_id).email = $scope.edit_email; // Update email as long as it is unique in the DB (If it's not, the call to /users/update_profile will error out)       
+
+              if($scope.edit_email !== undefined) {
+                StateService.getUserById($scope.edit_id).email = $scope.edit_email; // Update email as long as it is unique in the DB (If it's not, the call to /users/update_profile will error out)
+              }
+              if(params.username !== undefined) {
+                var tempUser = ipCookie('lscsUser');
+                tempUser.username = params.username;
+                ipCookie('lscsUser', tempUser, {expires: 14});
+                StateService.setProfileFromCookie();
+              }
               angular.element('#editSurveyorModal').modal('hide');  
               
               // Reset the modal UI so that anyone who clicks on the Edit Profile button again will be shown a fresh slate.            

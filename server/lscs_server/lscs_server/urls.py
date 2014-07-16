@@ -28,5 +28,6 @@ urlpatterns = patterns('',
 	url(r'^manager/checklist/(?P<pk>[\d]+)/$', 'rest_api.views.manager_checklist'),
 	url(r'^surveyor/checklists/$', 'rest_api.views.surveyor_checklists'),
 	url(r'^surveyor/checklist/(?P<pk>[\d]+)/$', 'rest_api.views.surveyor_checklist'),
+	url(r'^surveyor/answer/$', 'rest_api.views.surveyor_answer'),
     url(r'^redirect_to_login/$', RedirectView.as_view(url='http://127.0.0.1:9000'), name='password_reset_complete'),    
 )

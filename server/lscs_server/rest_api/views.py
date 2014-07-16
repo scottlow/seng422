@@ -223,6 +223,8 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
+
+
         checklist = Checklist(manager=request.user, dateCreated=datetime.now(), dateLastModified=datetime.now())
         serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
         if serializer.is_valid():
@@ -286,7 +288,7 @@ class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
 
     def get_queryset(self):
         c = Checklist.objects.select_related('manager', 'checklistType')
-        c = c.prefetch_related('surveyors')        
+        c = c.prefetch_related('surveyors')
         return c.filter(surveyors__pk=self.request.user.id)
 
 class ViewSurveyorChecklist(SurveyorSecurityMixin, generics.RetrieveAPIView):
@@ -294,6 +296,33 @@ class ViewSurveyorChecklist(SurveyorSecurityMixin, generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChecklistSerializer
     model = Checklist
+
+class AnswerSurveyQuestion(SurveyorSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        error = '{"error":"Required attributes not provided"}'
+        if "id" in request.DATA and "answer" in request.DATA:
+            answer = ChecklistAnswer.objects.get(id=request.DATA['id'])
+            error = '{"error":"Provided data is invalid"}'
+            if answer != None:
+                error = '{"error":"User is not assigned to checklist"}'
+                if request.user in answer.checklist.surveyors.all():
+                    if request.DATA["answer"] == "True":
+                        print(request.DATA["answer"])
+                        answer.answer = ChecklistAnswer.COMPLETED
+                    else:
+                        answer.answer = ChecklistAnswer.INCOMPLETE
+
+                    answer.checklist.dateLastModified = datetime.now()
+                    answer.checklist.save()
+                    answer.save()
+
+                    serializer = ChecklistAnswerSerializer(answer)
+                    return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
+
 
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 
@@ -314,3 +343,4 @@ manager_checklist = ViewManagerChecklist.as_view();
 
 surveyor_checklists = ListSurveyorChecklists.as_view();
 surveyor_checklist = ViewSurveyorChecklist.as_view();
+surveyor_answer = AnswerSurveyQuestion.as_view();

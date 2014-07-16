@@ -11,11 +11,22 @@ angular.module('clientApp')
   .controller('ClientCtrl', function ($scope, $q, $http, AuthService, $location, StateService, ipCookie) {
 
     $scope.StateService = StateService;
+    $scope.selectedChecklist;
+    $scope.addressSeaerchText;
+
+    $scope.clientMapLat = 0;
+    $scope.clientMapLong = 0;
+
+    var geocoder = new google.maps.Geocoder();
 
     $scope.$on('$stateChangeSuccess', function() {
       if(AuthService.isAuthenticated()) {
         $scope.isLoggedIn = true;
         StateService.setProfileFromCookie();
+
+        if(StateService.getUserType() === "SUR"){
+          StateService.getClientChecklists();
+        }
       }
     });
 
@@ -23,6 +34,22 @@ angular.module('clientApp')
       AuthService.logout();
       $scope.isLoggedIn = false;
     };
+
+    $scope.refreshMap = function(){
+      var checklists = StateService.getChecklists();
+      if(checklists !== undefined && checklists.length !== 0){
+        $scope.setMapLocation(checklists[0].latitude, checklists[0].logitude);
+      }
+      else{
+        $scope.setMapLocation(48.4630959, -123.3121053);
+      }
+    }
+
+    $scope.setMapLocation = function (lat, long){
+      $scope.clientMapLat = lat;
+      $scope.clientMapLong = long;
+    }
+
 
     $scope.cleanUpPasswords = function() {
       $scope.editVerifyPassword = '';

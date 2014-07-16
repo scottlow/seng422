@@ -81,7 +81,7 @@
             <!-- Map display -->
             <h3 class="sub-header" style="margin: 0px;">Checklist Map Data</h3>
             <!-- Does this change for client? -->
-            <div class="manager-map" lat="managerMapLat" long="managerMapLong" lscs-map zoom="13"></div>
+            <div class="manager-map" lat="clientMapLat" long="clientMapLong" lscs-map zoom="13"></div>
 
           </div>
 
@@ -101,22 +101,14 @@
                 </thead>
                 <tbody class="scrollContent">
                   
-                  <!-- <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setMaplocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getCheckLists()">
+                  <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setMaplocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getChecklists()">
                     <td>{{checklist.fileNumber}}</td>
                     <td>{{checklist.title}}</td>
                     <td>{{checklist.checklistType.name}}</td>
                     <td>{{checklist.landDistrict}}</td>
                     <td>{{checklist.state}}</td>
-                  </tr> -->
-
-                  <!-- Dummy Checklist -->
-                  <tr data-toggle="collapse" data-target="#details{{$index}}">
-                    <td>25</td>
-                    <td>Some Title</td>
-                    <td>Some type</td>
-                    <td>Some Land</td>
-                    <td>Some state</td>
                   </tr>
+                  <tr ng-repeat-end>
 
                     <td colspan="7" class="hiddenRow">
                       <div class="accordian-body collapse table-details" id="details{{$index}}">
@@ -125,14 +117,14 @@
                             <label class="control-label">Address</label>
                             <!-- Dummy Address -->
                             <p>
-                              Some Address
+                              {{checklist.address}}
                             </p>
                           </div>
                           <div class="col-md-7">
                             <label class="control-label">Description</label>
                             <!-- Dummy Description -->
                             <p>
-                              Some Description
+                              {{checklist.description}}
                             </p>
                           </div>
                           <div class="col-md-3">

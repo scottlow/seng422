@@ -33,7 +33,7 @@ class SurveyorSecurityMixin(object):
         if request.user.is_anonymous():
             return Response("", status=status.HTTP_403_FORBIDDEN)
         elif request.user.userType == LSCSUser.SURVEYOR:
-            return super(ManagerSecurityMixin, self).get(request, args, kwargs)
+            return super(SurveyorSecurityMixin, self).get(request, args, kwargs)
         else:
             return Response("", status=status.HTTP_403_FORBIDDEN)
 
@@ -41,6 +41,6 @@ class SurveyorSecurityMixin(object):
         if request.user.is_anonymous():
             return Response("", status=status.HTTP_403_FORBIDDEN)
         elif request.user.userType == LSCSUser.SURVEYOR:
-            return super(ManagerSecurityMixin, self).post(request)
+            return super(SurveyorSecurityMixin, self).post(request)
         else:
             return Response("", status=status.HTTP_403_FORBIDDEN)

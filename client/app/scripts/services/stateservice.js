@@ -21,6 +21,16 @@ angular.module('clientApp')
       });
     }
 
+    this.getClientChecklists = function() {
+      return $http.get('http://localhost:8000/' + 'surveyor/checklists/')
+      .success(function(data) {
+        checklists = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving checklists');
+      });
+    }
+
     this.getChecklistTypesList = function() {
       return checklistTypes;
     }

@@ -20,6 +20,16 @@ angular.module('clientApp')
       }
     }
 
+    this.editLocalChecklist = function(checklist) {
+      var editId = checklist.id;
+      for(var i = 0; i < checklists.length; i++) {
+        if(editId === checklists[i].id) {
+          checklists[i] = checklist;
+          break;
+        }
+      }
+    }
+
     this.getManagerChecklists = function() {
       return $http.get('http://localhost:8000/' + 'manager/checklists/')
       .success(function(data) {

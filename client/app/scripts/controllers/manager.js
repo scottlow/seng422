@@ -299,10 +299,6 @@ angular.module('clientApp')
           longitude: $scope.newChecklistModalLong,
         }
 
-        if($scope.isEditing === true) {
-          checklist.id = $scope.idToEdit;
-        }
-
         var local_checklist = {
           title: $scope.newChecklistTitle,
           fileNumber: $scope.newChecklistFileNumber,
@@ -313,7 +309,12 @@ angular.module('clientApp')
           surveyors: $scope.newChecklistSurveyors,
           latitude: $scope.newChecklistModalLat,
           longitude: $scope.newChecklistModalLong,
-        }        
+        }
+
+        if($scope.isEditing === true) {
+          checklist.id = $scope.idToEdit;
+          local_checklist.id = $scope.idToEdit;
+        }
 
         if($scope.isEditing === true) {
           $http.put('http://localhost:8000/' + 'manager/create_checklist/', checklist)
@@ -325,7 +326,9 @@ angular.module('clientApp')
             })
             .error(function (data, status, headers, config) {
               console.log('Error editing checklist!');
-          });           
+          });  
+
+          StateService.editLocalChecklist(local_checklist);
           } else {
             $http.post('http://localhost:8000/' + 'manager/create_checklist/', checklist)
               .success(function (data, status) {           

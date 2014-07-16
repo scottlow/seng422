@@ -38,7 +38,7 @@ angular.module('clientApp')
     $scope.refreshMap = function(){
       var checklists = StateService.getChecklists();
       if(checklists !== undefined && checklists.length !== 0){
-        $scope.setMapLocation(checklists[0].latitude, checklists[0].logitude);
+        $scope.setMapLocation(checklists[0].latitude, checklists[0].longitude);
       }
       else{
         $scope.setMapLocation(48.4630959, -123.3121053);

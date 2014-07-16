@@ -55,6 +55,19 @@ class CreateUser(ManagerSecurityMixin, generics.CreateAPIView):
                     header["Error-Message"] = "Email {0} already exists.".format(serializer.init_data['email'])
             return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)
 
+class DeleteUser(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        if('deletionID' in request.DATA.keys()):
+            user = LSCSUser.objects.get(pk=request.DATA['deletionID'])
+            user.delete()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status.HTTP_400_BAD_REQUEST)
+
+
 class UpdateSurveyor(ManagerSecurityMixin, generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -147,8 +160,8 @@ class PasswordReset(LoggedOutRESTAPIView, GenericAPIView):
                     status=status.HTTP_200_OK)
 
             else:
-                return Response(reset_form._errors,
-                                status=status.HTTP_400_BAD_REQUEST)
+                    return Response(reset_form._errors,
+                                    status=status.HTTP_400_BAD_REQUEST)
 
         else:
             return Response(serializer.errors,
@@ -283,6 +296,7 @@ class ViewSurveyorChecklist(SurveyorSecurityMixin, generics.RetrieveAPIView):
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 
 create_user = CreateUser.as_view();
+delete_user = DeleteUser.as_view();
 update_surveyor = UpdateSurveyor.as_view();
 list_surveyors = ListSurveyors.as_view();
 

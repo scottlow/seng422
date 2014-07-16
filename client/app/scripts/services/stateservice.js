@@ -11,6 +11,15 @@ angular.module('clientApp')
       currentUser = {};
     };
 
+    this.removeSurveyorData = function(deleteId) {
+      for(var i = 0; i < surveyorList.length; i++) {
+        if(deleteId === surveyorList[i].id) {
+          surveyorList.splice(i, 1);
+          break;          
+        }
+      }
+    }
+
     this.getManagerChecklists = function() {
       return $http.get('http://localhost:8000/' + 'manager/checklists/')
       .success(function(data) {

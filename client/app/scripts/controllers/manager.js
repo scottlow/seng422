@@ -19,6 +19,23 @@ angular.module('clientApp')
 
     var geocoder = new google.maps.Geocoder();
 
+    $scope.setUserForDeletion = function(user) {
+      $scope.userToBeDeleted = user;
+      $scope.idToBeDeleted = user.id;
+    }
+
+    $scope.confirmUserDeletion = function() {
+        $http.post('http://localhost:8000/' + 'users/delete/', {'deletionID' : $scope.idToBeDeleted})
+          .success(function (data, status) {
+            console.log('Successfully deleted user');
+            angular.element('#confirmSurveyorDeleteModal').modal('hide'); 
+            StateService.removeSurveyorData($scope.idToBeDeleted);            
+          })
+          .error(function (data, status) {
+            console.log('Error deleting user');
+          })
+    }
+
     $scope.formatAddress = function(address) {
       return address.replace(' ', '+');
     }
@@ -403,6 +420,7 @@ angular.module('clientApp')
                 ipCookie('lscsUser', tempUser, {expires: 14});
                 StateService.setProfileFromCookie();
               }
+
               angular.element('#editSurveyorModal').modal('hide');  
               
               // Reset the modal UI so that anyone who clicks on the Edit Profile button again will be shown a fresh slate.            

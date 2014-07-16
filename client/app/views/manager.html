@@ -115,7 +115,7 @@
                               <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#newChecklistModal" ng-click="editChecklist(checklist)" type="button" class="btn btn-success btn-sm">Edit</button>
                               <button type="button" class="btn btn-danger btn-sm" style="margin-top: -2px">Delete</button>
                             </p>
-                          </div>                                                   
+                          </div> 
                         </div>
                       </div>
                     </td>
@@ -160,7 +160,10 @@
                     <th>{{surveyor.first_name == '' && surveyor.last_name == '' ? 'N/A' : surveyor.first_name  + ' ' +  surveyor.last_name}}</th>
                     <th>{{surveyor.username}}</th>
                     <th>{{surveyor.email}}</th>
-                    <th><button type="button" data-toggle="modal" data-target="#editSurveyorModal" class="btn btn-primary btn-sm" ng-click="setEditInformation(surveyor)" style="margin-top: -2px">Edit User</button></th>
+                    <th>
+                      <button type="button" data-toggle="modal" data-target="#editSurveyorModal" class="btn btn-primary btn-sm" ng-click="setEditInformation(surveyor)" style="margin-top: -2px">Edit</button>
+                      <button type="button" data-toggle="modal" data-target="#confirmSurveyorDeleteModal" class="btn btn-danger btn-sm" ng-click="setUserForDeletion(surveyor)" style="margin-top: -2px">Delete</button>
+                    </th>
                   </tr>
                 </tbody>
               </table>
@@ -172,6 +175,25 @@
   </div>    
   </div>    
 </div>
+
+<!-- Confirm Deletion Modal -->
+<div class="modal fade" id="confirmSurveyorDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">
+  <div class="modal-dialog" style="width: 608px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Confirm Deletion</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the user {{userToBeDeleted.first_name}} {{userToBeDeleted.last_name}}?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" ng-click="confirmUserDeletion()" class="btn btn-primary">Confirm</button>       
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- New/Edit Checklist Modal -->
 <div class="modal fade" id="newChecklistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">

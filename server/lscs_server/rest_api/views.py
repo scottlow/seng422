@@ -285,7 +285,9 @@ class ListSurveyorChecklists(SurveyorSecurityMixin, generics.ListAPIView):
     serializer_class = ChecklistSurveyorSerializer
 
     def get_queryset(self):
-        return Checklist.objects.filter(surveyors__pk=self.request.user.id)
+        c = Checklist.objects.select_related('manager', 'checklistType')
+        c = c.prefetch_related('surveyors')        
+        return c.filter(surveyors__pk=self.request.user.id)
 
 class ViewSurveyorChecklist(SurveyorSecurityMixin, generics.RetrieveAPIView):
     authentication_classes = (TokenAuthentication,)

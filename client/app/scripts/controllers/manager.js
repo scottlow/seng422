@@ -69,9 +69,22 @@ angular.module('clientApp')
     $scope.setModalSurveyors = function(surveyors) {
       var e = angular.element('#surveyorsMultiSelect');
       for(var i = 0; i < surveyors.length; i++) {
-        e.multiselect('select', surveyors[i].id);
+        $scope.safeApply(function() {
+          e.multiselect('select', surveyors[i].id);
+        });
       }
     }
+
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };    
 
     $scope.getSurveyorIdList = function(surveyors) {
       var idList = [];
@@ -96,6 +109,7 @@ angular.module('clientApp')
 
       $scope.newChecklistType = checklist.checklistType;
       $scope.setModalChecklistType(checklist.checklistType);
+      $scope.newChecklistState = checklist.state;
 
       $scope.newChecklistTitle = checklist.title;
       $scope.newChecklistFileNumber = checklist.fileNumber;
@@ -103,8 +117,7 @@ angular.module('clientApp')
       $scope.newChecklistLandDistrict = checklist.landDistrict;
       $scope.newChecklistDescription = checklist.description;
 
-      $scope.newChecklistSurveyors = $scope.getSurveyorIdList(checklist.surveyors);
-      $scope.setModalSurveyors(checklist.surveyors);
+      $scope.setModalSurveyors(checklist.surveyors);  
     }
 
     $scope.refreshMap = function() {
@@ -287,6 +300,8 @@ angular.module('clientApp')
 
       if($scope.newChecklistForm.$valid) {
 
+        var surveyors = StateService.getSurveyorObjects($scope.newChecklistSurveyors);
+
         var checklist = {
           title: $scope.newChecklistTitle,
           fileNumber: $scope.newChecklistFileNumber,
@@ -299,6 +314,10 @@ angular.module('clientApp')
           longitude: $scope.newChecklistModalLong,
         }
 
+        if($scope.isEditing === false) {
+          $scope.newChecklistState = 'Draft';
+        }
+
         var local_checklist = {
           title: $scope.newChecklistTitle,
           fileNumber: $scope.newChecklistFileNumber,
@@ -306,9 +325,10 @@ angular.module('clientApp')
           address: $scope.addressSearchText,
           landDistrict: $scope.newChecklistLandDistrict,
           description: $scope.newChecklistDescription,
-          surveyors: $scope.newChecklistSurveyors,
+          surveyors: surveyors,
           latitude: $scope.newChecklistModalLat,
           longitude: $scope.newChecklistModalLong,
+          state: $scope.newChecklistState,
         }
 
         if($scope.isEditing === true) {

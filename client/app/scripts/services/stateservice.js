@@ -20,6 +20,18 @@ angular.module('clientApp')
       }
     }
 
+    this.getSurveyorObjects = function(ids) {
+      var surveyors = [];
+      for(var i = 0; i < ids.length; i++) {
+        for(var j = 0; j < surveyorList.length; j++) {
+          if(surveyorList[j].id === parseInt(ids[i])) {
+            surveyors.push(surveyorList[j]);
+          }
+        }
+      }
+      return surveyors;
+    }
+
     this.editLocalChecklist = function(checklist) {
       var editId = checklist.id;
       for(var i = 0; i < checklists.length; i++) {

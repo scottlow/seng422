@@ -231,11 +231,9 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
             serializer.save()
 
             checklist_questions = ChecklistQuestion.objects.filter(checklistType__pk=checklist.checklistType.id)
-            for question in checklist_questions:
-                answer = ChecklistAnswer(checklist=checklist, question=question)
-                answer.save()
+            ChecklistAnswer.objects.bulk_create([ChecklistAnswer(checklist=checklist, question=question) for question in checklist_questions])
 
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+            return Response(data="{'id': " + str(checklist.id) + "}", status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
 
     def put(self, request):

@@ -14,8 +14,8 @@ angular.module('clientApp')
     $scope.selectedChecklist;
     $scope.addressSeaerchText;
 
-    $scope.clientMapLat = 0;
-    $scope.clientMapLong = 0;
+    $scope.clientLat = 0;
+    $scope.clientLong = 0;
 
     var geocoder = new google.maps.Geocoder();
 
@@ -35,19 +35,19 @@ angular.module('clientApp')
       $scope.isLoggedIn = false;
     };
 
-    $scope.refreshMap = function(){
+    $scope.refresh = function(){
       var checklists = StateService.getChecklists();
       if(checklists !== undefined && checklists.length !== 0){
-        $scope.setMapLocation(checklists[0].latitude, checklists[0].longitude);
+        $scope.setLocation(checklists[0].latitude, checklists[0].longitude);
       }
       else{
-        $scope.setMapLocation(48.4630959, -123.3121053);
+        $scope.setLocation(48.4630959, -123.3121053);
       }
     }
 
-    $scope.setMapLocation = function (lat, long){
-      $scope.clientMapLat = lat;
-      $scope.clientMapLong = long;
+    $scope.setLocation = function (lat, long){
+      $scope.clientLat = lat;
+      $scope.clientLong = long;
     }
 
 

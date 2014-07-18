@@ -13,7 +13,8 @@
     "angular-route": "1.2.6",
     "angular-cookie": "~4.0.2",
     "angular-ui-router": "~0.2.10",
-    "bootstrap-multiselect": "~0.9.5"
+    "bootstrap-multiselect": "~0.9.5",
+    "simpleWeather": "~3.0.2"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",

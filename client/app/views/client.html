@@ -24,7 +24,7 @@
     <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
       <ul class="nav navbar-nav">
           <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
-          <li><a href="#checklists" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklists</a></li>     
+          <li><a href="#checklists" ng-click="refresh()" role="tab" data-toggle="tab">Checklists</a></li>     
       </ul>
     </div>
       <div class="nav navbar-nav navbar-right" ng-show="isLoggedIn">
@@ -72,16 +72,11 @@
           
           <!-- Map and weather column -->
           <div class="col -xs-12 col-sm-12 col-md-4">
-            
-            <!-- DOTO:Weather data -->
-            <div class="weather-data">
-              Weather stuff
-            </div>
 
-            <!-- Map display -->
-            <h3 class="sub-header" style="margin: 0px;">Checklist Map Data</h3>
-            <!-- Does this change for client? -->
-            <div class="manager-map" lat="clientMapLat" long="clientMapLong" lscs-map zoom="13"></div>
+            <!-- Weather and Map display -->
+            <h3 class="sub-header" style="margin: 0px;">Checklist Weather and Map Data</h3>
+            <div lat="clientLat" long="clientLong" lscs-weather></div>
+            <div class="client-map" lat="clientLat" long="clientLong" lscs-map zoom="13"></div>
 
           </div>
 
@@ -101,7 +96,7 @@
                 </thead>
                 <tbody class="scrollContent">
                   
-                  <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setMaplocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getChecklists()">
+                  <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setLocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getChecklists()">
                     <td>{{checklist.fileNumber}}</td>
                     <td>{{checklist.title}}</td>
                     <td>{{checklist.checklistType.name}}</td>

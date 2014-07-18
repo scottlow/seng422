@@ -80,32 +80,32 @@ class ChecklistAnswerSerializer(serializers.ModelSerializer):
 
 class ChecklistCreateSerializer(serializers.ModelSerializer):
     manager = serializers.PrimaryKeyRelatedField()
-    checklistType = serializers.PrimaryKeyRelatedField()
+    checklistTypes = serializers.PrimaryKeyRelatedField(many=True)
     surveyors = serializers.PrimaryKeyRelatedField(required=False, many=True)
     class Meta:
         model = rest_api.models.Checklist
 
 class ChecklistManagerSerializer(serializers.ModelSerializer):
-    checklistType = ChecklistTypeSerializerLight()
+    checklistTypes = ChecklistTypeSerializerLight(many=True)
     surveyors = LSCSUserSerializer(required=False, many=True)
     state = serializers.CharField(source='get_state_display')
     class Meta:
         model = rest_api.models.Checklist
         depth = 1
-        fields = ('id', 'surveyors', 'checklistType', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'latitude', 'longitude','dateCreated', 'dateLastModified', 'state')
+        fields = ('id', 'surveyors', 'checklistTypes', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'latitude', 'longitude','dateCreated', 'dateLastModified', 'state')
 
 class ChecklistSurveyorSerializer(serializers.ModelSerializer):
-    checklistType = ChecklistTypeSerializerLight()
+    checklistTypes = ChecklistTypeSerializerLight(many=True)
     manager = LSCSUserSerializer(required=False)
     surveyors = LSCSUserSerializer(required=False, many=True)
     state = serializers.CharField(source='get_state_display')
     class Meta:
         model = rest_api.models.Checklist
         depth = 1
-        fields = ('id', 'manager', 'surveyors', 'checklistType', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'latitude', 'longitude','dateCreated', 'dateLastModified', 'state')
+        fields = ('id', 'manager', 'surveyors', 'checklistTypes', 'fileNumber', 'title', 'description', 'landDistrict', 'address', 'latitude', 'longitude','dateCreated', 'dateLastModified', 'state')
 
 class ChecklistSerializer(serializers.ModelSerializer):
-    checklistType = ChecklistTypeSerializerLight()
+    checklistTypes = ChecklistTypeSerializerLight(many=True)
     manager = LSCSUserSerializer()
     surveyors = LSCSUserSerializer(required=False, many=True)
     answers = ChecklistAnswerSerializer(many=True)

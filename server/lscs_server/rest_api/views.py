@@ -204,7 +204,7 @@ class CreateChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView):
             serializer.save()
 
             serializer.object
-            checklists = Checklist.objects.filter(checklistType__pk=serializer.object.checklistType.id)
+            checklists = Checklist.objects.filter(checklistTypes__pk=serializer.object.checklistType.id)
             for checklist in checklists:
                 answer = ChecklistAnswer(checklist=checklist, question=serializer.object)
                 answer.save()
@@ -230,7 +230,9 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
         if serializer.is_valid():
             serializer.save()
 
-            checklist_questions = ChecklistQuestion.objects.filter(checklistType__pk=checklist.checklistType.id)
+            checklist_questions = []
+            for checklistType in checklist.checklistTypes.all():
+                checklist_questions.extend(ChecklistQuestion.objects.filter(checklistType__pk=checklistType.id))
             ChecklistAnswer.objects.bulk_create([ChecklistAnswer(checklist=checklist, question=question) for question in checklist_questions])
 
             return Response(data="{'id': " + str(checklist.id) + "}", status=status.HTTP_201_CREATED)

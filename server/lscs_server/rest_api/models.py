@@ -53,7 +53,7 @@ class Checklist(models.Model):
 
     manager = models.ForeignKey(LSCSUser, related_name='managers')
     surveyors = models.ManyToManyField(LSCSUser, related_name='surveyors')
-    checklistType = models.ForeignKey(ChecklistType)
+    checklistTypes = models.ManyToManyField(ChecklistType, related_name='types')
     fileNumber = models.IntegerField(null=True)
     title = models.CharField(max_length=256)
     description = models.CharField(max_length=256, null=True)

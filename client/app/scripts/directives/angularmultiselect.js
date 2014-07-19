@@ -13,12 +13,10 @@ angular.module('clientApp')
                 element.multiselect({
                     numberDisplayed: 1,
                     onChange: function(optionElement, checked) {
-                        console.log('wat');
                         optionElement.prop('selected', false);
 
                         var modelValue = ngModel.$modelValue; // current model value - array of selected items
                         var optionValue = optionElement[0].value; // text of current option
-                        console.log(modelValue);
                         var optionIndex = modelValue.indexOf(optionValue); 
                         if (checked) {
                             if ( optionIndex == -1) { // current option value is not in model - add it

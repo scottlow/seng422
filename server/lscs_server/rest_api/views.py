@@ -174,7 +174,7 @@ def reset_confirm(request, uidb64=None, token=None):
 # --------- Checklists! --------- #
 ###################################
 
-class CreateChecklistType(ManagerSecurityMixin, generics.CreateAPIView):
+class CreateChecklistType(ManagerSecurityMixin, generics.CreateAPIView, generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -186,6 +186,15 @@ class CreateChecklistType(ManagerSecurityMixin, generics.CreateAPIView):
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def put(self, request):
+        checklistType = ChecklistType.objects.get(pk=request.DATA['id'])
+        serializer = ChecklistTypeSerializerLight(checklistType, data=request.DATA, partial=True)
+        if(serializer.is_valid()):
+            serializer.save()
+
+            return Response(data="{'id': " + str(checklistType.id) + "}", status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
+
 class ListChecklistTypes(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -194,7 +203,7 @@ class ListChecklistTypes(ManagerSecurityMixin, generics.ListAPIView):
     def get_queryset(self):
         return ChecklistType.objects.all()
 
-class CreateChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView):
+class CreateChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView, generics.UpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -212,6 +221,15 @@ class CreateChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView):
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def put(self, request):
+        question = ChecklistQuestion.objects.get(pk=request.DATA['id'])
+        serializer = ChecklistQuestionSerializer(question, data=request.DATA, partial=True)
+        if(serializer.is_valid()):
+            serializer.save()
+
+            return Response(data="{'id': " + str(question.id) + "}", status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
+
 class ViewChecklistType(ManagerSecurityMixin, generics.RetrieveAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -223,8 +241,6 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-
-
         checklist = Checklist(manager=request.user, dateCreated=datetime.now(), dateLastModified=datetime.now())
         serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
         if serializer.is_valid():

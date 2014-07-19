@@ -32,6 +32,15 @@ angular.module('clientApp')
       return surveyors;
     }
 
+    this.removeChecklistData = function(deleteId) {
+      for(var i = 0; i < checklists.length; i++) {
+        if(deleteId == checklists[i].id) {
+          checklists.splice(i, 1);
+          break;
+        }
+      }
+    }
+
     this.editLocalChecklist = function(checklist) {
       var editId = checklist.id;
       for(var i = 0; i < checklists.length; i++) {

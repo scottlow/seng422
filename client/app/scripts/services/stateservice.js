@@ -5,7 +5,7 @@ angular.module('clientApp')
     var currentUser;
     var surveyorList;
     var checklists;
-    var checklistTypes;    
+    var checklistTypes = [];    
 
     this.clearState = function() {
       currentUser = {};
@@ -32,6 +32,31 @@ angular.module('clientApp')
       return surveyors;
     }
 
+<<<<<<< HEAD
+    this.getChecklistTypeObjects = function(ids) {
+      var checklistTypesList = [];
+      for(var i = 0; i < ids.length; i++) {
+        for(var j = 0; j < checklistTypes.length; j++) {
+          if(checklistTypes[j].id === parseInt(ids[i])) {
+            checklistTypesList.push(checklistTypes[j]);
+          }
+        }
+      }
+      return checklistTypesList;
+    }
+
+
+=======
+    this.removeChecklistData = function(deleteId) {
+      for(var i = 0; i < checklists.length; i++) {
+        if(deleteId == checklists[i].id) {
+          checklists.splice(i, 1);
+          break;
+        }
+      }
+    }
+
+>>>>>>> FETCH_HEAD
     this.editLocalChecklist = function(checklist) {
       var editId = checklist.id;
       for(var i = 0; i < checklists.length; i++) {
@@ -128,7 +153,7 @@ angular.module('clientApp')
     this.getUserList = function() {
       return $http.get('http://localhost:8000/' + 'manager/surveyors/')
       .success(function(data) {
-        surveyorList = data;        
+        surveyorList = data; 
       })
       .error(function(data) {
         console.log('There was an error getting user information');
@@ -138,12 +163,12 @@ angular.module('clientApp')
     this.getChecklistTypes = function() {
       return $http.get('http://localhost:8000/' + 'manager/checklist_types/')
       .success(function(data) {
-        checklistTypes = data;        
+        checklistTypes = data;
       })
       .error(function(data) {
         console.log('There was an error getting user information');
       });
-    }    
+    } 
 
     this.getUserById = function(id) {
 

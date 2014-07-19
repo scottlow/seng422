@@ -89,7 +89,6 @@
                   <tr>
                     <th>File Number</th>
                     <th>Title</th>
-                    <th>Checklist Type</th>
                     <th>Land District</th>
                     <th>State</th>
                   </tr>
@@ -99,7 +98,6 @@
                   <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setLocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getChecklists()">
                     <td>{{checklist.fileNumber}}</td>
                     <td>{{checklist.title}}</td>
-                    <td>{{checklist.checklistType.name}}</td>
                     <td>{{checklist.landDistrict}}</td>
                     <td>{{checklist.state}}</td>
                   </tr>

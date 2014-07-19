@@ -194,13 +194,13 @@ td.userListRoot span:last-child:after {
 .client-map {
   margin-right:20px;
   width: 100%;
-  height: 400px; /* Todo: JS hackery to get this value not hardcoded */
+  height: 475px; /* Todo: JS hackery to get this value not hardcoded */
 }
 
 .client-weather {
   margin-right:20px;
   width: 100%;
-  height: 200px; /* Todo: JS hackery to get this value not hardcoded */
+  height: 125px; /* Todo: JS hackery to get this value not hardcoded */
 }
 
 /*

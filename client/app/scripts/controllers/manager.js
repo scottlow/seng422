@@ -63,28 +63,25 @@ angular.module('clientApp')
     });
 
     $scope.createChecklist = function() {
+      $scope.newChecklistType = [];      
       $scope.isEditing = false;
+      $scope.deselectAllModalSurveyors();
+      $scope.deselectAllModalChecklistTypes();       
     }
 
     $scope.setModalSurveyors = function(surveyors) {
       var e = angular.element('#surveyorsMultiSelect');
       for(var i = 0; i < surveyors.length; i++) {
-        $scope.safeApply(function() {
-          e.multiselect('select', surveyors[i].id);
-        });
-      }
+        e.multiselect('select', surveyors[i].id);
+      }     
     }
 
-    $scope.safeApply = function(fn) {
-      var phase = this.$root.$$phase;
-      if(phase == '$apply' || phase == '$digest') {
-        if(fn && (typeof(fn) === 'function')) {
-          fn();
-        }
-      } else {
-        this.$apply(fn);
+    $scope.setModalChecklistTypes = function(checklistTypes) {
+      var e = angular.element('#checklistTypeMultiSelect');
+      for(var i = 0; i < checklistTypes.length; i++) {
+        e.multiselect('select', checklistTypes[i].id);
       }
-    };    
+    }   
 
     $scope.getSurveyorIdList = function(surveyors) {
       var idList = [];
@@ -95,20 +92,13 @@ angular.module('clientApp')
       return idList;
     }
 
-    $scope.setModalChecklistType = function(checklistType) {
-      console.log(checklistType);
-      angular.element('#modalChecklistType').val(checklistType);
-    }
-
     $scope.editChecklist = function(checklist) {
       $scope.idToEdit = checklist.id;
 
       $scope.deselectAllModalSurveyors();
-      $scope.newChecklistSurveyors = [];
+      $scope.deselectAllModalChecklistTypes();        
       $scope.isEditing = true;
 
-      $scope.newChecklistType = checklist.checklistType;
-      $scope.setModalChecklistType(checklist.checklistType);
       $scope.newChecklistState = checklist.state;
 
       $scope.newChecklistTitle = checklist.title;
@@ -118,6 +108,8 @@ angular.module('clientApp')
       $scope.newChecklistDescription = checklist.description;
 
       $scope.setModalSurveyors(checklist.surveyors);  
+      $scope.setModalChecklistTypes(checklist.checklistTypes);   
+
     }
 
     $scope.refreshMap = function() {
@@ -142,17 +134,26 @@ angular.module('clientApp')
       });      
     }
 
+    $scope.deselectAllModalChecklistTypes = function() {
+      var e = angular.element('#checklistTypeMultiSelect');
+
+      angular.element('option', e).each(function(element) {
+        e.multiselect('deselect', angular.element(this).val());
+      });      
+    }
+
     $scope.cleanUpNewChecklistDialog = function() {
-      $scope.newChecklistType = $scope.checklistTypes[0];
       $scope.newChecklistTitle = '';
       $scope.newChecklistFileNumber = '';
       $scope.addressSearchText = '';
       $scope.newChecklistLandDistrict = '';
       $scope.newChecklistDescription = '';
       $scope.newChecklistSurveyors = [];
+      $scope.newChecklistType = [];
       $scope.setDefaultModalMapLocation();
 
       $scope.deselectAllModalSurveyors();
+      $scope.deselectAllModalChecklistTypes();
     }
 
     // Set up the page
@@ -163,25 +164,14 @@ angular.module('clientApp')
         if(StateService.getUserType() === "MAN") {
           StateService.getUserList();
           StateService.getManagerChecklists();
+          $scope.newChecklistSurveyors = [];          
           StateService.getChecklistTypes().then(function() {
             $scope.checklistTypes = StateService.getChecklistTypesList();
-            $scope.newChecklistType = $scope.checklistTypes[0];
+            $scope.newChecklistType = [];
           });
         }
       }
-    });
-
-    $scope.$watchCollection(function() {
-      return StateService.getSurveyorList();
-    },
-    function(newVal, oldVal) {
-      if(newVal === oldVal) return;
-      $timeout(function() {
-        angular.element('.multiselect').multiselect({
-          numberDisplayed : 2,
-        }); 
-      });
-    })
+    });        
 
     $scope.setDefaultModalMapLocation = function() {
       if($scope.newChecklistModalLat === 0 || $scope.newChecklistModalLong === 0) {
@@ -301,11 +291,12 @@ angular.module('clientApp')
       if($scope.newChecklistForm.$valid) {
 
         var surveyors = StateService.getSurveyorObjects($scope.newChecklistSurveyors);
+        var checklistTypes = StateService.getChecklistTypeObjects($scope.newChecklistType);
 
         var checklist = {
           title: $scope.newChecklistTitle,
           fileNumber: $scope.newChecklistFileNumber,
-          checklistType: $scope.newChecklistType.id,
+          checklistTypes: $scope.newChecklistType.id,
           address: $scope.addressSearchText,
           landDistrict: $scope.newChecklistLandDistrict,
           description: $scope.newChecklistDescription,
@@ -321,7 +312,7 @@ angular.module('clientApp')
         var local_checklist = {
           title: $scope.newChecklistTitle,
           fileNumber: $scope.newChecklistFileNumber,
-          checklistType: $scope.newChecklistType,
+          checklistTypes: checklistTypes,
           address: $scope.addressSearchText,
           landDistrict: $scope.newChecklistLandDistrict,
           description: $scope.newChecklistDescription,

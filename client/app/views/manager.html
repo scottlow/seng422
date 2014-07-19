@@ -218,10 +218,12 @@
             </div>
             <div class="col-sm-4">
             <!-- Checklist Type -->
-              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistType.$invalid ) && newChecklistHasSubmitted }">
+              <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistTypes.$invalid ) && newChecklistHasSubmitted }">
                   <label class="control-label">Checklist Type</label> 
-                    <select name="checklistType" class="form-control" id="modalChecklistType" ng-model="newChecklistType" ng-options="type.name for type in checklistTypes track by checklist.id" required></select>
-                    <p ng-show="newChecklistForm.checklistType.$invalid && newChecklistHasSubmitted" class="help-block">Please choose a checklist type.</p>
+                  <select id="checklistTypeMultiSelect" name="checklistTypes" class="multiselect" multiple="multiple" ng-model="newChecklistType" angular-multiselect required>
+                    <option on-finish-render ng-repeat="type in checklistTypes" value="{{type.id}}">{{type.name}}</option>
+                  </select>                  
+                  <p ng-show="newChecklistForm.checklistTypes.$invalid && newChecklistHasSubmitted" class="help-block">Please choose a checklist type.</p>
               </div> 
             </div>             
             <div class="col-sm-3">
@@ -264,8 +266,8 @@
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistSurveyors.$invalid ) && newChecklistHasSubmitted }">
                 <label class="control-label">Assigned Surveyors</label> 
                 <div>         
-                  <select id="surveyorsMultiSelect" name="checklistSurveyors" class="multiselect" multiple="multiple" ng-model="newChecklistSurveyors" required>
-                    <option ng-repeat="surveyor in StateService.getSurveyorList()" value="{{surveyor.id}}">{{surveyor.first_name}} {{surveyor.last_name}}</option>
+                  <select id="surveyorsMultiSelect" name="checklistSurveyors" class="multiselect" multiple="multiple" ng-model="newChecklistSurveyors" angular-multiselect required>
+                    <option on-finish-render ng-repeat="surveyor in StateService.getSurveyorList()" value="{{surveyor.id}}">{{surveyor.first_name}} {{surveyor.last_name}}</option>
                   </select>
                 </div>
                 <p ng-show="newChecklistForm.checklistSurveyors.$invalid && newChecklistHasSubmitted" class="help-block">Please select at least one surveyor.</p>               

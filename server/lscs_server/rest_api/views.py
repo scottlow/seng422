@@ -244,8 +244,22 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
         if(serializer.is_valid()):
             serializer.save()
 
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);            
+            return Response(data="{'id': " + str(checklist.id) + "}", status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
+
+class DeleteChecklist(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        if('deletionID' in request.DATA.keys()):
+            checklist = Checklist.objects.get(pk=request.DATA['deletionID'])
+            if checklist != None:
+                ChecklistAnswer.objects.filter(checklist__pk=checklist.id).delete()
+                checklist.delete()
+
+                return Response(data="{'id': " + str(request.DATA['deletionID']) + "}", status=status.HTTP_202_ACCEPTED)
+        return Response(data='{"error":"Checklist does not exist"}', status=status.HTTP_400_BAD_REQUEST);
 
 class AssignSurveyors(ManagerSecurityMixin, generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -338,6 +352,7 @@ manager_view_checklist_type = ViewChecklistType.as_view();
 
 manager_create_checklist = CreateChecklist.as_view();
 manager_assign_surveyors = AssignSurveyors.as_view();
+manager_delete_checklist = DeleteChecklist.as_view();
 manager_checklists = ListManagerChecklists.as_view();
 manager_checklist = ViewManagerChecklist.as_view();
 

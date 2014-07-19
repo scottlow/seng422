@@ -195,6 +195,19 @@ class CreateChecklistType(ManagerSecurityMixin, generics.CreateAPIView, generics
             return Response(data="{'id': " + str(checklistType.id) + "}", status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
 
+class DeleteChecklistType(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        if('deletionID' in request.DATA.keys()):
+            questionType = ChecklistType.objects.get(pk=request.DATA['deletionID'])
+            if questionType != None:
+                questionType.delete()
+
+                return Response(data="{'id': " + str(request.DATA['deletionID']) + "}", status=status.HTTP_202_ACCEPTED)
+        return Response(data='{"error":"Question Type does not exist"}', status=status.HTTP_400_BAD_REQUEST);
+
 class ListChecklistTypes(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -229,6 +242,19 @@ class CreateChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView, gene
 
             return Response(data="{'id': " + str(question.id) + "}", status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
+
+class DeleteChecklistQuestion(ManagerSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        if('deletionID' in request.DATA.keys()):
+            question = ChecklistQuestion.objects.get(pk=request.DATA['deletionID'])
+            if(question != None):
+                question.delete()
+
+                return Response(data="{'id': " + str(request.DATA['deletionID']) + "}", status=status.HTTP_202_ACCEPTED)
+        return Response(data='{"error":"Question does not exist"}', status=status.HTTP_400_BAD_REQUEST);
 
 class ViewChecklistType(ManagerSecurityMixin, generics.RetrieveAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -271,7 +297,6 @@ class DeleteChecklist(ManagerSecurityMixin, generics.CreateAPIView):
         if('deletionID' in request.DATA.keys()):
             checklist = Checklist.objects.get(pk=request.DATA['deletionID'])
             if checklist != None:
-                ChecklistAnswer.objects.filter(checklist__pk=checklist.id).delete()
                 checklist.delete()
 
                 return Response(data="{'id': " + str(request.DATA['deletionID']) + "}", status=status.HTTP_202_ACCEPTED)
@@ -362,9 +387,11 @@ update_surveyor = UpdateSurveyor.as_view();
 list_surveyors = ListSurveyors.as_view();
 
 manager_create_checklist_type = CreateChecklistType.as_view();
+manager_delete_checklist_type = DeleteChecklistType.as_view();
 manager_list_checklist_types = ListChecklistTypes.as_view();
-manager_create_checklist_question = CreateChecklistQuestion.as_view();
 manager_view_checklist_type = ViewChecklistType.as_view();
+manager_create_checklist_question = CreateChecklistQuestion.as_view();
+manager_delete_checklist_question = DeleteChecklistQuestion.as_view();
 
 manager_create_checklist = CreateChecklist.as_view();
 manager_assign_surveyors = AssignSurveyors.as_view();

@@ -72,7 +72,7 @@ class Checklist(models.Model):
 
 class ChecklistAnswer(models.Model):
     checklist = models.ForeignKey(Checklist, related_name='answers')
-    question = models.ForeignKey(ChecklistQuestion)
+    question = models.ForeignKey(ChecklistQuestion, related_name='answers')
 
     UNANSWERED = 'UA'
     COMPLETED = 'CM'

@@ -249,8 +249,8 @@
             <!-- File Number -->
               <div class="form-group" ng-class="{ 'has-error' : (newChecklistForm.checklistFileNumber.$invalid ) && newChecklistHasSubmitted }">
                   <label class="control-label">File Number</label> 
-                    <input type="text" name="checklistFileNumber" class="form-control" ng-model="newChecklistFileNumber" required>              
-                    <p ng-show="newChecklistForm.checklistFileNumber.$invalid && newChecklistHasSubmitted" class="help-block">Please enter a file number.</p>
+                    <input type="text" name="checklistFileNumber" class="form-control" ng-model="newChecklistFileNumber" integer required>              
+                    <p ng-show="newChecklistForm.checklistFileNumber.$invalid && newChecklistHasSubmitted" class="help-block">Please enter a numerical file number.</p>
               </div> 
             </div>                              
           </div>

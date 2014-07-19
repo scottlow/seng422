@@ -313,7 +313,7 @@ angular.module('clientApp')
         var checklist = {
           title: $scope.newChecklistTitle,
           fileNumber: $scope.newChecklistFileNumber,
-          checklistTypes: $scope.newChecklistType.id,
+          checklistTypes: $scope.newChecklistType,
           address: $scope.addressSearchText,
           landDistrict: $scope.newChecklistLandDistrict,
           description: $scope.newChecklistDescription,

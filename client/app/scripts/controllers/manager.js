@@ -36,6 +36,23 @@ angular.module('clientApp')
           })
     }
 
+    $scope.setChecklistForDeletion = function(checklist) {
+      $scope.checklistToBeDeleted = checklist;
+      $scope.checklistIdToBeDeleted = checklist.id;
+    }
+
+    $scope.confirmChecklistDeletion = function() {
+        $http.post('http://localhost:8000/' + 'manager/delete_checklist/', {'deletionID' : $scope.checklistIdToBeDeleted})
+        .success(function (data, status) {
+          console.log('Successfully deleted checklist');
+          angular.element('#confirmChecklistDeleteModal').modal('hide');
+          StateService.removeChecklistData($scope.checklistIdToBeDeleted);
+        })
+        .error(function (data, status) {
+          console.log('Error deleting checklist')
+        })
+    }
+
     $scope.formatAddress = function(address) {
       return address.replace(' ', '+');
     }

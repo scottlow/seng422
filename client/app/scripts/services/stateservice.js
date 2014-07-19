@@ -32,7 +32,6 @@ angular.module('clientApp')
       return surveyors;
     }
 
-<<<<<<< HEAD
     this.getChecklistTypeObjects = function(ids) {
       var checklistTypesList = [];
       for(var i = 0; i < ids.length; i++) {
@@ -45,8 +44,6 @@ angular.module('clientApp')
       return checklistTypesList;
     }
 
-
-=======
     this.removeChecklistData = function(deleteId) {
       for(var i = 0; i < checklists.length; i++) {
         if(deleteId == checklists[i].id) {
@@ -56,7 +53,6 @@ angular.module('clientApp')
       }
     }
 
->>>>>>> FETCH_HEAD
     this.editLocalChecklist = function(checklist) {
       var editId = checklist.id;
       for(var i = 0; i < checklists.length; i++) {

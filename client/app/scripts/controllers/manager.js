@@ -79,6 +79,10 @@ angular.module('clientApp')
         }, 500);
     });
 
+    $scope.getSection = function(sectionId) {
+      StateService.getSection(sectionId);
+    }
+
     $scope.createChecklist = function() {
       $scope.newChecklistType = [];      
       $scope.isEditing = false;

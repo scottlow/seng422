@@ -23,9 +23,10 @@
       </form>
  	  <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
  	  	<ul class="nav navbar-nav">
-            <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
-          <li><a href="#checklists" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklists</a></li>
-          <li><a href="#surveyors" role="tab" data-toggle="tab">Surveyors</a></li> 	  	
+        <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
+        <li><a href="#checklists" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklists</a></li>
+        <li><a href="#checklistSections" ng-click="refreshMap()" role="tab" data-toggle="tab">Checklist Sections</a></li>        
+        <li><a href="#surveyors" role="tab" data-toggle="tab">Surveyors</a></li>
  	  	</ul>
  	  </div>
       <div class="nav navbar-nav navbar-right" ng-show="isLoggedIn">
@@ -128,6 +129,76 @@
       </div>
     </div>    
   </div>
+  <div class="tab-pane" id="checklistSections">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 main" style="padding-bottom:0px">
+          <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
+            <h1 class="pull-left" style="margin: 0px;">Checklist Sections</h1>
+          </div>
+          <p style="margin-top: 20px" class="well well-sm">Please hover over an existing checklist from the table below to view geographical information for the each checklist's project. To obtain more information on a specific checklist, please click the row corresponding to the checklist. Finally, if you want to create a new checklist, please click the New Checklist button.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="container" style="margin: 0px; width:100%;">
+          <div class="col-xs-12 col-sm-4 col-md-4">
+          <div class="sub-header" style="padding-bottom:42px; margin-bottom: 0px;">
+            <h3 class="pull-left" style="margin: 0px;">Checklist Sections</h3>
+            <div class="pull-right">
+              <button type="button" data-toggle="modal" ng-click="createChecklist()" data-target="#newChecklistModal" class="btn btn-success btn-md" style="margin-top: -2px">New Section</button>
+            </div>
+          </div>
+            <div class="table-responsive manager-table-container">
+              <table class="table table-manager table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="scrollContent">
+                  <tr class="checklist-row" ng-click="getSection(checklistType.id)" ng-repeat="checklistType in StateService.getChecklistTypesList()">
+                    <td>{{checklistType.name}}</td> 
+                    <td>
+                      <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#editChecklistTypeModal" ng-click="editChecklistType(checklistType)" type="button" class="btn btn-success btn-sm">Edit</button>
+                      <button data-toggle="modal" data-target="#confirmChecklistTypeDeleteModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setChecklistTypeForDeletion(checklistType)">Delete</button>                      
+                    </td>                                 
+                  </tr>                
+                </tbody>
+              </table>
+            </div>
+          </div>        
+          <div class="col-xs-12 col-sm-8 col-md-8">
+          <div class="sub-header" style="padding-bottom:42px; margin-bottom: 0px;">
+            <h3 class="pull-left" style="margin: 0px;">Section Questions</h3>
+            <div class="pull-right">
+              <button type="button" data-toggle="modal" ng-click="createChecklist()" data-target="#newChecklistModal" class="btn btn-success btn-md" style="margin-top: -2px">New Question</button>
+            </div>
+          </div>
+            <div class="table-responsive manager-table-container">
+              <table class="table table-manager table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="scrollContent">
+                  <tr data-toggle="collapse" data-target="#sectionDetails{{$index}}" class="checklist-row" ng-repeat="question in StateService.getSectionData().questions">
+                    <td>{{question.question}}</td>
+                    <td>
+                      <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#editQuestionModal" ng-click="editSection(question)" type="button" class="btn btn-success btn-sm">Edit</button>
+                      <button data-toggle="modal" data-target="#confirmSectionDeleteModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setQuestionForDeletion(question)">Delete</button>                      
+                    </td>            
+                  </tr>                 
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
+  </div>  
   <div class="tab-pane" id="surveyors">
     <div class="container-fluid">
       <div class="row">
@@ -216,7 +287,7 @@
 
 <!-- New/Edit Checklist Modal -->
 <div class="modal fade" id="newChecklistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="width: 608px;">
+  <div class="modal-dialog" style="width: 650px;">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

@@ -5,7 +5,8 @@ angular.module('clientApp')
     var currentUser;
     var surveyorList;
     var checklists;
-    var checklistTypes = [];    
+    var checklistTypes = []; 
+    var currentSelectedSection = [];
 
     this.clearState = function() {
       currentUser = {};
@@ -81,6 +82,20 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('Error retrieving checklists');
       });
+    }
+
+    this.getSection = function(id) {
+      return $http.get('http://localhost:8000/' + 'manager/checklist_type/' + id + '/')
+      .success(function(data){
+        currentSelectedSection = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving section questions');
+      });      
+    }
+
+    this.getSectionData = function() {
+      return currentSelectedSection;
     }
 
     this.getChecklistTypesList = function() {

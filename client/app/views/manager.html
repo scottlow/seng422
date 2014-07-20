@@ -136,7 +136,7 @@
           <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
             <h1 class="pull-left" style="margin: 0px;">Checklist Sections</h1>
           </div>
-          <p style="margin-top: 20px" class="well well-sm">Please hover over an existing checklist from the table below to view geographical information for the each checklist's project. To obtain more information on a specific checklist, please click the row corresponding to the checklist. Finally, if you want to create a new checklist, please click the New Checklist button.</p>
+          <p style="margin-top: 20px" class="well well-sm">Please select a checklist section from the list to the left to view the questions associated with it. Both sections and their respective questions can be modified or deleted at any time by using their corresponding action buttons. To add a new section or question to a specific section, please use the create buttons below.</p>
         </div>
       </div>
       <div class="row">
@@ -153,13 +153,13 @@
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Actions</th>
+                    <th class="align-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
                   <tr class="checklist-row" ng-click="getSection(checklistType.id)" ng-repeat="checklistType in StateService.getChecklistTypesList()">
                     <td>{{checklistType.name}}</td> 
-                    <td>
+                    <td class="align-right">
                       <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#editChecklistTypeModal" ng-click="editChecklistType(checklistType)" type="button" class="btn btn-success btn-sm">Edit</button>
                       <button data-toggle="modal" data-target="#confirmChecklistTypeDeleteModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setChecklistTypeForDeletion(checklistType)">Delete</button>                      
                     </td>                                 
@@ -172,7 +172,7 @@
           <div class="sub-header" style="padding-bottom:42px; margin-bottom: 0px;">
             <h3 class="pull-left" style="margin: 0px;">Section Questions</h3>
             <div class="pull-right">
-              <button type="button" data-toggle="modal" ng-click="createChecklist()" data-target="#newChecklistModal" class="btn btn-success btn-md" style="margin-top: -2px">New Question</button>
+              <button type="button" ng-disabled="StateService.getSectionData().length === 0" data-toggle="modal" ng-click="createChecklist()" data-target="#newChecklistModal" class="btn btn-success btn-md" style="margin-top: -2px">New Question</button>
             </div>
           </div>
             <div class="table-responsive manager-table-container">
@@ -180,13 +180,13 @@
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Actions</th>
+                    <th class="align-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
                   <tr data-toggle="collapse" data-target="#sectionDetails{{$index}}" class="checklist-row" ng-repeat="question in StateService.getSectionData().questions">
                     <td>{{question.question}}</td>
-                    <td>
+                    <td class="align-right">
                       <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#editQuestionModal" ng-click="editSection(question)" type="button" class="btn btn-success btn-sm">Edit</button>
                       <button data-toggle="modal" data-target="#confirmSectionDeleteModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setQuestionForDeletion(question)">Delete</button>                      
                     </td>            

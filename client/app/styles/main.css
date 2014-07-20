@@ -119,6 +119,10 @@ i {
   vertical-align: middle !important;
 }
 
+.align-right {
+  text-align: right;
+}
+
 body {
   padding-top: 50px;
   padding-bottom: 20px;

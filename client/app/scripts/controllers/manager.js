@@ -75,11 +75,28 @@ angular.module('clientApp')
           .success(function (data, status) {
             console.log('Successfully deleted user');
             angular.element('#confirmSurveyorDeleteModal').modal('hide'); 
-            StateService.removeSurveyorData($scope.idToBeDeleted);            
+            StateService.removeSurveyorData($scope.idToBeDeleted);           
           })
           .error(function (data, status) {
             console.log('Error deleting user');
           })
+    }
+
+    $scope.setSectionForDeletion = function(section) {
+      $scope.sectionToBeDeleted = section;
+      $scope.sectionIdToBeDeleted = section.id;
+    }
+
+    $scope.confirmSectionDeletion = function() {
+        $http.post(StateService.getServerAddress() + 'manager/delete_checklist_type/', {'deletionID' : $scope.sectionIdToBeDeleted})
+        .success(function (data, status) {
+          console.log('Successfully deleted checklist section');
+          angular.element('#confirmSectionDeleteModal').modal('hide');
+          StateService.removeSectionData($scope.sectionIdToBeDeleted);
+        })
+        .error(function (data, status) {
+          console.log('Error deleting checklist section')
+        })
     }
 
     $scope.setChecklistForDeletion = function(checklist) {

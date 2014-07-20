@@ -74,6 +74,15 @@ angular.module('clientApp')
       return checklistTypesList;
     }
 
+    this.removeSectionData = function(deleteId) {
+      for(var i = 0; i < checklistTypes.length; i++) {
+        if(deleteId == checklistTypes[i].id) {
+          checklistTypes.splice(i, 1);
+          break;
+        }
+      }
+    }    
+
     this.removeChecklistData = function(deleteId) {
       for(var i = 0; i < checklists.length; i++) {
         if(deleteId == checklists[i].id) {

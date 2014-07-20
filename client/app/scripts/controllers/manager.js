@@ -19,13 +19,30 @@ angular.module('clientApp')
 
     var geocoder = new google.maps.Geocoder();
 
+    $scope.submitNewSection = function() {
+      $scope.sectionHasSubmitted = true;
+      if($scope.newSectionForm.$valid) {
+        $http.post(StateService.getServerAddress() + 'manager/create_checklist_type/', {'name' : $scope.newSectionName})
+        .success(function(data){
+          console.log('Successfully created section');
+          angular.element('#newSectionModal').modal('hide');           
+          StateService.setSectionId(data.id);
+        })
+        .error(function(data){
+          console.log('Error creating section.');
+        });
+        
+        StateService.addLocalSection($scope.newSectionName);
+      }
+    }
+
     $scope.setUserForDeletion = function(user) {
       $scope.userToBeDeleted = user;
       $scope.idToBeDeleted = user.id;
     }
 
     $scope.confirmUserDeletion = function() {
-        $http.post('http://localhost:8000/' + 'users/delete/', {'deletionID' : $scope.idToBeDeleted})
+        $http.post(StateService.getServerAddress() + 'users/delete/', {'deletionID' : $scope.idToBeDeleted})
           .success(function (data, status) {
             console.log('Successfully deleted user');
             angular.element('#confirmSurveyorDeleteModal').modal('hide'); 
@@ -42,7 +59,7 @@ angular.module('clientApp')
     }
 
     $scope.confirmChecklistDeletion = function() {
-        $http.post('http://localhost:8000/' + 'manager/delete_checklist/', {'deletionID' : $scope.checklistIdToBeDeleted})
+        $http.post(StateService.getServerAddress() + 'manager/delete_checklist/', {'deletionID' : $scope.checklistIdToBeDeleted})
         .success(function (data, status) {
           console.log('Successfully deleted checklist');
           angular.element('#confirmChecklistDeleteModal').modal('hide');
@@ -246,7 +263,7 @@ angular.module('clientApp')
 
         StateService.addUser(userParam);
 
-        $http.post('http://localhost:8000/' + 'users/create/', userParam)
+        $http.post(StateService.getServerAddress() + 'users/create/', userParam)
           .success(function (data, status) {
             angular.element('#newSurveyorModal').modal('hide');   
             $scope.hasSubmitted = false;
@@ -349,7 +366,7 @@ angular.module('clientApp')
         }
 
         if($scope.isEditing === true) {
-          $http.put('http://localhost:8000/' + 'manager/create_checklist/', checklist)
+          $http.put(StateService.getServerAddress() + 'manager/create_checklist/', checklist)
             .success(function (data, status) {           
               console.log("Edited a checklist.");       
               angular.element('#newChecklistModal').modal('hide');
@@ -362,7 +379,7 @@ angular.module('clientApp')
 
           StateService.editLocalChecklist(local_checklist);
           } else {
-            $http.post('http://localhost:8000/' + 'manager/create_checklist/', checklist)
+            $http.post(StateService.getServerAddress() + 'manager/create_checklist/', checklist)
               .success(function (data, status) {           
                 console.log("Created a new checklist.");       
                 angular.element('#newChecklistModal').modal('hide');
@@ -442,7 +459,7 @@ angular.module('clientApp')
           // Make the profile change request if necessary
           if(makeRequest) {           
             params.id = $scope.edit_id;
-            $http.post('http://localhost:8000/' + 'users/update/', params)
+            $http.post(StateService.getServerAddress() + 'users/update/', params)
             .success(function (status) {     
               console.log("Changed user information");
 

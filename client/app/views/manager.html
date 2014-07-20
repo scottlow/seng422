@@ -145,7 +145,7 @@
           <div class="sub-header" style="padding-bottom:42px; margin-bottom: 0px;">
             <h3 class="pull-left" style="margin: 0px;">Checklist Sections</h3>
             <div class="pull-right">
-              <button type="button" data-toggle="modal" ng-click="createChecklist()" data-target="#newChecklistModal" class="btn btn-success btn-md" style="margin-top: -2px">New Section</button>
+              <button type="button" data-toggle="modal" data-target="#newSectionModal" class="btn btn-success btn-md" style="margin-top: -2px">New Section</button>
             </div>
           </div>
             <div class="table-responsive manager-table-container">
@@ -245,6 +245,33 @@
     </div>
   </div>    
   </div>    
+</div>
+
+<!-- New Section Modal -->
+<div class="modal fade" id="newSectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 608px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">New Checklist Section</h4>
+      </div>
+      <div class="modal-body">
+        <form name="newSectionForm" class="form-horizontal" role="form" novalidate>
+          <!-- Section Name -->
+          <div class="form-group" style="margin-bottom: 0px" ng-class="{ 'has-error' : newSectionForm.sectionName.$invalid && sectionHasSubmitted }">
+            <label class="col-sm-3 control-label">Section Name</label> 
+            <div class="col-sm-9">
+              <input type="text" name="sectionName" class="form-control" ng-model="newSectionName" required>       
+              <p ng-show="newSectionForm.sectionName.$invalid && sectionHasSubmitted" class="help-block">Please enter a valid section name.</p>
+            </div>
+          </div> 
+        </form>
+      </div>
+      <div class="modal-footer" style="margin-top: 0px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="submitNewSection()" class="btn btn-primary">Create Section</button>
+      </div>      
+    </div>
+  </div>
 </div>
 
 <!-- Confirm Surveyor Deletion Modal -->

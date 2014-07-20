@@ -177,7 +177,7 @@ angular.module('clientApp')
           // Make the profile change request if necessary
           if(makeRequest) {           
             params.id = $scope.edit_id;
-            $http.post('http://localhost:8000/' + 'users/update/', params)
+            $http.post(StateService.getServerAddress() + 'users/update/', params)
             .success(function (status) {           
               console.log("Changed user information");
 

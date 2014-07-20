@@ -34,7 +34,7 @@ angular.module('clientApp')
 
       if($scope.recoverInfoForm.$valid) {
 
-        $http.post('http://localhost:8000/' + 'users/password/reset/', {'email' : $scope.recoverEmail})
+        $http.post(StateService.getServerAddress() + 'users/password/reset/', {'email' : $scope.recoverEmail})
           .success(function (data, status) {           
             console.log("Sent recovery email");       
             angular.element('#recoverInfoModal').modal('hide');   

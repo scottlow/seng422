@@ -6,11 +6,40 @@ angular.module('clientApp')
     var surveyorList;
     var checklists;
     var checklistTypes = []; 
-    var currentSelectedSection = [];
+    var currentSelectedSection;
 
     this.clearState = function() {
       currentUser = {};
     };
+
+    this.setSectionId = function(id) {
+      if(currentSelectedSection.id === -1) {
+        currentSelectedSection.id = id;
+      } else {
+        for(var i = 0; i < checklistTypes.length; i++) {
+          if(checklistTypes[i].id === -1) {
+            checklistTypes[i].id = id;
+            console.log('Found section id match');
+            break;
+          }
+        }
+      }
+    }
+
+    this.addLocalSection = function(name) {
+      var section = {
+        'name' : name,
+        'questions' : [],
+        'id' : -1,
+      }
+
+      checklistTypes.push(section);
+      currentSelectedSection = section;
+    }
+
+    this.getServerAddress = function() {
+      return 'http://localhost:8000/';
+    }
 
     this.removeSurveyorData = function(deleteId) {
       for(var i = 0; i < surveyorList.length; i++) {
@@ -65,7 +94,7 @@ angular.module('clientApp')
     }
 
     this.getManagerChecklists = function() {
-      return $http.get('http://localhost:8000/' + 'manager/checklists/')
+      return $http.get(this.getServerAddress() + 'manager/checklists/')
       .success(function(data) {
         checklists = data;
       })
@@ -75,7 +104,7 @@ angular.module('clientApp')
     }
 
     this.getClientChecklists = function() {
-      return $http.get('http://localhost:8000/' + 'surveyor/checklists/')
+      return $http.get(this.getServerAddress() + 'surveyor/checklists/')
       .success(function(data) {
         checklists = data;
       })
@@ -85,7 +114,7 @@ angular.module('clientApp')
     }
 
     this.getSection = function(id) {
-      return $http.get('http://localhost:8000/' + 'manager/checklist_type/' + id + '/')
+      return $http.get(this.getServerAddress() + 'manager/checklist_type/' + id + '/')
       .success(function(data){
         currentSelectedSection = data;
       })
@@ -162,7 +191,7 @@ angular.module('clientApp')
     }
 
     this.getUserList = function() {
-      return $http.get('http://localhost:8000/' + 'manager/surveyors/')
+      return $http.get(this.getServerAddress() + 'manager/surveyors/')
       .success(function(data) {
         surveyorList = data; 
       })
@@ -172,7 +201,7 @@ angular.module('clientApp')
     }
 
     this.getChecklistTypes = function() {
-      return $http.get('http://localhost:8000/' + 'manager/checklist_types/')
+      return $http.get(this.getServerAddress() + 'manager/checklist_types/')
       .success(function(data) {
         checklistTypes = data;
       })

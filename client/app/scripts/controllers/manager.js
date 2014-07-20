@@ -22,18 +22,47 @@ angular.module('clientApp')
     $scope.submitNewSection = function() {
       $scope.sectionHasSubmitted = true;
       if($scope.newSectionForm.$valid) {
-        $http.post(StateService.getServerAddress() + 'manager/create_checklist_type/', {'name' : $scope.newSectionName})
-        .success(function(data){
-          console.log('Successfully created section');
-          angular.element('#newSectionModal').modal('hide');           
-          StateService.setSectionId(data.id);
-        })
-        .error(function(data){
-          console.log('Error creating section.');
-        });
-        
-        StateService.addLocalSection($scope.newSectionName);
+        if(!$scope.isEditingSection) {
+          $http.post(StateService.getServerAddress() + 'manager/create_checklist_type/', {'name' : $scope.newSectionName})
+          .success(function(data){
+            console.log('Successfully created section');
+            angular.element('#newSectionModal').modal('hide');           
+            StateService.setSectionId(data.id);
+            $scope.newSectionName = '';
+          })
+          .error(function(data){
+            console.log('Error creating section.');
+          });
+          
+          StateService.addLocalSection($scope.newSectionName);          
+        } else {
+          $http.put(StateService.getServerAddress() + 'manager/create_checklist_type/', {'name' : $scope.newSectionName, 'id' : $scope.editSectionId})
+          .success(function(data) {
+            console.log('Successfully edited section');
+            angular.element('#newSectionModal').modal('hide');  
+            $scope.newSectionName = '';
+            $scope.editSectionId = undefined;
+          })
+          .error(function(data) {
+            console.log('Error editing section');
+          })
+
+          StateService.editLocalChecklistSection($scope.newSectionName, $scope.editSectionId);
+        }
       }
+    }
+
+    $scope.cleanUpNewSectionModal = function() {
+      $scope.newSectionName = '';   
+      $scope.sectionHasSubmitted = false;
+      $scope.isEditingSection = false; 
+    }
+
+    $scope.editChecklistType = function(checklistSection) {
+      $scope.isEditingSection = true;
+      $scope.editDisplayName = checklistSection.name;
+      $scope.newSectionName = checklistSection.name;
+      $scope.editSectionId = checklistSection.id;
     }
 
     $scope.setUserForDeletion = function(user) {
@@ -102,7 +131,7 @@ angular.module('clientApp')
 
     $scope.createChecklist = function() {
       $scope.newChecklistType = [];      
-      $scope.isEditing = false;
+      $scope.isEditingChecklist = false;
       $scope.deselectAllModalSurveyors();
       $scope.deselectAllModalChecklistTypes();       
     }
@@ -135,7 +164,7 @@ angular.module('clientApp')
 
       $scope.deselectAllModalSurveyors();
       $scope.deselectAllModalChecklistTypes();        
-      $scope.isEditing = true;
+      $scope.isEditingChecklist = true;
 
       $scope.newChecklistState = checklist.state;
 
@@ -343,7 +372,7 @@ angular.module('clientApp')
           longitude: $scope.newChecklistModalLong,
         }
 
-        if($scope.isEditing === false) {
+        if($scope.isEditingChecklist === false) {
           $scope.newChecklistState = 'Draft';
         }
 
@@ -360,12 +389,12 @@ angular.module('clientApp')
           state: $scope.newChecklistState,
         }
 
-        if($scope.isEditing === true) {
+        if($scope.isEditingChecklist === true) {
           checklist.id = $scope.idToEdit;
           local_checklist.id = $scope.idToEdit;
         }
 
-        if($scope.isEditing === true) {
+        if($scope.isEditingChecklist === true) {
           $http.put(StateService.getServerAddress() + 'manager/create_checklist/', checklist)
             .success(function (data, status) {           
               console.log("Edited a checklist.");       

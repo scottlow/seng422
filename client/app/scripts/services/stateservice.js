@@ -123,6 +123,15 @@ angular.module('clientApp')
       });      
     }
 
+    this.editLocalChecklistSection = function(name, id) {
+      for(var i = 0; i < checklistTypes.length; i++) {
+        if(checklistTypes[i].id === id) {
+          checklistTypes[i].name = name;
+          break;
+        }
+      }
+    }
+
     this.getSectionData = function() {
       return currentSelectedSection;
     }

@@ -145,7 +145,7 @@
           <div class="sub-header" style="padding-bottom:42px; margin-bottom: 0px;">
             <h3 class="pull-left" style="margin: 0px;">Checklist Sections</h3>
             <div class="pull-right">
-              <button type="button" data-toggle="modal" data-target="#newSectionModal" class="btn btn-success btn-md" style="margin-top: -2px">New Section</button>
+              <button type="button" data-toggle="modal" ng-click="cleanUpNewSectionModal()" data-target="#newSectionModal" class="btn btn-success btn-md" style="margin-top: -2px">New Section</button>
             </div>
           </div>
             <div class="table-responsive manager-table-container">
@@ -160,7 +160,7 @@
                   <tr class="checklist-row" ng-click="getSection(checklistType.id)" ng-repeat="checklistType in StateService.getChecklistTypesList()">
                     <td>{{checklistType.name}}</td> 
                     <td class="align-right">
-                      <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#editChecklistTypeModal" ng-click="editChecklistType(checklistType)" type="button" class="btn btn-success btn-sm">Edit</button>
+                      <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#newSectionModal" ng-click="editChecklistType(checklistType)" type="button" class="btn btn-success btn-sm">Edit</button>
                       <button data-toggle="modal" data-target="#confirmChecklistTypeDeleteModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setChecklistTypeForDeletion(checklistType)">Delete</button>                      
                     </td>                                 
                   </tr>                
@@ -252,9 +252,11 @@
   <div class="modal-dialog" style="width: 608px;">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">New Checklist Section</h4>
+        <h4 ng-hide="isEditingSection" class="modal-title" id="myModalLabel">New Checklist Section</h4>
+        <h4 ng-show="isEditingSection" class="modal-title" id="myModalLabel">Edit Checklist Section</h4>        
       </div>
       <div class="modal-body">
+        <p ng-show="isEditingSection">Please select a new name for checklist section {{editDisplayName}}</p>
         <form name="newSectionForm" class="form-horizontal" role="form" novalidate>
           <!-- Section Name -->
           <div class="form-group" style="margin-bottom: 0px" ng-class="{ 'has-error' : newSectionForm.sectionName.$invalid && sectionHasSubmitted }">
@@ -268,7 +270,8 @@
       </div>
       <div class="modal-footer" style="margin-top: 0px;">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" ng-click="submitNewSection()" class="btn btn-primary">Create Section</button>
+        <button ng-hide="isEditingSection" type="button" ng-click="submitNewSection()" class="btn btn-primary">Create Section</button>
+        <button ng-show="isEditingSection" type="button" ng-click="submitNewSection()" class="btn btn-primary">Edit Section</button>        
       </div>      
     </div>
   </div>
@@ -318,8 +321,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" ng-hide="isEditing" id="myModalLabel">Create a New Checklist<br /><small>Please complete the following fields to create a new checklist.</small></h4>
-        <h4 class="modal-title" ng-show="isEditing" id="myModalLabel">Edit a Checklist<br /><small>Please modify any of the fields below to update a checklist's administrative information.</small></h4>        
+        <h4 class="modal-title" ng-hide="isEditingChecklist" id="myModalLabel">Create a New Checklist<br /><small>Please complete the following fields to create a new checklist.</small></h4>
+        <h4 class="modal-title" ng-show="isEditingChecklist" id="myModalLabel">Edit a Checklist<br /><small>Please modify any of the fields below to update a checklist's administrative information.</small></h4>        
       </div>
       <div class="modal-body">
         <div class="new_checklist_map" lat="newChecklistModalLat" long="newChecklistModalLong" zoom="13" lscs-map></div>      
@@ -395,8 +398,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button ng-hide="isEditing" type="button" ng-click="submitCreateChecklist()" class="btn btn-primary">Create Checklist</button>
-        <button ng-show="isEditing" type="button" ng-click="submitCreateChecklist()" class="btn btn-primary">Edit Checklist</button>        
+        <button ng-hide="isEditingChecklist" type="button" ng-click="submitCreateChecklist()" class="btn btn-primary">Create Checklist</button>
+        <button ng-show="isEditingChecklist" type="button" ng-click="submitCreateChecklist()" class="btn btn-primary">Edit Checklist</button>        
       </div>
     </div>
   </div>

@@ -41,7 +41,8 @@ angular.module('clientApp')
             console.log('Successfully edited section');
             angular.element('#newSectionModal').modal('hide');  
             $scope.newSectionName = '';
-            StateService.getManagerChecklists();            
+            StateService.getManagerChecklists();
+            $scope.$broadcast('rebuildMultiselect');
             $scope.editSectionId = undefined;
           })
           .error(function(data) {

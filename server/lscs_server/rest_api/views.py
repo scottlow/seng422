@@ -281,7 +281,8 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST);
 
     def put(self, request):
-        checklist = Checklist(pk=request.DATA['id'], manager=request.user, dateLastModified=datetime.now())
+        checklist = Checklist.objects.get(pk=request.DATA['id'])
+        checklist.dateLastModified = datetime.now()
         serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
         if(serializer.is_valid()):
             serializer.save()

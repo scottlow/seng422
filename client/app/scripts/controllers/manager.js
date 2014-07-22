@@ -606,7 +606,8 @@ angular.module('clientApp')
     };
 
     $scope.refreshOverviewDoughnutChart = function(user) {
-      console.log("refreshing...");
+      //console.log("refreshing...");
+
       var doughnutData = [
           {
             value: 300,
@@ -640,9 +641,8 @@ angular.module('clientApp')
           }
 
         ];
-
         var ctx = document.getElementById("chart-area").getContext("2d");
-        window.myDoughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true});
+        window.myDoughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true,animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
     }
 
     angular.element('#newChecklistModal').on('shown.bs.modal', function() {

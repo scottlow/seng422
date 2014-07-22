@@ -19,6 +19,70 @@ angular.module('clientApp')
 
     var geocoder = new google.maps.Geocoder();
 
+    $scope.submitNewQuestion = function() {
+      $scope.questionHasSubmitted = true;
+      if($scope.newQuestionForm.$valid) {
+        if(!$scope.isEditingQuestion){
+          $http.post(StateService.getServerAddress() + 'manager/create_checklist_question/', {'checklistType' : StateService.getSectionData().id, 'question' : $scope.newQuestionText})
+          .success(function(data){
+            console.log('Successfully created question');
+            angular.element('#newQuestionModal').modal('hide');
+            $scope.newQuestionText = '';
+            StateService.setQuestionId(data.id);
+            $scope.questionHasSubmitted = false;
+          })
+          .error(function(data){
+            console.log('Error creating question.');
+          });
+
+          StateService.addLocalQuestion($scope.newQuestionText);
+        } else {
+          $http.put(StateService.getServerAddress() + 'manager/create_checklist_question/', {'id' : $scope.editQuestionId, 'question' : $scope.newQuestionText })
+          .success(function(data) {
+            console.log('Successfully edited question');
+            angular.element('#newQuestionModal').modal('hide');
+            $scope.newQuestionText = '';
+            $scope.editQuestionId = undefined;
+            $scope.questionHasSubmitted = false;
+          })
+          .error(function(data) {
+            console.log('Error editing question');
+          })
+
+          StateService.editLocalChecklistQuestion($scope.editQuestionId, $scope.newQuestionText);
+        }
+      }
+    }
+
+    $scope.cleanUpNewQuestionModal = function() {
+      $scope.newQuestionText = '';   
+      $scope.questionHasSubmitted = false;
+      $scope.isEditingQuestion = false;
+    }
+
+    $scope.editChecklistQuestion = function(checklistQuestion) {
+      $scope.isEditingQuestion = true;
+      $scope.newChecklistQuestion = checklistQuestion.question;
+      $scope.editQuestionId = checklistQuestion.id;
+    }
+
+    $scope.setQuestionForDeletion = function(checklistQuestion) {
+      $scope.questionToBeDeleted = checklistQuestion;
+      $scope.questionIdToBeDeleted = checklistQuestion.id;
+    }
+
+    $scope.confirmQuestionDeletion = function() {
+        $http.post(StateService.getServerAddress() + 'manager/delete_checklist_question/', {'deletionID' : $scope.questionIdToBeDeleted})
+        .success(function (data, status) {
+          console.log('Successfully deleted checklist question');
+          angular.element('#confirmQuestionDeletionModal').modal('hide');
+          StateService.removeQuestionData($scope.questionIdToBeDeleted);
+        })
+        .error(function (data, status) {
+          console.log('Error deleting checklist question')
+        })
+    }
+
     $scope.submitNewSection = function() {
       $scope.sectionHasSubmitted = true;
       if($scope.newSectionForm.$valid) {

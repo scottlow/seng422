@@ -26,6 +26,26 @@ angular.module('clientApp')
       }
     }
 
+    this.setQuestionId = function(id) {
+      for(var i=0; i < currentSelectedSection.questions.length; i++) {
+        if(currentSelectedSection.questions[i].id === -1) {
+          currentSelectedSection.questions[i].id = id;
+          console.log('Found question id match');
+          break;
+        }
+      }
+    }
+
+    this.addLocalQuestion = function(text) {
+      var question = {
+        'questionType' : currentSelectedSection.id,
+        'question' : text,
+        'id' : -1,
+      }
+
+      currentSelectedSection.questions.push(question);
+    }
+
     this.addLocalSection = function(name) {
       var section = {
         'name' : name,
@@ -81,6 +101,15 @@ angular.module('clientApp')
           break;
         }
       }
+    }  
+
+    this.removeQuestionData = function(deleteId) {
+      for(var i = 0; i < currentSelectedSection.questions.length; i++) {
+        if(deleteId == currentSelectedSection.questions[i].id) {
+          currentSelectedSection.questions.splice(i, 1);
+          break;
+        }
+      }
     }    
 
     this.removeChecklistData = function(deleteId) {
@@ -123,19 +152,32 @@ angular.module('clientApp')
     }
 
     this.getSection = function(id) {
-      return $http.get(this.getServerAddress() + 'manager/checklist_type/' + id + '/')
-      .success(function(data){
-        currentSelectedSection = data;
-      })
-      .error(function(data) {
-        console.log('Error retrieving section questions');
-      });      
+      if(currentSelectedSection == undefined || currentSelectedSection.id != id) {
+        return $http.get(this.getServerAddress() + 'manager/checklist_type/' + id + '/')
+        .success(function(data){
+          currentSelectedSection = data;
+        })
+        .error(function(data) {
+          console.log('Error retrieving section questions');
+        });
+      } else {
+        currentSelectedSection = undefined;
+      }    
     }
 
     this.editLocalChecklistSection = function(name, id) {
       for(var i = 0; i < checklistTypes.length; i++) {
         if(checklistTypes[i].id === id) {
           checklistTypes[i].name = name;
+          break;
+        }
+      }
+    }
+
+    this.editLocalChecklistQuestion = function(id, text) {
+      for(var i=0; i < currentSelectedSection.questions.length; i++) {
+        if(currentSelectedSection.questions[i].id == id) {
+          currentSelectedSection.questions[i].question = text;
           break;
         }
       }

@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('ManagerCtrl', function ($scope, $http, $q, AuthService, $location, StateService, $timeout, ipCookie) {  
+  .controller('ManagerCtrl', function ($scope, $http, $q, AuthService, $location, StateService, $timeout, ipCookie) {
     $scope.StateService = StateService;
     $scope.selectedChecklist;
     $scope.addressSearchText;
@@ -90,20 +90,20 @@ angular.module('clientApp')
           $http.post(StateService.getServerAddress() + 'manager/create_checklist_type/', {'name' : $scope.newSectionName})
           .success(function(data){
             console.log('Successfully created section');
-            angular.element('#newSectionModal').modal('hide');           
+            angular.element('#newSectionModal').modal('hide');
             StateService.setSectionId(data.id);
             $scope.newSectionName = '';
           })
           .error(function(data){
             console.log('Error creating section.');
           });
-          
-          StateService.addLocalSection($scope.newSectionName);          
+
+          StateService.addLocalSection($scope.newSectionName);
         } else {
           $http.put(StateService.getServerAddress() + 'manager/create_checklist_type/', {'name' : $scope.newSectionName, 'id' : $scope.editSectionId})
           .success(function(data) {
             console.log('Successfully edited section');
-            angular.element('#newSectionModal').modal('hide');  
+            angular.element('#newSectionModal').modal('hide');
             $scope.newSectionName = '';
             StateService.getManagerChecklists();
             $scope.$broadcast('rebuildMultiselect');
@@ -119,9 +119,9 @@ angular.module('clientApp')
     }
 
     $scope.cleanUpNewSectionModal = function() {
-      $scope.newSectionName = '';   
+      $scope.newSectionName = '';
       $scope.sectionHasSubmitted = false;
-      $scope.isEditingSection = false; 
+      $scope.isEditingSection = false;
     }
 
     $scope.editChecklistType = function(checklistSection) {
@@ -140,8 +140,8 @@ angular.module('clientApp')
         $http.post(StateService.getServerAddress() + 'users/delete/', {'deletionID' : $scope.idToBeDeleted})
           .success(function (data, status) {
             console.log('Successfully deleted user');
-            angular.element('#confirmSurveyorDeleteModal').modal('hide'); 
-            StateService.removeSurveyorData($scope.idToBeDeleted);           
+            angular.element('#confirmSurveyorDeleteModal').modal('hide');
+            StateService.removeSurveyorData($scope.idToBeDeleted);
           })
           .error(function (data, status) {
             console.log('Error deleting user');
@@ -213,17 +213,17 @@ angular.module('clientApp')
     }
 
     $scope.createChecklist = function() {
-      $scope.newChecklistType = [];      
+      $scope.newChecklistType = [];
       $scope.isEditingChecklist = false;
       $scope.deselectAllModalSurveyors();
-      $scope.deselectAllModalChecklistTypes();       
+      $scope.deselectAllModalChecklistTypes();
     }
 
     $scope.setModalSurveyors = function(surveyors) {
       var e = angular.element('#surveyorsMultiSelect');
       for(var i = 0; i < surveyors.length; i++) {
         e.multiselect('select', surveyors[i].id);
-      }     
+      }
     }
 
     $scope.setModalChecklistTypes = function(checklistTypes) {
@@ -231,7 +231,7 @@ angular.module('clientApp')
       for(var i = 0; i < checklistTypes.length; i++) {
         e.multiselect('select', checklistTypes[i].id);
       }
-    }   
+    }
 
     $scope.getSurveyorIdList = function(surveyors) {
       var idList = [];
@@ -246,7 +246,7 @@ angular.module('clientApp')
       $scope.idToEdit = checklist.id;
 
       $scope.deselectAllModalSurveyors();
-      $scope.deselectAllModalChecklistTypes();        
+      $scope.deselectAllModalChecklistTypes();
       $scope.isEditingChecklist = true;
 
       $scope.newChecklistState = checklist.state;
@@ -257,8 +257,8 @@ angular.module('clientApp')
       $scope.newChecklistLandDistrict = checklist.landDistrict;
       $scope.newChecklistDescription = checklist.description;
 
-      $scope.setModalSurveyors(checklist.surveyors);  
-      $scope.setModalChecklistTypes(checklist.checklistTypes);   
+      $scope.setModalSurveyors(checklist.surveyors);
+      $scope.setModalChecklistTypes(checklist.checklistTypes);
 
     }
 
@@ -281,7 +281,7 @@ angular.module('clientApp')
 
       angular.element('option', e).each(function(element) {
         e.multiselect('deselect', angular.element(this).val());
-      });      
+      });
     }
 
     $scope.deselectAllModalChecklistTypes = function() {
@@ -289,7 +289,7 @@ angular.module('clientApp')
 
       angular.element('option', e).each(function(element) {
         e.multiselect('deselect', angular.element(this).val());
-      });      
+      });
     }
 
     $scope.cleanUpNewChecklistDialog = function() {
@@ -314,19 +314,19 @@ angular.module('clientApp')
         if(StateService.getUserType() === "MAN") {
           StateService.getUserList();
           StateService.getManagerChecklists();
-          $scope.newChecklistSurveyors = [];          
+          $scope.newChecklistSurveyors = [];
           StateService.getChecklistTypes().then(function() {
             $scope.checklistTypes = StateService.getChecklistTypesList();
             $scope.newChecklistType = [];
           });
         }
       }
-    });        
+    });
 
     $scope.setDefaultModalMapLocation = function() {
       if($scope.newChecklistModalLat === 0 || $scope.newChecklistModalLong === 0) {
         $scope.newChecklistModalLat = 48.4630959;
-        $scope.newChecklistModalLong = -123.3121053;          
+        $scope.newChecklistModalLong = -123.3121053;
       } else {
         $scope.$broadcast('forceRefreshMap');
       }
@@ -345,17 +345,17 @@ angular.module('clientApp')
       $scope.newPassword = '';
       $scope.verifyPassword = '';
 
-      $scope.newSurveyorForm.verifyPassword.$error.passwordMatch = false;  
+      $scope.newSurveyorForm.verifyPassword.$error.passwordMatch = false;
       $scope.usernamePostError = false;
-      $scope.emailPostError = false;  
+      $scope.emailPostError = false;
       $scope.usernameErrorMessage = '';
       $scope.emailErrorMessage = '';
     };
 
     $scope.submitCreateUser = function() {
-      $scope.newSurveyorForm.verifyPassword.$error.passwordMatch = false;  
+      $scope.newSurveyorForm.verifyPassword.$error.passwordMatch = false;
       $scope.usernamePostError = false;
-      $scope.emailPostError = false;  
+      $scope.emailPostError = false;
       $scope.usernameErrorMessage = '';
       $scope.emailErrorMessage = '';
 
@@ -366,10 +366,10 @@ angular.module('clientApp')
         $scope.newSurveyorForm.verifyPassword.$invalid = false;
 
         var userParam = {
-          'username' : $scope.newUsername, 
-          'first_name' : $scope.newFirstName, 
-          'last_name' : $scope.newLastName, 
-          'email' : $scope.newEmail, 
+          'username' : $scope.newUsername,
+          'first_name' : $scope.newFirstName,
+          'last_name' : $scope.newLastName,
+          'email' : $scope.newEmail,
           'password' : $scope.newPassword
         }
 
@@ -377,7 +377,7 @@ angular.module('clientApp')
 
         $http.post(StateService.getServerAddress() + 'users/create/', userParam)
           .success(function (data, status) {
-            angular.element('#newSurveyorModal').modal('hide');   
+            angular.element('#newSurveyorModal').modal('hide');
             $scope.hasSubmitted = false;
             StateService.setUserId(data.id, data.username);
             $scope.cleanUpNewSurveyorDialog();
@@ -405,7 +405,7 @@ angular.module('clientApp')
         // If entered passwords don't match, we can error out early.
         if($scope.editNewPassword !== $scope.editVerifyPassword) {
           $scope.editSurveyorForm.verifyPassword.$error.passwordMatch = true;
-          $scope.editSurveyorForm.newPassword.$invalid = true;          
+          $scope.editSurveyorForm.newPassword.$invalid = true;
           $scope.editSurveyorForm.verifyPassword.$invalid = true;
           $scope.editSurveyorForm.password.$invalid = false;
           deferred.resolve(null); // We don't know whether or not we have to make a REST API call due to invalid data. Thus, we can return null (which will terminate execution of submitAccountUpdate())
@@ -415,17 +415,17 @@ angular.module('clientApp')
           .success(function(){
             // If so, set the appropriate form validation state and continue processing
             $scope.editSurveyorForm.verifyPassword.$error.passwordMatch = false;
-            $scope.editSurveyorForm.newPassword.$invalid = false;            
-            $scope.editSurveyorForm.verifyPassword.$invalid = false;          
+            $scope.editSurveyorForm.newPassword.$invalid = false;
+            $scope.editSurveyorForm.verifyPassword.$invalid = false;
             deferred.resolve(true); // We do need to make a request to the REST API in this case, so we can return true
           })
           .error(function() {
             // Otherwise, set the appropriate form validation state and error out
             $scope.editSurveyorForm.password.$error.passwordIncorrect = true;
             $scope.editSurveyorForm.password.$invalid = true;
-            $scope.editSurveyorForm.verifyPassword.$error.passwordMatch = false;          
-            $scope.editSurveyorForm.newPassword.$invalid = false;            
-            $scope.editSurveyorForm.verifyPassword.$invalid = false; 
+            $scope.editSurveyorForm.verifyPassword.$error.passwordMatch = false;
+            $scope.editSurveyorForm.newPassword.$invalid = false;
+            $scope.editSurveyorForm.verifyPassword.$invalid = false;
             deferred.resolve(null); // We don't know whether or not we have to make a REST API call due to invalid data. Thus, we can return null (which will terminate execution of submitAccountUpdate())
           });
         }
@@ -433,7 +433,7 @@ angular.module('clientApp')
         deferred.resolve(false); // We know for certain that we won't have to make a REST API call yet. Thus we can return false.
       }
       return deferred.promise;
-    };  
+    };
 
     $scope.submitCreateChecklist = function() {
       $scope.newChecklistHasSubmitted = true;
@@ -479,21 +479,21 @@ angular.module('clientApp')
 
         if($scope.isEditingChecklist === true) {
           $http.put(StateService.getServerAddress() + 'manager/create_checklist/', checklist)
-            .success(function (data, status) {           
-              console.log("Edited a checklist.");       
+            .success(function (data, status) {
+              console.log("Edited a checklist.");
               angular.element('#newChecklistModal').modal('hide');
               $scope.newChecklistHasSubmitted = false;
               $scope.cleanUpNewChecklistDialog();
             })
             .error(function (data, status, headers, config) {
               console.log('Error editing checklist!');
-          });  
+          });
 
           StateService.editLocalChecklist(local_checklist);
           } else {
             $http.post(StateService.getServerAddress() + 'manager/create_checklist/', checklist)
-              .success(function (data, status) {           
-                console.log("Created a new checklist.");       
+              .success(function (data, status) {
+                console.log("Created a new checklist.");
                 angular.element('#newChecklistModal').modal('hide');
                 StateService.setChecklistId(data.id, local_checklist);
                 $scope.newChecklistHasSubmitted = false;
@@ -501,10 +501,10 @@ angular.module('clientApp')
               })
               .error(function (data, status, headers, config) {
                 console.log('Error creating checklist!');
-            });    
+            });
 
-            StateService.addLocalChecklist(local_checklist); 
-        }       
+            StateService.addLocalChecklist(local_checklist);
+        }
       }
     }
 
@@ -523,7 +523,7 @@ angular.module('clientApp')
       $scope.editSurveyorForm.password.$error.passwordIncorrect = false;
 
       // If we're here, it means the Save Changes button has been clicked and the form has been submitted
-      $scope.editHasSubmitted = true; 
+      $scope.editHasSubmitted = true;
 
       if($scope.editSurveyorForm.$valid) {
 
@@ -545,16 +545,16 @@ angular.module('clientApp')
           // Check for new first name
           if($scope.edit_first_name !== StateService.getUserById($scope.edit_id).first_name) {
             params.first_name = $scope.edit_first_name;
-            StateService.getUserById($scope.edit_id).first_name = $scope.edit_first_name; // Set the new name in StateService           
+            StateService.getUserById($scope.edit_id).first_name = $scope.edit_first_name; // Set the new name in StateService
             makeRequest = true;
           }
 
           // Check for new last name
           if($scope.edit_last_name !== StateService.getUserById($scope.edit_id).last_name) {
             params.last_name = $scope.edit_last_name;
-            StateService.getUserById($scope.edit_id).last_name = $scope.edit_last_name; // Set the new name in StateService           
+            StateService.getUserById($scope.edit_id).last_name = $scope.edit_last_name; // Set the new name in StateService
             makeRequest = true;
-          }                    
+          }
 
           // Check for new email
           if($scope.edit_email !== StateService.getUserById($scope.edit_id).email) {
@@ -566,13 +566,13 @@ angular.module('clientApp')
           if($scope.edit_username !== StateService.getUserById($scope.edit_id).username) {
             params.username = $scope.edit_username;
             makeRequest = true;
-          }          
+          }
 
           // Make the profile change request if necessary
-          if(makeRequest) {           
+          if(makeRequest) {
             params.id = $scope.edit_id;
             $http.post(StateService.getServerAddress() + 'users/update/', params)
-            .success(function (status) {     
+            .success(function (status) {
               console.log("Changed user information");
 
               if($scope.edit_email !== undefined) {
@@ -585,9 +585,9 @@ angular.module('clientApp')
                 StateService.setProfileFromCookie();
               }
 
-              angular.element('#editSurveyorModal').modal('hide');  
-              
-              // Reset the modal UI so that anyone who clicks on the Edit Profile button again will be shown a fresh slate.            
+              angular.element('#editSurveyorModal').modal('hide');
+
+              // Reset the modal UI so that anyone who clicks on the Edit Profile button again will be shown a fresh slate.
               $scope.editHasSubmitted = false;
               $scope.editShowChangePassword = false;
             })
@@ -601,28 +601,28 @@ angular.module('clientApp')
                 $scope.emailEditPostError = true;
                 $scope.emailEditErrorMessage = h['error-message'];
               }
-            });                
+            });
           } else {
             // If we get here, it means there was no need to make a request. I'm unsure of what the best behaviour is, but for now, I'm going to say we should
             // maintain modal state and close the modal.
-            angular.element('#editSurveyorModal').modal('hide');           
+            angular.element('#editSurveyorModal').modal('hide');
           }
         });
-      }     
-    }; 
+      }
+    };
 
     $scope.cleanUpEditModal = function() {
       $scope.usernameEditPostError = false;
       $scope.usernameEditErrorMessage = '';
       $scope.emailEditPostError = false;
-      $scope.emailEditErrorMessage = ''; 
-      $scope.cleanUpPasswords();  
+      $scope.emailEditErrorMessage = '';
+      $scope.cleanUpPasswords();
     };
 
     $scope.cleanUpPasswords = function() {
       $scope.editVerifyPassword = '';
       $scope.editNewPassword = '';
-      $scope.managerPassword = '';   
+      $scope.managerPassword = '';
     };
 
     $scope.checkMatchingPasswords = function() {
@@ -630,7 +630,7 @@ angular.module('clientApp')
         $scope.newSurveyorForm.verifyPassword.$error.passwordMatch = true;
         $scope.newSurveyorForm.newPassword.$invalid = true;
         $scope.newSurveyorForm.verifyPassword.$invalid = true;
-        return false;       
+        return false;
       } else {
         return true;
       }
@@ -656,7 +656,7 @@ angular.module('clientApp')
       $scope.selectedChecklistChecklistType = '';
       $scope.selectedChecklistTitle = '';
       $scope.selectedChecklistFilenumber = '';
-      
+
     };
 
     $scope.setEditInformation = function(user) {
@@ -669,8 +669,48 @@ angular.module('clientApp')
       $scope.edit_id = user.id;
     };
 
+    $scope.refreshOverviewDoughnutChart = function(user) {
+      //console.log("refreshing...");
+
+      var doughnutData = [
+          {
+            value: 300,
+            color:"#F7464A",
+            highlight: "#FF5A5E",
+            label: "Red"
+          },
+          {
+            value: 50,
+            color: "#46BFBD",
+            highlight: "#5AD3D1",
+            label: "Green"
+          },
+          {
+            value: 100,
+            color: "#FDB45C",
+            highlight: "#FFC870",
+            label: "Yellow"
+          },
+          {
+            value: 40,
+            color: "#949FB1",
+            highlight: "#A8B3C5",
+            label: "Grey"
+          },
+          {
+            value: 110,
+            color: "#4D5360",
+            highlight: "#616774",
+            label: "Dark Grey"
+          }
+
+        ];
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myDoughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true,animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
+    }
+
     angular.element('#newChecklistModal').on('shown.bs.modal', function() {
-      $timeout(function(){      
+      $timeout(function(){
         $scope.setDefaultModalMapLocation();
       });
     });

@@ -61,6 +61,7 @@ angular.module('clientApp')
 
     $scope.editChecklistQuestion = function(checklistQuestion) {
       $scope.isEditingQuestion = true;
+      $scope.newQuestionText = checklistQuestion.question;
       $scope.newChecklistQuestion = checklistQuestion.question;
       $scope.editQuestionId = checklistQuestion.id;
     }
@@ -126,7 +127,7 @@ angular.module('clientApp')
     $scope.editChecklistType = function(checklistSection) {
       $scope.isEditingSection = true;
       $scope.editDisplayName = checklistSection.name;
-      $scope.newSectionName = checklistSection.name;
+      $scope.newSection = checklistSection.name;
       $scope.editSectionId = checklistSection.id;
     }
 

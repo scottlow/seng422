@@ -13,7 +13,7 @@ angular.module('clientApp')
     $scope.StateService = StateService;
     $scope.selectedChecklist;
     $scope.addressSeaerchText;
-
+    $scope.selectedChecklistDetails = '';
     $scope.clientLat = 0;
     $scope.clientLong = 0;
 
@@ -50,6 +50,27 @@ angular.module('clientApp')
       $scope.clientLong = long;
     }
 
+    $scope.setSelectedChecklist = function(selectedChecklistID) {
+      StateService.getClientChecklistById(selectedChecklistID);
+    };
+
+    $scope.retreiveSelectedChecklist = function(checklistID) {
+      if(checklistID !== StateService.getChecklistDetails().id){
+        StateService.getClientChecklistById(checklistID);
+        $scope.cleanChecklistDetails();
+        $scope.selectedChecklistDetails = '';
+      } else {
+        $scope.cleanChecklistDetails();
+        $scope.selectedChecklistDetails = StateService.getChecklistDetails();
+      }
+      if($scope.selectedChecklistDetails == ''){
+        $scope.selectedChecklistDetails = '';
+      }
+    };
+
+    $scope.cleanChecklistDetails = function() {
+      $scope.selectedChecklistDetails = '';
+    };
 
     $scope.cleanUpPasswords = function() {
       $scope.editVerifyPassword = '';
@@ -112,6 +133,10 @@ angular.module('clientApp')
         deferred.resolve(false); // We know for certain that we won't have to make a REST API call yet. Thus we can return false.
       }
       return deferred.promise;
+    };
+
+    $scope.submitChecklistDetailsUpdate = function() {
+      //FINISH ME
     };
 
     $scope.submitSurveyorUpdate = function() {

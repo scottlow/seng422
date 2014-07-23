@@ -10,7 +10,6 @@
 angular.module('clientApp')
   .controller('ManagerCtrl', function ($scope, $http, $q, AuthService, $location, StateService, $timeout, ipCookie) {
     $scope.StateService = StateService;
-    $scope.selectedChecklist;
     $scope.addressSearchText;
     $scope.newChecklistModalLat = 0;
     $scope.newChecklistModalLong = 0;
@@ -636,27 +635,26 @@ angular.module('clientApp')
       }
     };
 
-    $scope.setSelectedChecklist = function(selectedChecklist) {
-      $scope.cleanChecklistDetails();
-      $scope.selectedChecklistDescription = selectedChecklist.description;
-      $scope.selectedChecklistAddress = selectedChecklist.address;
-      $scope.selectedChecklistState = selectedChecklist.state;
-      $scope.selectedChecklistLandDistrict = selectedChecklist.landDistrict;
-      $scope.selectedChecklistChecklistType = selectedChecklist.checklistType.name;
-      $scope.selectedChecklistTitle = selectedChecklist.title;
-      $scope.selectedChecklistFilenumber = selectedChecklist.fileNumber;
+    $scope.setSelectedChecklist = function(selectedChecklistID) {
+      StateService.getManagerChecklistById(selectedChecklistID);
+    };
 
+    $scope.retreiveSelectedChecklist = function(checklistID) {
+      if(checklistID !== StateService.getChecklistDetails().id){
+        StateService.getManagerChecklistById(checklistID);
+        $scope.cleanChecklistDetails();
+        $scope.selectedChecklistDetails = '';
+      } else {
+        $scope.cleanChecklistDetails();
+        $scope.selectedChecklistDetails = StateService.getChecklistDetails();
+      }
+      if($scope.selectedChecklistDetails == ''){
+        $scope.selectedChecklistDetails = '';
+      }
     };
 
     $scope.cleanChecklistDetails = function() {
-      $scope.selectedChecklistDescription = '';
-      $scope.selectedChecklistAddress = '';
-      $scope.selectedChecklistState = '';
-      $scope.selectedChecklistLandDistrict = '';
-      $scope.selectedChecklistChecklistType = '';
-      $scope.selectedChecklistTitle = '';
-      $scope.selectedChecklistFilenumber = '';
-
+      $scope.selectedChecklistDetails = '';
     };
 
     $scope.setEditInformation = function(user) {

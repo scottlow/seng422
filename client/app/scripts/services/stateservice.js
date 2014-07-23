@@ -7,6 +7,7 @@ angular.module('clientApp')
     var checklists;
     var checklistTypes = []; 
     var currentSelectedSection;
+    var selectedChecklistDetails = '';
 
     this.clearState = function() {
       currentUser = {};
@@ -141,6 +142,16 @@ angular.module('clientApp')
       });
     }
 
+    this.getManagerChecklistById = function(id) {
+      return $http.get(this.getServerAddress() + 'manager/checklist/' + id + '/')
+      .success(function(data) {
+        selectedChecklistDetails = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving checklist with id of ' + id);
+      });
+    }
+
     this.getClientChecklists = function() {
       return $http.get(this.getServerAddress() + 'surveyor/checklists/')
       .success(function(data) {
@@ -148,6 +159,16 @@ angular.module('clientApp')
       })
       .error(function(data) {
         console.log('Error retrieving checklists');
+      });
+    }
+
+    this.getClientChecklistById = function(id) {
+      return $http.get(this.getServerAddress() + 'surveyor/checklist/' + id + '/')
+      .success(function(data) {
+        selectedChecklistDetails = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving checklist with id of ' + id);
       });
     }
 
@@ -207,6 +228,10 @@ angular.module('clientApp')
 
     this.getChecklists = function() {
       return checklists;
+    }
+
+    this.getChecklistDetails = function() {
+      return selectedChecklistDetails;
     }
 
     this.setProfile = function(u) {

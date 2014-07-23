@@ -57,12 +57,18 @@ class ChecklistTypeSerializerLight(serializers.ModelSerializer):
         model = rest_api.models.ChecklistType
 
 class ChecklistQuestionSerializer(serializers.ModelSerializer):
+    checklistType = serializers.PrimaryKeyRelatedField()
+    class Meta:
+        model = rest_api.models.ChecklistQuestion
+        fields = ('id', 'checklistType', 'question')
+
+class ChecklistQuestionSerializerLight(serializers.ModelSerializer):
     class Meta:
         model = rest_api.models.ChecklistQuestion
         fields = ('id', 'question')
 
 class ChecklistTypeSerializer(serializers.ModelSerializer):
-    questions = ChecklistQuestionSerializer(many=True)
+    questions = ChecklistQuestionSerializerLight(many=True)
     class Meta:
         model = rest_api.models.ChecklistType
 

@@ -55,17 +55,9 @@ angular.module('clientApp')
     };
 
     $scope.retreiveSelectedChecklist = function(checklistID) {
-      if(checklistID !== StateService.getChecklistDetails().id){
-        StateService.getClientChecklistById(checklistID);
-        $scope.cleanChecklistDetails();
-        $scope.selectedChecklistDetails = '';
-      } else {
-        $scope.cleanChecklistDetails();
-        $scope.selectedChecklistDetails = StateService.getChecklistDetails();
-      }
-      if($scope.selectedChecklistDetails == ''){
-        $scope.selectedChecklistDetails = '';
-      }
+      StateService.getClientChecklistById(checklistID).then(function() {
+        $scope.selectedChecklistDetails = StateService.getChecklistDetails();          
+      });
     };
 
     $scope.cleanChecklistDetails = function() {

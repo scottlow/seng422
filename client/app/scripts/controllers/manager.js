@@ -641,17 +641,9 @@ angular.module('clientApp')
     };
 
     $scope.retreiveSelectedChecklist = function(checklistID) {
-      if(checklistID !== StateService.getChecklistDetails().id){
-        StateService.getManagerChecklistById(checklistID);
-        $scope.cleanChecklistDetails();
-        $scope.selectedChecklistDetails = '';
-      } else {
-        $scope.cleanChecklistDetails();
+      StateService.getManagerChecklistById(checklistID).then(function() {
         $scope.selectedChecklistDetails = StateService.getChecklistDetails();
-      }
-      if($scope.selectedChecklistDetails == ''){
-        $scope.selectedChecklistDetails = '';
-      }
+      });
     };
 
     $scope.cleanChecklistDetails = function() {

@@ -715,17 +715,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="question in selectedChecklistDetails.answers">
-                <td>{{question.question.question}}</td>  
-                <td>{{question.answer}}</td>    
+              <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="answer in selectedChecklistDetails.answers">
+                <td>{{answer.question.question}}</td>  
+                <td>{{answer.answer}}</td>    
               </tr>
             </tbody>
-            <th>If no questions are displayed please open this page again.</th>
-            <th></th>
           </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="cleanChecklistDetails();" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

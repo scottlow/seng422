@@ -145,7 +145,15 @@ angular.module('clientApp')
     this.getManagerChecklistById = function(id) {
       return $http.get(this.getServerAddress() + 'manager/checklist/' + id + '/')
       .success(function(data) {
-        selectedChecklistDetails = data;
+        var dict = {}
+        for(var i = 0; i < data.checklistTypes.length; i++) {
+          dict[data.checklistTypes[i].id] = {'name' : data.checklistTypes[i].name, 'answers' : []};
+        }
+
+        for(var i = 0; i < data.answers.length; i++) {
+          dict[data.answers[i].question.checklistType].answers.push({'id' : data.answers[i].id, 'answer' : data.answers[i].answer, 'question' : data.answers[i].question.question})
+        }
+        selectedChecklistDetails = dict;
       })
       .error(function(data) {
         console.log('Error retrieving checklist with id of ' + id);

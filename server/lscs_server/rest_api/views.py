@@ -270,6 +270,11 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
         checklist = Checklist(manager=request.user, dateCreated=datetime.now(), dateLastModified=datetime.now())
         serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
         if serializer.is_valid():
+            if(checklist.surveyors == []):
+                checklist.state = Checklist.UNASSIGNED
+            else:
+                checklist.state = Checklist.INPROGRESS
+
             serializer.save()
 
             checklist_questions = []
@@ -286,6 +291,11 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
         currentTypeIds = [checklistType.id for checklistType in checklist.checklistTypes.all()]
         serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
         if(serializer.is_valid()):
+            if(checklist.surveyors == []):
+                checklist.state = Checklist.UNASSIGNED
+            else:
+                checklist.state = Checklist.INPROGRESS
+
             serializer.save()
             newTypeIds = [checklistType.id for checklistType in checklist.checklistTypes.all()]
             for id in currentTypeIds:
@@ -377,7 +387,6 @@ class AnswerSurveyQuestion(SurveyorSecurityMixin, generics.CreateAPIView):
                 error = '{"error":"User is not assigned to checklist"}'
                 if request.user in answer.checklist.surveyors.all():
                     if request.DATA["answer"] == "True":
-                        print(request.DATA["answer"])
                         answer.answer = ChecklistAnswer.COMPLETED
                     else:
                         answer.answer = ChecklistAnswer.INCOMPLETE
@@ -390,27 +399,66 @@ class AnswerSurveyQuestion(SurveyorSecurityMixin, generics.CreateAPIView):
                     return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
 
+class SubmitChecklist(SurveyorSecurityMixin, generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        error = '{"error":"Required attributes not provided"}'
+        if "id" in request.DATA:
+            checklist = Checklist.objects.get(id=request.DATA['id'])
+            error = '{"error":"Provided data is invalid"}'
+            if checklist != None:
+                error = '{"error":"User is not assigned to checklist"}'
+                if request.user in checklist.surveyors.all():
+                    error = '{"error":"A checklist question is not answered"}'
+                    if checklist.answers.filter(answer=ChecklistAnswer.UNANSWERED).count() == 0:
+                        checklist.state = Checklist.SUBMITTED
+                        checklist.save()
+
+                        return Response(data={'id':checklist.id, 'status':checklist.get_state_display()}, status=status.HTTP_200_OK)
+        return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
+
+
+#############################
+# --------- Data! --------- #
+#############################
+class GetChecklistStatusDistribution(ManagerSecurityMixin, generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (JSONRenderer, JSONRenderer)
+
+    def get(self, request):
+        data = {"total":0, "count":{}}
+        for choice in Checklist.STATE_CHOICES:
+            data["count"][choice[1]] = Checklist.objects.filter(state=choice[0]).count()
+            data["total"] += data["count"][choice[1]]
+        return Response(data=data, status=status.HTTP_200_OK)
+
 
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 
-create_user = CreateUser.as_view();
-delete_user = DeleteUser.as_view();
-update_surveyor = UpdateSurveyor.as_view();
-list_surveyors = ListSurveyors.as_view();
+create_user = CreateUser.as_view()
+delete_user = DeleteUser.as_view()
+update_surveyor = UpdateSurveyor.as_view()
+list_surveyors = ListSurveyors.as_view()
 
-manager_create_checklist_type = CreateChecklistType.as_view();
-manager_delete_checklist_type = DeleteChecklistType.as_view();
-manager_list_checklist_types = ListChecklistTypes.as_view();
-manager_view_checklist_type = ViewChecklistType.as_view();
-manager_create_checklist_question = CreateChecklistQuestion.as_view();
-manager_delete_checklist_question = DeleteChecklistQuestion.as_view();
+manager_create_checklist_type = CreateChecklistType.as_view()
+manager_delete_checklist_type = DeleteChecklistType.as_view()
+manager_list_checklist_types = ListChecklistTypes.as_view()
+manager_view_checklist_type = ViewChecklistType.as_view()
+manager_create_checklist_question = CreateChecklistQuestion.as_view()
+manager_delete_checklist_question = DeleteChecklistQuestion.as_view()
 
-manager_create_checklist = CreateChecklist.as_view();
-manager_assign_surveyors = AssignSurveyors.as_view();
-manager_delete_checklist = DeleteChecklist.as_view();
-manager_checklists = ListManagerChecklists.as_view();
-manager_checklist = ViewManagerChecklist.as_view();
+manager_create_checklist = CreateChecklist.as_view()
+manager_assign_surveyors = AssignSurveyors.as_view()
+manager_delete_checklist = DeleteChecklist.as_view()
+manager_checklists = ListManagerChecklists.as_view()
+manager_checklist = ViewManagerChecklist.as_view()
 
-surveyor_checklists = ListSurveyorChecklists.as_view();
-surveyor_checklist = ViewSurveyorChecklist.as_view();
-surveyor_answer = AnswerSurveyQuestion.as_view();
+manager_checklist_distribution = GetChecklistStatusDistribution.as_view()
+
+surveyor_checklists = ListSurveyorChecklists.as_view()
+surveyor_checklist = ViewSurveyorChecklist.as_view()
+surveyor_answer = AnswerSurveyQuestion.as_view()
+surveyor_submit = SubmitChecklist.as_view()

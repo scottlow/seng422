@@ -15,7 +15,8 @@ angular.module('clientApp')
     $scope.newChecklistModalLong = 0;
     $scope.managerMapLat = 0;
     $scope.managerMapLong = 0;
-
+    $scope.overviewChartArea = document.getElementById("chart-area").getContext("2d");
+    $scope.overviewChart;
     var geocoder = new google.maps.Geocoder();
 
     $scope.submitNewQuestion = function() {
@@ -54,7 +55,7 @@ angular.module('clientApp')
     }
 
     $scope.cleanUpNewQuestionModal = function() {
-      $scope.newQuestionText = '';   
+      $scope.newQuestionText = '';
       $scope.questionHasSubmitted = false;
       $scope.isEditingQuestion = false;
     }
@@ -658,16 +659,41 @@ angular.module('clientApp')
       $scope.edit_id = user.id;
     };
 
-    $scope.refreshOverviewDoughnutChart = function(user) {
-      //console.log("refreshing...");
-
+    $scope.drawOverviewDoughnutChart = function(user) {
       var doughnutData = [
           {
             value: 300,
             color:"#F7464A",
             highlight: "#FF5A5E",
-            label: "Red"
+            label: "Not started"
           },
+          {
+            value: 100,
+            color: "#FDB45C",
+            highlight: "#FFC870",
+            label: "In progress"
+          },
+          {
+            value: 50,
+            color: "#46BFBD",
+            highlight: "#5AD3D1",
+            label: "Completed"
+          },
+          {
+            value: 110,
+            color: "#4D5360",
+            highlight: "#616774",
+            label: "Archived"
+          }
+
+        ];
+
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        $scope.overviewChart = new Chart(ctx).Doughnut(doughnutData, {responsive : true, animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
+    }
+
+    $scope.redrawOverviewDoughnutChart = function(user) {
+      var doughnutData = [
           {
             value: 50,
             color: "#46BFBD",
@@ -680,22 +706,11 @@ angular.module('clientApp')
             highlight: "#FFC870",
             label: "Yellow"
           },
-          {
-            value: 40,
-            color: "#949FB1",
-            highlight: "#A8B3C5",
-            label: "Grey"
-          },
-          {
-            value: 110,
-            color: "#4D5360",
-            highlight: "#616774",
-            label: "Dark Grey"
-          }
-
         ];
-        var ctx = document.getElementById("chart-area").getContext("2d");
-        window.myDoughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true,animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
+      //reset existing charts
+      document.getElementById("chart-area").outerHTML='<canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="drawOverviewDoughnutChart()"/>';
+      var ctx = document.getElementById("chart-area").getContext("2d");
+      $scope.overviewChart = new Chart(ctx).Doughnut(doughnutData, {responsive : true, animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
     }
 
     angular.element('#newChecklistModal').on('shown.bs.modal', function() {

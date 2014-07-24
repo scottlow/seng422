@@ -53,14 +53,16 @@
         <div class="col-sm-12 main" style="padding-bottom:0px">
           <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
             <h1 class="pull-left" style="margin: 0px;">Overview</h1>
+
             <div class="pull-right">
-              <button type="button" data-toggle="modal" ng-click="refreshOverviewDoughnutChart()" class="btn btn-success btn-lg" style="margin-top: -2px">Update Data</button>
+              <button type="button" data-toggle="modal" ng-click="redrawOverviewDoughnutChart()" class="btn btn-success btn-lg" style="margin-top: -2px">Update Data</button>
             </div>
+
           </div>
           <p style="margin-top: 20px" class="well well-sm"><b>Greetings, {{StateService.getUsername()}}.</b> Some dummy semi-useful information that somehow pertains to the minions you have under your responsibility will reside here.</p>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-4">
-              <canvas id="chart-area" width="300" height="300" ng-init="refreshOverviewDoughnutChart()"/>
+              <canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="drawOverviewDoughnutChart()"/>
               <h4>Legend</h4>
               <table class="table table-manager table-striped">
                 <thead>
@@ -223,9 +225,9 @@
                     <td>{{checklistType.name}}</td>
                     <td class="align-right">
                       <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#newSectionModal" ng-click="editChecklistType(checklistType)" type="button" class="btn btn-primary btn-sm">Edit</button>
-                      <button data-toggle="modal" data-target="#confirmSectionDeleteModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setSectionForDeletion(checklistType)">Delete</button>                      
-                    </td>                                 
-                  </tr>                
+                      <button data-toggle="modal" data-target="#confirmSectionDeleteModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setSectionForDeletion(checklistType)">Delete</button>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -250,9 +252,9 @@
                     <td>{{question.question}}</td>
                     <td class="align-right">
                       <button style="margin-right: 2px; margin-top: -2px;" data-toggle="modal" data-target="#newQuestionModal" ng-click="editChecklistQuestion(question)" type="button" class="btn btn-primary btn-sm">Edit</button>
-                      <button data-toggle="modal" data-target="#confirmQuestionDeletionModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setQuestionForDeletion(question)">Delete</button>                      
-                    </td>            
-                  </tr>                 
+                      <button data-toggle="modal" data-target="#confirmQuestionDeletionModal" type="button" class="btn btn-danger btn-sm" style="margin-top: -2px" ng-click="setQuestionForDeletion(question)">Delete</button>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -315,26 +317,26 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 ng-hide="isEditingQuestion" class="modal-title" id="myModalLabel">New Checklist Question</h4>
-        <h4 ng-show="isEditingQuestion" class="modal-title" id="myModalLabel">Edit Checklist Question</h4>        
+        <h4 ng-show="isEditingQuestion" class="modal-title" id="myModalLabel">Edit Checklist Question</h4>
       </div>
       <div class="modal-body">
         <p ng-show="isEditingQuestion">Please enter new question text for the question.</p>
         <form name="newQuestionForm" class="form-horizontal" role="form" novalidate>
           <!-- Question Text -->
           <div class="form-group" style="margin-bottom: 0px" ng-class="{ 'has-error' : newQuestionForm.questionText.$invalid && questionHasSubmitted }">
-            <label class="col-sm-3 control-label">Question Text</label> 
+            <label class="col-sm-3 control-label">Question Text</label>
             <div class="col-sm-9">
-              <input type="text" name="questionText" class="form-control" ng-model="newQuestionText" required>       
+              <input type="text" name="questionText" class="form-control" ng-model="newQuestionText" required>
               <p ng-show="newQuestionForm.questionText.$invalid && questionHasSubmitted" class="help-block">Please enter a valid question.</p>
             </div>
-          </div> 
+          </div>
         </form>
       </div>
       <div class="modal-footer" style="margin-top: 0px;">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button ng-hide="isEditingQuestion" type="button" ng-click="submitNewQuestion()" class="btn btn-primary">Create Question</button>
-        <button ng-show="isEditingQuestion" type="button" ng-click="submitNewQuestion()" class="btn btn-primary">Edit Question</button>        
-      </div>      
+        <button ng-show="isEditingQuestion" type="button" ng-click="submitNewQuestion()" class="btn btn-primary">Edit Question</button>
+      </div>
     </div>
   </div>
 </div>
@@ -437,7 +439,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" ng-click="confirmQuestionDeletion()" class="btn btn-primary">Confirm</button>       
+        <button type="button" ng-click="confirmQuestionDeletion()" class="btn btn-primary">Confirm</button>
       </div>
     </div>
   </div>
@@ -723,7 +725,7 @@
             </thead>
             <tbody ng-repeat-end>
               <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="answer in section.answers">
-                <td>{{answer.question}}</td>  
+                <td>{{answer.question}}</td>
                 <td>{{answer.answer}}</td>
               </tr>
             </tbody>

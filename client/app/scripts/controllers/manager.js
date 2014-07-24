@@ -247,6 +247,8 @@ angular.module('clientApp')
 
       $scope.deselectAllModalSurveyors();
       $scope.deselectAllModalChecklistTypes();
+      $scope.newChecklistSurveyors = [];
+      $scope.newChecklistType = [];
       $scope.isEditingChecklist = true;
 
       $scope.newChecklistState = checklist.state;

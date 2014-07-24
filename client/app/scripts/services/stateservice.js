@@ -153,6 +153,15 @@ angular.module('clientApp')
         for(var i = 0; i < data.answers.length; i++) {
           dict[data.answers[i].question.checklistType].answers.push({'id' : data.answers[i].id, 'answer' : data.answers[i].answer, 'question' : data.answers[i].question.question})
         }
+
+        var sorted = [];
+        for (var entry in dict)
+          sorted.push([dict[entry].name, dict[entry]]);
+        sorted.sort(function(a, b) {return a[0] > b[0]});
+        dict = {}
+        for (var entry in sorted)
+          dict[entry] = sorted[entry][1];
+
         selectedChecklistDetails = dict;
       })
       .error(function(data) {

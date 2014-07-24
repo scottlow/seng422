@@ -50,10 +50,6 @@ angular.module('clientApp')
       $scope.clientLong = long;
     }
 
-    $scope.setSelectedChecklist = function(selectedChecklistID) {
-      StateService.getClientChecklistById(selectedChecklistID);
-    };
-
     $scope.retreiveSelectedChecklist = function(checklistID) {
       StateService.getClientChecklistById(checklistID).then(function() {
         $scope.selectedChecklistDetails = StateService.getChecklistDetails();          

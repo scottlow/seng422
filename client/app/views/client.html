@@ -241,7 +241,7 @@
   <div class="modal-dialog" style="width: 706px;">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button type="button" class="close" ng-click="cleanChecklistDetails()" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Checklist Details<br /><small>Below you can find all questions associated with the checklist.</small></h4>
       </div>
       <div class="modal-body">
@@ -254,10 +254,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="answer in StateService.getChecklistDetails().answers">
+              <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="answer in selectedChecklistDetails.answers">
                 <td>{{answer.question.question}}</td>  
                 <td class="form-group">
-                  <input type="text" name="name" class="form-control" ng-model="answer.answer">  
+                  <select class="dropdown-toggle btn btn-default" ng-change="saveChecklistQuestion(answer.question.id)" ng-model="answer.answer">
+                    <option class="btn btn-default" value="Unanswered">Unanswered</option>
+                    <option class="btn btn-default" value="True">Completed</option>
+                    <option class="btn btn-default" value="False">Uncompleted</option>
+                  </select>  
                 </td>
               </tr>
             </tbody>
@@ -266,7 +270,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" ng-click="cleanChecklistDetails()" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="submitChecklistDetailsUpdate()">Save Changes</button>
+        <button type="button" class="btn btn-primary" ng-click="cleanChecklistDetails()" ng-click="submitChecklistDetailsUpdate()">Final Submit</button>
       </div>
     </div>
   </div>

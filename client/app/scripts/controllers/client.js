@@ -60,6 +60,21 @@ angular.module('clientApp')
       $scope.selectedChecklistDetails = '';
     };
 
+    $scope.saveChecklistQuestion = function(id){
+      var params = {};
+      
+      params.id = id;
+      params.answer = $scope.answer.answer;
+
+      $http.post(StateService.getServerAddress() + 'surveyor/answer/', params)
+      .success(function () {
+        console.log("Changed question answer.");
+      })
+      .error(function () {
+        console.log("Failed to change question answer.");
+      });
+    }
+
     $scope.cleanUpPasswords = function() {
       $scope.editVerifyPassword = '';
       $scope.editNewPassword = '';

@@ -636,10 +636,6 @@ angular.module('clientApp')
       }
     };
 
-    $scope.setSelectedChecklist = function(selectedChecklistID) {
-      StateService.getManagerChecklistById(selectedChecklistID);
-    };
-
     $scope.retreiveSelectedChecklist = function(checklistID) {
       StateService.getManagerChecklistById(checklistID).then(function() {
         $scope.selectedChecklistDetails = StateService.getChecklistDetails();

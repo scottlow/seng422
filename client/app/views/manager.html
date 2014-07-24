@@ -147,7 +147,7 @@
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
-                  <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setMapLocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-click="setSelectedChecklist(checklist.id)" ng-repeat-start="checklist in StateService.getChecklists()">
+                  <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setMapLocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getChecklists()">
                     <td>{{checklist.fileNumber}}</td>
                     <td>{{checklist.title}}</td>
                     <td class="userListRoot"><span ng-repeat="type in checklist.checklistTypes">{{type.name}}</span></td>

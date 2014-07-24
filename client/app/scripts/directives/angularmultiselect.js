@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-    .directive('angularMultiselect', function() {
+    .directive('angularMultiselect', function($timeout) {
         return {
             scope : {
                 data: '=',
@@ -27,27 +27,16 @@ angular.module('clientApp')
                             modelValue.splice(optionIndex,1);
                         }
 
-                        ngModel.$setViewValue(modelValue);
-                        ngModel.$render();
-                        scope.safeApply();
+                        $timeout(function() {
+                            ngModel.$setViewValue(modelValue);
+                            ngModel.$render();
+                        })
                     }
                 });
 
                 scope.$on('rebuildMultiselect', function () {
                     element.multiselect('rebuild');
-                });
-
-                scope.safeApply = function(fn) {
-                  var phase = this.$root.$$phase;
-                  if(phase == '$apply' || phase == '$digest') {
-                    if(fn && (typeof(fn) === 'function')) {
-                      fn();
-                    }
-                  } else {
-                    this.$apply(fn);
-                  }
-                };    
-
+                });  
             }
         };
     });

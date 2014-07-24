@@ -708,6 +708,7 @@
       </div>
       <div class="modal-body">
           <table class="table table-striped">
+            <tr><div style="text-align: center;" ng-show="StateService.getChecklistDetails().length === 0">Loading checklists, please wait...</div></tr>
             <thead ng-repeat-start="section in selectedChecklistDetails">
               <tr style="background-color: #d9edf7">
                 <th>{{section.name}}</th>
@@ -723,7 +724,7 @@
             <tbody ng-repeat-end>
               <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="answer in section.answers">
                 <td>{{answer.question}}</td>  
-                <td>{{answer.answer}}</td>    
+                <td>{{answer.answer}}</td>
               </tr>
             </tbody>
           </table>

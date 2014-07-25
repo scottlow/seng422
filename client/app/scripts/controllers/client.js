@@ -65,14 +65,15 @@ angular.module('clientApp')
       
       params.id = id;
       params.answer = answer;
-
-      $http.post(StateService.getServerAddress() + 'surveyor/answer/', params)
-      .success(function () {
-        console.log("Changed question answer.");
-      })
-      .error(function () {
-        console.log("Failed to change question answer.");
-      });
+      if(answer !== "Unanswered"){
+        $http.post(StateService.getServerAddress() + 'surveyor/answer/', params)
+        .success(function () {
+          console.log("Changed question answer.");
+        })
+        .error(function () {
+          console.log("Failed to change question answer.");
+        });
+      }
     }
 
     $scope.cleanUpPasswords = function() {

@@ -62,7 +62,7 @@
           <p style="margin-top: 20px" class="well well-sm"><b>Greetings, {{StateService.getUsername()}}.</b> Some dummy semi-useful information that somehow pertains to the minions you have under your responsibility will reside here.</p>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-4">
-              <canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="drawOverviewDoughnutChart()"/>
+              <canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="initOverviewDoughnutChart()"/>
               <h4>Legend</h4>
               <table class="table table-manager table-striped">
                 <thead>
@@ -72,9 +72,9 @@
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
-                  <tr data-toggle="collapse" data-target="#details{{$index}}" class="checklist-row" >
-                    <td>Completed</td>
-                    <td>10</td>
+                  <tr data-toggle="collapse" data-target="#details{{$index}}" class="checklist-row" ng-repeat-start="state in StateService.getLegendData()">
+                    <td>{{state.label}}</td>
+                    <td>{{state.value}}</td>
                   </tr>
                   <tr ng-repeat-end>
                     <td colspan="7" class="hiddenRow">
@@ -83,19 +83,7 @@
                           <div class="col-md-2">
                             <label class="control-label">Stuff</label>
                             <p>
-                              details
-                            </p>
-                          </div>
-                          <div class="col-md-7">
-                            <label class="control-label">Other Stuff</label>
-                            <p>
-                              details
-                            </p>
-                          </div>
-                          <div class="col-md-3">
-                            <label class="control-label">Actions</label>
-                            <p>
-                              Stuff here
+                              Stuff
                             </p>
                           </div>
                         </div>

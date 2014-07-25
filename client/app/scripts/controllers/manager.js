@@ -15,8 +15,10 @@ angular.module('clientApp')
     $scope.newChecklistModalLong = 0;
     $scope.managerMapLat = 0;
     $scope.managerMapLong = 0;
-    $scope.overviewChartArea = document.getElementById("chart-area").getContext("2d");
     $scope.overviewChart;
+    $scope.overviewChartRawData;
+    $scope.overviewChartParsedData;
+
     var geocoder = new google.maps.Geocoder();
 
     $scope.submitNewQuestion = function() {
@@ -659,52 +661,75 @@ angular.module('clientApp')
       $scope.edit_id = user.id;
     };
 
+    $scope.initOverviewDoughnutChart = function(user) {
+      //fetch initial data...
+      $http.get(StateService.getServerAddress() + 'manager/checklist_distribution/')
+      .success(function (data) {
+        console.log('Chart Data retrieved from manager.js');
+        $scope.overviewChartRawData = data;
+        $scope.parseOverviewChartData();
+      })
+      .error(function (data) {
+        console.log('Error grabbing chart data from endpoint.')
+      })
+    }
+
+    $scope.parseOverviewChartData = function(user) {
+      var obj = $scope.overviewChartRawData;
+      obj = obj.count;//strip the total, I guess.
+      var chartColours = ["#F7464A","#FDB45C","#46BFBD","#46BFBD","#4D5360","#A3F746","#46F7F3","#9B46F7","#A2F746"];
+      var x = [];
+      var count = 0;
+      for(var entry in obj){
+        if(obj[entry] > 0){
+          x.push({'label': entry, 'value' : obj[entry], "color": chartColours[count], "hightlight": chartColours[count]});
+          count ++;
+        }
+      }
+      $scope.overviewChartParsedData = x;
+      $scope.drawOverviewDoughnutChart();
+    }
+
     $scope.drawOverviewDoughnutChart = function(user) {
-      var doughnutData = [
-          {
-            value: 300,
-            color:"#F7464A",
-            highlight: "#FF5A5E",
-            label: "Not started"
-          },
-          {
-            value: 100,
-            color: "#FDB45C",
-            highlight: "#FFC870",
-            label: "In progress"
-          },
-          {
-            value: 50,
-            color: "#46BFBD",
-            highlight: "#5AD3D1",
-            label: "Completed"
-          },
-          {
-            value: 110,
-            color: "#4D5360",
-            highlight: "#616774",
-            label: "Archived"
-          }
-
-        ];
-
+        //parse the string into something usable
+        var newData = $scope.overviewChartParsedData;
+        console.log(newData);
+        //paint the chart.
         var ctx = document.getElementById("chart-area").getContext("2d");
-        $scope.overviewChart = new Chart(ctx).Doughnut(doughnutData, {responsive : true, animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
+        $scope.overviewChart = new Chart(ctx).Doughnut(newData, {responsive : true, animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
+    }
+
+    $scope.getParsedOverviewData = function(user) {
+      console.log("returning data?");
+      return $scope.overviewChartParsedData;
+    }
+
+    $scope.updateOverviewData = function(user) {
+      //fetch initial data...
+      $http.get(StateService.getServerAddress() + 'manager/checklist_distribution/')
+      .success(function (data) {
+        console.log('Chart Data retrieved from manager.js');
+        $scope.overviewChartRawData = data;
+        $scope.parseOverviewChartData();
+      })
+      .error(function (data) {
+        console.log('Error grabbing chart data from endpoint.')
+      })
     }
 
     $scope.redrawOverviewDoughnutChart = function(user) {
       var doughnutData = [
           {
-            value: 50,
-            color: "#46BFBD",
-            highlight: "#5AD3D1",
-            label: "Green"
+            "value": 50,
+            "color": "#46BFBD",
+            "highlight": "#5AD3D1",
+            "label": "Completed"
           },
           {
-            value: 100,
-            color: "#FDB45C",
-            highlight: "#FFC870",
-            label: "Yellow"
+            "value": 100,
+            "color": "#FDB45C",
+            "highlight": "#FFC870",
+            "label": "In-Progress"
           },
         ];
       //reset existing charts

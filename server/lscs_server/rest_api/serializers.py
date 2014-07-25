@@ -119,7 +119,7 @@ class ChecklistSerializer(serializers.ModelSerializer):
         model = rest_api.models.Checklist
         depth = 1
 
-class ChecklistIDSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = rest_api.models.Checklist
-        fields = ("id",)
+class ChecklistRecentlyUpdatedSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = rest_api.models.Checklist
+    fields = ("id","title","description","fileNumber","landDistrict","state","surveyors",)

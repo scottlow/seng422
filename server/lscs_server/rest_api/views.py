@@ -439,7 +439,7 @@ class GetChecklistStatusRecentlyUpdated(ManagerSecurityMixin, generics.ListAPIVi
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     renderer_classes = (JSONRenderer, JSONRenderer)
-    serializer_class = ChecklistIDSerializer
+    serializer_class = ChecklistRecentlyUpdatedSerializer
 
     def get_queryset(self):
       return Checklist.objects.order_by('dateLastModified')[:5]

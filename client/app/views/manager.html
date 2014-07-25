@@ -87,6 +87,26 @@
               </table>
               <h4>Most Recently Modified</h4>
                 <p>A new table will appear here soon.</p>
+                <table class="table table-manager table-striped" ng-init="StateService.getRecentlyUpdatedChecklists()">
+                  <thead>
+                    <tr>
+                      <th>File Number</th>
+                      <th>Title</th>
+                      <th>Land District</th>
+                      <th>State</th>
+                    </tr>
+                  </thead>
+                  <tbody class="scrollContent">
+                    <tr class="overviewRU-row" ng-repeat-start="checklist in StateService.getRecentlyUpdatedData()">
+                      <td>{{checklist.fileNumber}}</td>
+                      <td>{{checklist.title}}</td>
+                      <td>{{checklist.landDistrict}}</td>
+                      <td>{{checklist.state}}</td>
+                    </tr>
+                    <tr ng-repeat-end>
+                    </tr>
+                  </tbody>
+                </table>
               </table>
             </div>
           </div>

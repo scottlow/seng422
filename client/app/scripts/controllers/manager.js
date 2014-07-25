@@ -675,7 +675,6 @@ angular.module('clientApp')
     }
 
     $scope.getParsedOverviewData = function(user) {
-      console.log($scope.overviewChartParsedData);
       return $scope.overviewChartParsedData;
     }
 

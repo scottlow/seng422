@@ -63,6 +63,7 @@
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-4">
               <canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="updateOverviewData()"/>
+              <p style="margin-top: 20px" class="well well-sm">Some stuff here maybe?</p>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-8">
               <h4>Legend</h4>
@@ -75,26 +76,17 @@
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
-                  <tr data-toggle="collapse" data-target="#details{{$index}}" class="checklist-row" ng-repeat-start="state in getParsedOverviewData()">
+                  <tr ng-repeat-start="state in getParsedOverviewData()">
                     <td><div style="width:30px;height:30px;border:1px solid #000;background-color: {{state.color}};"></div></td>
                     <td>{{state.label}}</td>
                     <td>{{state.value}}</td>
                   </tr>
                   <tr ng-repeat-end>
-                    <td colspan="7" class="hiddenRow">
-                      <div class="accordian-body collapse table-details" id="details{{$index}}">
-                        <div class="row well well-sm well-details">
-                          <div class="col-md-2">
-                            <label class="control-label">Stuff</label>
-                            <p>
-                              Stuff
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
                   </tr>
                 </tbody>
+              </table>
+              <h4>Most Recently Modified</h4>
+                <p>A new table will appear here soon.</p>
               </table>
             </div>
           </div>

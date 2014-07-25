@@ -60,11 +60,11 @@ angular.module('clientApp')
       $scope.selectedChecklistDetails = '';
     };
 
-    $scope.saveChecklistQuestion = function(id){
+    $scope.saveChecklistQuestion = function(answer, id){
       var params = {};
       
       params.id = id;
-      params.answer = $scope.answer.answer;
+      params.answer = answer;
 
       $http.post(StateService.getServerAddress() + 'surveyor/answer/', params)
       .success(function () {

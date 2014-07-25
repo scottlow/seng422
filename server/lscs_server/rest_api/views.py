@@ -386,7 +386,7 @@ class AnswerSurveyQuestion(SurveyorSecurityMixin, generics.CreateAPIView):
             if answer != None:
                 error = '{"error":"User is not assigned to checklist"}'
                 if request.user in answer.checklist.surveyors.all():
-                    if request.DATA["answer"] == "True":
+                    if request.DATA["answer"] == "Completed":
                         answer.answer = ChecklistAnswer.COMPLETED
                     else:
                         answer.answer = ChecklistAnswer.INCOMPLETE

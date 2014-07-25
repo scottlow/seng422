@@ -257,10 +257,10 @@
               <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="answer in selectedChecklistDetails.answers">
                 <td>{{answer.question.question}}</td>  
                 <td class="form-group">
-                  <select class="dropdown-toggle btn btn-default" ng-change="saveChecklistQuestion(answer.question.id)" ng-model="answer.answer">
+                  <select class="dropdown-toggle btn btn-default" ng-change="saveChecklistQuestion(answer.answer, answer.id)" ng-model="answer.answer">
                     <option class="btn btn-default" value="Unanswered">Unanswered</option>
-                    <option class="btn btn-default" value="True">Completed</option>
-                    <option class="btn btn-default" value="False">Uncompleted</option>
+                    <option class="btn btn-default" value="Completed">Completed</option>
+                    <option class="btn btn-default" value="Uncompleted">Uncompleted</option>
                   </select>  
                 </td>
               </tr>

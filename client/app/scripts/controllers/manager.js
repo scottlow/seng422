@@ -674,6 +674,11 @@ angular.module('clientApp')
       })
     }
 
+    $scope.getParsedOverviewData = function(user) {
+      console.log($scope.overviewChartParsedData);
+      return $scope.overviewChartParsedData;
+    }
+
     $scope.parseOverviewData = function(user) {
       var obj = $scope.overviewChartRawData;
       obj = obj.count;//strip the total, I guess.

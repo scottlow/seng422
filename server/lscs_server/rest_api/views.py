@@ -444,6 +444,20 @@ class GetChecklistStatusRecentlyUpdated(ManagerSecurityMixin, generics.ListAPIVi
     def get_queryset(self):
       return Checklist.objects.order_by('dateLastModified')[:5]
 
+class GetSurveyerChecklistStatusDistribution(SurveyorSecurityMixin, generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (JSONRenderer, JSONRenderer)
+
+    def get(self, request):
+      temp = {}
+      data = []
+      for choice in Checklist.STATE_CHOICES:
+        temp = dict(label=choice[1],value=Checklist.objects.filter(state=choice[0]).count())
+        data.append(temp)
+        temp = {}
+      return Response(data=data, status=status.HTTP_200_OK)
+
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 
 create_user = CreateUser.as_view()
@@ -471,3 +485,5 @@ surveyor_checklists = ListSurveyorChecklists.as_view()
 surveyor_checklist = ViewSurveyorChecklist.as_view()
 surveyor_answer = AnswerSurveyQuestion.as_view()
 surveyor_submit = SubmitChecklist.as_view()
+surveyor_checklist_distribution = GetSurveyerChecklistStatusDistribution.as_view()
+

@@ -661,20 +661,20 @@ angular.module('clientApp')
       $scope.edit_id = user.id;
     };
 
-    $scope.initOverviewDoughnutChart = function(user) {
+    $scope.updateOverviewData = function(user) {
       //fetch initial data...
       $http.get(StateService.getServerAddress() + 'manager/checklist_distribution/')
       .success(function (data) {
         console.log('Chart Data retrieved from manager.js');
         $scope.overviewChartRawData = data;
-        $scope.parseOverviewChartData();
+        $scope.parseOverviewData();
       })
       .error(function (data) {
         console.log('Error grabbing chart data from endpoint.')
       })
     }
 
-    $scope.parseOverviewChartData = function(user) {
+    $scope.parseOverviewData = function(user) {
       var obj = $scope.overviewChartRawData;
       obj = obj.count;//strip the total, I guess.
       var chartColours = ["#F7464A","#FDB45C","#46BFBD","#46BFBD","#4D5360","#A3F746","#46F7F3","#9B46F7","#A2F746"];
@@ -697,24 +697,6 @@ angular.module('clientApp')
         //paint the chart.
         var ctx = document.getElementById("chart-area").getContext("2d");
         $scope.overviewChart = new Chart(ctx).Doughnut(newData, {responsive : true, animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
-    }
-
-    $scope.getParsedOverviewData = function(user) {
-      console.log("returning data?");
-      return $scope.overviewChartParsedData;
-    }
-
-    $scope.updateOverviewData = function(user) {
-      //fetch initial data...
-      $http.get(StateService.getServerAddress() + 'manager/checklist_distribution/')
-      .success(function (data) {
-        console.log('Chart Data retrieved from manager.js');
-        $scope.overviewChartRawData = data;
-        $scope.parseOverviewChartData();
-      })
-      .error(function (data) {
-        console.log('Error grabbing chart data from endpoint.')
-      })
     }
 
     $scope.redrawOverviewDoughnutChart = function(user) {

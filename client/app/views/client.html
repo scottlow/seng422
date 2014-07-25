@@ -292,7 +292,25 @@
       </div>
       <div class="modal-footer">
         <button type="button" ng-click="cleanChecklistDetails()" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="cleanChecklistDetails()" ng-click="submitChecklistDetailsUpdate()">Final Submit</button>
+        <button type="button" class="btn btn-primary" ng-click="submitChecklistDetailsUpdate(selectedChecklistDetails.id)">Complete Checklist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error submitting checklist modal -->
+<div class="modal fade" id="errorSubmitChecklist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Error<br /><small>An error occured while performing database operation.</small></h4>
+      </div>
+      <div class="modal-body">
+        <td>Failed to submit checklist, make sure all questions have been answered.</td>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

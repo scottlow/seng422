@@ -36,7 +36,7 @@ class CreateUser(ManagerSecurityMixin, generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        
+
         serializer = LSCSUserRegisterSerializer(data=request.DATA);
         if serializer.is_valid():
             serializer.save()
@@ -83,9 +83,9 @@ class UpdateSurveyor(ManagerSecurityMixin, generics.CreateAPIView):
             if('first_name' in request.DATA.keys()):
                 user.first_name = serializer.init_data['first_name']
             if('last_name' in request.DATA.keys()):
-                user.last_name = serializer.init_data['last_name']      
+                user.last_name = serializer.init_data['last_name']
             if('username' in request.DATA.keys()):
-                user.username = serializer.init_data['username']                              
+                user.username = serializer.init_data['username']
             user.save()
 
             serializer = LSCSUserSerializer(user)
@@ -96,11 +96,11 @@ class UpdateSurveyor(ManagerSecurityMixin, generics.CreateAPIView):
             if errors:
                 if errors[0] == "username":
                     header["Error-Type"] = errors[0]
-                    header["Error-Message"] = "Username {0} already exists".format(serializer.init_data['username'])                  
+                    header["Error-Message"] = "Username {0} already exists".format(serializer.init_data['username'])
                 elif errors[0] == "email":
                     header['Error-Type'] = errors[0]
                     header["Error-Message"] = "Email {0} already exists".format(serializer.init_data['email'])
-            return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)    
+            return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)
 
 class ListSurveyors(ManagerSecurityMixin, generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -117,7 +117,7 @@ class LoggedOutRESTAPIView(APIView):
     permission_classes = (AllowAny,)
 
 class PasswordReset(LoggedOutRESTAPIView, GenericAPIView):
-    permission_classes = (AllowAny,)    
+    permission_classes = (AllowAny,)
 
     """
     Calls Django Auth PasswordResetForm save method.
@@ -129,7 +129,7 @@ class PasswordReset(LoggedOutRESTAPIView, GenericAPIView):
     serializer_class = PasswordResetSerializer
 
     def post(self, request):
-        # Create a serializer with request.DATA     
+        # Create a serializer with request.DATA
         serializer = self.serializer_class(data=request.DATA)
 
         try:
@@ -386,7 +386,7 @@ class AnswerSurveyQuestion(SurveyorSecurityMixin, generics.CreateAPIView):
             if answer != None:
                 error = '{"error":"User is not assigned to checklist"}'
                 if request.user in answer.checklist.surveyors.all():
-                    if request.DATA["answer"] == "True":
+                    if request.DATA["answer"] == "Completed":
                         answer.answer = ChecklistAnswer.COMPLETED
                     else:
                         answer.answer = ChecklistAnswer.INCOMPLETE
@@ -435,6 +435,32 @@ class GetChecklistStatusDistribution(ManagerSecurityMixin, generics.GenericAPIVi
             data["total"] += data["count"][choice[1]]
         return Response(data=data, status=status.HTTP_200_OK)
 
+class GetChecklistStatusRecentlyUpdated(ManagerSecurityMixin, generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (JSONRenderer, JSONRenderer)
+    serializer_class = ChecklistRecentlyUpdatedSerializer
+
+    def get_queryset(self):
+      return Checklist.objects.order_by('dateLastModified')[:5]
+
+class GetSurveyerChecklistStatusDistribution(SurveyorSecurityMixin, generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (JSONRenderer, JSONRenderer)
+
+    def get(self, request):
+      temp = {}
+      data = []
+      c = Checklist.objects.select_related('manager', 'checklistType')
+      c = c.prefetch_related('surveyors')
+      c = c.filter(surveyors__pk=self.request.user.id)
+      print c.count()
+
+      for choice in Checklist.STATE_CHOICES:
+        temp = dict(value=c.filter(state=choice[0]).count(),label=choice[1])
+        data.append(temp)
+      return Response(data=data, status=status.HTTP_200_OK)
 
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()
 
@@ -457,8 +483,11 @@ manager_checklists = ListManagerChecklists.as_view()
 manager_checklist = ViewManagerChecklist.as_view()
 
 manager_checklist_distribution = GetChecklistStatusDistribution.as_view()
+manager_checklist_recently_updated = GetChecklistStatusRecentlyUpdated.as_view()
 
 surveyor_checklists = ListSurveyorChecklists.as_view()
 surveyor_checklist = ViewSurveyorChecklist.as_view()
 surveyor_answer = AnswerSurveyQuestion.as_view()
 surveyor_submit = SubmitChecklist.as_view()
+surveyor_checklist_distribution = GetSurveyerChecklistStatusDistribution.as_view()
+

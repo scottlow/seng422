@@ -24,21 +24,21 @@
     <div class="nag navbar-nav navbar-left" ng-show="isLoggedIn">
       <ul class="nav navbar-nav">
           <li class="active"><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
-          <li><a href="#checklists" ng-click="refresh()" role="tab" data-toggle="tab">Checklists</a></li>     
+          <li><a href="#checklists" ng-click="refresh()" role="tab" data-toggle="tab">Checklists</a></li>
       </ul>
     </div>
       <div class="nav navbar-nav navbar-right" ng-show="isLoggedIn">
         <ul class="nav navbar-nav">
-          <li><p class="navbar-text">Welcome, {{StateService.getUsername()}}</p></li>             
+          <li><p class="navbar-text">Welcome, {{StateService.getUsername()}}</p></li>
           <li class="padding-fix dropdown">
             <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h4 glyphicon glyphicon-cog"></span></a>
-            <ul class="dropdown-menu">          
+            <ul class="dropdown-menu">
               <li><a data-toggle="modal" data-target="#editSurveyorModal" ng-click="setEditInformation(StateService.getCurrentUser())" href="#">Edit Profile</a></li>
-              <li><a ng-click="signOut()" href="">Sign Out</a></li>            
+              <li><a ng-click="signOut()" href="">Sign Out</a></li>
             </ul>
           </li>
         </ul>
-      </div>      
+      </div>
     </div>
     <!--/.navbar-collapse -->
   </div>
@@ -48,9 +48,31 @@
 <div class="tab-content">
 
   <!-- Overview tab content -->
-  <div class="tab-pane" id="overview">
-    Overview stuff
-  </div>
+  <div class="tab-pane active" id="overview">
+      <div class="row">
+        <div class="col-sm-12 main" style="padding-bottom:0px">
+          <div class="page-header" style="padding-bottom:55px; margin-bottom: 0px;">
+            <h1 class="pull-left" style="margin: 0px;">Overview</h1>
+
+            <div class="pull-right">
+              <button type="button" data-toggle="modal" ng-click="updateOverviewData()" class="btn btn-success btn-lg" style="margin-top: -2px">Update Data</button>
+            </div>
+
+          </div>
+          <p style="margin-top: 20px" class="well well-sm"><b>Greetings, {{StateService.getUsername()}}.</b> Don't forget to get back to work after staying here in the overview!</p>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-4">
+              <canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="updateOverviewData()"/>
+              <p style="margin-top: 20px" class="well well-sm">If you're reading this, you should be working.</p>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-8">
+              <h4>Legend</h4>
+              <h4>Most Recently Modified</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   <!-- Checklist tab content -->
   <div class="tab-pane" id="checklists">
@@ -69,7 +91,7 @@
       <!-- Map/weather and Table row -->
       <div class="row">
         <div class="container" style="margin: 0px; width:100%;">
-          
+
           <!-- Map and weather column -->
           <div class="col -xs-12 col-sm-12 col-md-4">
 
@@ -94,7 +116,7 @@
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
-                  
+
                   <tr data-toggle="collapse" data-target="#details{{$index}}" ng-mouseover="setLocation(checklist.latitude, checklist.longitude)" class="checklist-row" ng-repeat-start="checklist in StateService.getChecklists()">
                     <td>{{checklist.fileNumber}}</td>
                     <td>{{checklist.title}}</td>
@@ -155,77 +177,77 @@
         <form name="editSurveyorForm" class="form-horizontal" role="form" ng-submit="submitRegistration()" novalidate>
           <!-- Username -->
           <div class="form-group" ng-class="{ 'has-error' : editSurveyorForm.username.$invalid && editHasSubmitted || usernameEditErrorMessage }">
-            <label class="col-sm-3 control-label">Username</label> 
+            <label class="col-sm-3 control-label">Username</label>
             <div class="col-sm-9">
               <input type="username" name="username" class="form-control" ng-model="edit_username" required placeholder="username">
-              <p ng-show="usernameEditPostError" class="help-block">{{usernameEditErrorMessage}}</p>          
+              <p ng-show="usernameEditPostError" class="help-block">{{usernameEditErrorMessage}}</p>
               <p ng-show="editSurveyorForm.username.$invalid && editHasSubmitted" class="help-block">Please enter a valid username.</p>
             </div>
-          </div>      
+          </div>
           <!-- First Name -->
           <div class="form-group">
-              <label class="col-sm-3 control-label">First Name</label> 
+              <label class="col-sm-3 control-label">First Name</label>
               <div class="col-sm-9">
                 <input type="text" name="name" class="form-control" ng-model="edit_first_name" placeholder="First Name">
               </div>
           </div>
           <!-- Last Name -->
           <div class="form-group">
-              <label class="col-sm-3 control-label">Last Name</label> 
+              <label class="col-sm-3 control-label">Last Name</label>
               <div class="col-sm-9">
                 <input type="text" name="name" class="form-control" ng-model="edit_last_name" placeholder="Last Name">
               </div>
-          </div>          
+          </div>
           <!-- Email -->
           <div class="form-group" ng-class="{ 'has-error' : editSurveyorForm.email.$invalid && editHasSubmitted || emailEditErrorMessage }">
-            <label class="col-sm-3 control-label">Email</label> 
+            <label class="col-sm-3 control-label">Email</label>
             <div class="col-sm-9">
               <input type="email" name="email" class="form-control" ng-model="edit_email" required placeholder="Email">
-              <p ng-show="emailEditPostError" class="help-block">{{emailEditErrorMessage}}</p>          
+              <p ng-show="emailEditPostError" class="help-block">{{emailEditErrorMessage}}</p>
               <p ng-show="editSurveyorForm.email.$invalid && editHasSubmitted" class="help-block">Please enter a valid email.</p>
             </div>
           </div>
           <!-- Password -->
           <div class="form-group">
-            <label class="col-sm-3 control-label">Password</label>             
+            <label class="col-sm-3 control-label">Password</label>
             <div class="col-sm-9">
-              <button type="button" ng-show="!editShowChangePassword" ng-click="editShowChangePassword = true; editHasSubmitted = false;" class="btn btn-primary">Change Password</button>            
+              <button type="button" ng-show="!editShowChangePassword" ng-click="editShowChangePassword = true; editHasSubmitted = false;" class="btn btn-primary">Change Password</button>
               <div ng-show="editShowChangePassword" class="well" style="margin-bottom: 0px;">
                 <!-- Current Password -->
-                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.password.$invalid && editHasSubmitted }">              
-                  <label class="col-sm-4 control-label">Current Password</label>               
-                  <div class="col-sm-8">                            
+                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.password.$invalid && editHasSubmitted }">
+                  <label class="col-sm-4 control-label">Current Password</label>
+                  <div class="col-sm-8">
                     <input type="password" name="password" class="form-control" ng-model="currentPassword" ng-required="editShowChangePassword">
                     <p ng-show="editSurveyorForm.password.$error.required && !editSurveyorForm.password.$error.passwordIncorrect && editHasSubmitted" class="help-block">Please enter your current password.</p>
-                    <p ng-show="editSurveyorForm.password.$error.passwordIncorrect && editHasSubmitted" class="help-block">The password you entered does not match the one we have on file for you! Please try again.</p>                    
+                    <p ng-show="editSurveyorForm.password.$error.passwordIncorrect && editHasSubmitted" class="help-block">The password you entered does not match the one we have on file for you! Please try again.</p>
                   </div>
                 </div>
                 <!-- New Password -->
-                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.newPassword.$invalid && editHasSubmitted }">                 
-                  <label class="col-sm-4 control-label">New Password</label>               
-                  <div class="col-sm-8">                            
+                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.newPassword.$invalid && editHasSubmitted }">
+                  <label class="col-sm-4 control-label">New Password</label>
+                  <div class="col-sm-8">
                     <input type="password" name="newPassword" class="form-control" ng-model="editNewPassword" ng-required="editShowChangePassword">
                     <p ng-show="editSurveyorForm.newPassword.$error.required && editHasSubmitted" class="help-block">Please enter a new password.</p>
-                  </div> 
-                </div>  
+                  </div>
+                </div>
                 <!-- Confirm Password -->
-                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.verifyPassword.$invalid && editHasSubmitted }">                 
-                  <label class="col-sm-4 control-label">Verify Password</label>               
-                  <div class="col-sm-8">                            
+                <div class="form-group" ng-class="{ 'has-error' : editShowChangePassword && editSurveyorForm.verifyPassword.$invalid && editHasSubmitted }">
+                  <label class="col-sm-4 control-label">Verify Password</label>
+                  <div class="col-sm-8">
                     <input type="password" name="verifyPassword" class="form-control" ng-model="editVerifyPassword" ng-required="editShowChangePassword">
                     <p ng-show="editSurveyorForm.verifyPassword.$error.required && editHasSubmitted" class="help-block">Please verify your new password.</p>
-                    <p ng-show="editSurveyorForm.verifyPassword.$error.passwordMatch && editHasSubmitted" class="help-block">The passwords you entered do not match!</p>                    
-                  </div> 
+                    <p ng-show="editSurveyorForm.verifyPassword.$error.passwordMatch && editHasSubmitted" class="help-block">The passwords you entered do not match!</p>
+                  </div>
                 </div>
                 <!-- Hide Button -->
-                <div class="form-group" style="margin-bottom: 0px">  
-                  <div class="col-sm-12">                                
-                    <button style="float: right;" type="button" ng-click="editShowChangePassword = false; cleanUpPasswords();" class="btn btn-default">Cancel</button>   
+                <div class="form-group" style="margin-bottom: 0px">
+                  <div class="col-sm-12">
+                    <button style="float: right;" type="button" ng-click="editShowChangePassword = false; cleanUpPasswords();" class="btn btn-default">Cancel</button>
                   </div>
-                </div>                                        
+                </div>
               </div>
             </div>
-          </div>                                           
+          </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -241,7 +263,7 @@
   <div class="modal-dialog" style="width: 706px;">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button type="button" class="close" ng-click="cleanChecklistDetails()" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Checklist Details<br /><small>Below you can find all questions associated with the checklist.</small></h4>
       </div>
       <div class="modal-body">
@@ -254,10 +276,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="answer in StateService.getChecklistDetails().answers">
-                <td>{{answer.question.question}}</td>  
+              <tr data-toggle="collapse" data-target="#checklistDetails{{$index}}" class="checklist-row" ng-repeat="answer in selectedChecklistDetails.answers">
+                <td>{{answer.question.question}}</td>
                 <td class="form-group">
-                  <input type="text" name="name" class="form-control" ng-model="answer.answer">  
+                  <select class="dropdown-toggle btn btn-default" ng-change="saveChecklistQuestion(answer.answer, answer.id)" ng-model="answer.answer">
+                    <option class="btn btn-default" value="Unanswered">Unanswered</option>
+                    <option class="btn btn-default" value="Completed">Completed</option>
+                    <option class="btn btn-default" value="Incomplete">Incomplete</option>
+                  </select>
                 </td>
               </tr>
             </tbody>
@@ -266,7 +292,25 @@
       </div>
       <div class="modal-footer">
         <button type="button" ng-click="cleanChecklistDetails()" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="submitChecklistDetailsUpdate()">Save Changes</button>
+        <button type="button" class="btn btn-primary" ng-click="submitChecklistDetailsUpdate(selectedChecklistDetails.id)">Complete Checklist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error submitting checklist modal -->
+<div class="modal fade" id="errorSubmitChecklist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Error<br /><small>An error occured while performing database operation.</small></h4>
+      </div>
+      <div class="modal-body">
+        <td>Failed to submit checklist, make sure all questions have been answered.</td>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

@@ -27,7 +27,7 @@ class LSCSUserRegisterSerializer(serializers.ModelSerializer):
             allowed = set(fields)
             existing = set(self.fields.keys())
             for field_name in existing - allowed:
-                self.fields.pop(field_name)        
+                self.fields.pop(field_name)
 
     def validate(self, attrs):
         if 'username' in attrs and rest_api.models.LSCSUser.objects.filter(username=attrs['username']).exists():
@@ -118,3 +118,8 @@ class ChecklistSerializer(serializers.ModelSerializer):
     class Meta:
         model = rest_api.models.Checklist
         depth = 1
+
+class ChecklistRecentlyUpdatedSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = rest_api.models.Checklist
+    fields = ("id","title","description","fileNumber","landDistrict","state","surveyors",)

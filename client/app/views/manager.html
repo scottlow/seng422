@@ -55,58 +55,59 @@
             <h1 class="pull-left" style="margin: 0px;">Overview</h1>
 
             <div class="pull-right">
-              <button type="button" data-toggle="modal" ng-click="redrawOverviewDoughnutChart()" class="btn btn-success btn-lg" style="margin-top: -2px">Update Data</button>
+              <button type="button" data-toggle="modal" ng-click="updateOverviewData()" class="btn btn-success btn-lg" style="margin-top: -2px">Update Data</button>
             </div>
 
           </div>
           <p style="margin-top: 20px" class="well well-sm"><b>Greetings, {{StateService.getUsername()}}.</b> Some dummy semi-useful information that somehow pertains to the minions you have under your responsibility will reside here.</p>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-4">
-              <canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="drawOverviewDoughnutChart()"/>
+              <canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="updateOverviewData()"/>
+              <p style="margin-top: 20px" class="well well-sm">Some stuff here maybe?</p>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-8">
               <h4>Legend</h4>
               <table class="table table-manager table-striped">
                 <thead>
                   <tr>
+                    <th>Colour</th>
                     <th>State</th>
                     <th>Count</th>
                   </tr>
                 </thead>
                 <tbody class="scrollContent">
-                  <tr data-toggle="collapse" data-target="#details{{$index}}" class="checklist-row" >
-                    <td>Completed</td>
-                    <td>10</td>
+                  <tr ng-repeat-start="state in getParsedOverviewData()">
+                    <td><div style="width:30px;height:30px;border:1px solid #000;background-color: {{state.color}};"></div></td>
+                    <td>{{state.label}}</td>
+                    <td>{{state.value}}</td>
                   </tr>
                   <tr ng-repeat-end>
-                    <td colspan="7" class="hiddenRow">
-                      <div class="accordian-body collapse table-details" id="details{{$index}}">
-                        <div class="row well well-sm well-details">
-                          <div class="col-md-2">
-                            <label class="control-label">Stuff</label>
-                            <p>
-                              details
-                            </p>
-                          </div>
-                          <div class="col-md-7">
-                            <label class="control-label">Other Stuff</label>
-                            <p>
-                              details
-                            </p>
-                          </div>
-                          <div class="col-md-3">
-                            <label class="control-label">Actions</label>
-                            <p>
-                              Stuff here
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
                   </tr>
                 </tbody>
               </table>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-8">
-              <p>Some ridiculous news feed here</p>
+              <h4>Most Recently Modified</h4>
+                <p>A new table will appear here soon.</p>
+                <table class="table table-manager table-striped" ng-init="StateService.getRecentlyUpdatedChecklists()">
+                  <thead>
+                    <tr>
+                      <th>File Number</th>
+                      <th>Title</th>
+                      <th>Land District</th>
+                      <th>State</th>
+                    </tr>
+                  </thead>
+                  <tbody class="scrollContent">
+                    <tr class="overviewRU-row" ng-repeat-start="checklist in StateService.getRecentlyUpdatedData()">
+                      <td>{{checklist.fileNumber}}</td>
+                      <td>{{checklist.title}}</td>
+                      <td>{{checklist.landDistrict}}</td>
+                      <td>{{checklist.state}}</td>
+                    </tr>
+                    <tr ng-repeat-end>
+                    </tr>
+                  </tbody>
+                </table>
+              </table>
             </div>
           </div>
         </div>

@@ -60,6 +60,22 @@ angular.module('clientApp')
       $scope.selectedChecklistDetails = '';
     };
 
+    $scope.saveChecklistQuestion = function(answer, id){
+      var params = {};
+      
+      params.id = id;
+      params.answer = answer;
+      if(answer !== "Unanswered"){
+        $http.post(StateService.getServerAddress() + 'surveyor/answer/', params)
+        .success(function () {
+          console.log("Changed question answer.");
+        })
+        .error(function () {
+          console.log("Failed to change question answer.");
+        });
+      }
+    }
+
     $scope.cleanUpPasswords = function() {
       $scope.editVerifyPassword = '';
       $scope.editNewPassword = '';
@@ -123,8 +139,22 @@ angular.module('clientApp')
       return deferred.promise;
     };
 
-    $scope.submitChecklistDetailsUpdate = function() {
-      //FINISH ME
+    $scope.submitChecklistDetailsUpdate = function(id) {
+      var params = {};
+      
+      params.id = id;
+      params.state = "Submitted";
+
+      $http.post(StateService.getServerAddress() + 'surveyor/checklist_submit/', params)
+      .success(function () {
+        console.log("Submitted complete checklist.");
+        $('#checklistDetailsModal').modal('hide');
+        $scope.cleanChecklistDetails();
+      })
+      .error(function () {
+        console.log("Failed to submit checklist.");
+        $('#errorSubmitChecklist').modal('show');
+      });
     };
 
     $scope.submitSurveyorUpdate = function() {

@@ -5,9 +5,10 @@ angular.module('clientApp')
     var currentUser;
     var surveyorList;
     var checklists;
-    var checklistTypes = []; 
+    var checklistTypes = [];
     var currentSelectedSection;
     var selectedChecklistDetails = '';
+    var recentlyUpdatedChecklists;
 
     this.clearState = function() {
       currentUser = {};
@@ -66,7 +67,7 @@ angular.module('clientApp')
       for(var i = 0; i < surveyorList.length; i++) {
         if(deleteId === surveyorList[i].id) {
           surveyorList.splice(i, 1);
-          break;          
+          break;
         }
       }
     }
@@ -102,7 +103,7 @@ angular.module('clientApp')
           break;
         }
       }
-    }  
+    }
 
     this.removeQuestionData = function(deleteId) {
       for(var i = 0; i < currentSelectedSection.questions.length; i++) {
@@ -111,7 +112,7 @@ angular.module('clientApp')
           break;
         }
       }
-    }    
+    }
 
     this.removeChecklistData = function(deleteId) {
       for(var i = 0; i < checklists.length; i++) {
@@ -200,7 +201,7 @@ angular.module('clientApp')
         });
       } else {
         currentSelectedSection = undefined;
-      }    
+      }
     }
 
     this.editLocalChecklistSection = function(name, id) {
@@ -295,7 +296,7 @@ angular.module('clientApp')
     this.getUserList = function() {
       return $http.get(this.getServerAddress() + 'manager/surveyors/')
       .success(function(data) {
-        surveyorList = data; 
+        surveyorList = data;
       })
       .error(function(data) {
         console.log('There was an error getting user information');
@@ -310,7 +311,7 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('There was an error getting user information');
       });
-    } 
+    }
 
     this.getUserById = function(id) {
 
@@ -323,6 +324,20 @@ angular.module('clientApp')
           }
         }
       }
+    }
+
+    this.getRecentlyUpdatedChecklists = function(id){
+      return $http.get(this.getServerAddress() + 'manager/checklist_recently_updated/')
+      .success(function(data) {
+        recentlyUpdatedChecklists = data;
+      })
+      .error(function(data) {
+        console.log('There was an error getting user information');
+      });
+    }
+
+    this.getRecentlyUpdatedData = function(id) {
+      return recentlyUpdatedChecklists;
     }
 
   });

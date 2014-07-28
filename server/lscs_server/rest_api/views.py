@@ -452,14 +452,19 @@ class GetSurveyerChecklistStatusDistribution(SurveyorSecurityMixin, generics.Gen
     def get(self, request):
       temp = {}
       data = []
+      count = 0;
+      chartColours = ["#F7464A","#FDB45C","#46BFBD","#46BFBD","#4D5360","#A3F746","#46F7F3","#9B46F7","#A2F746"];
+      #filter only the checklists that belong to me.
       c = Checklist.objects.select_related('manager', 'checklistType')
       c = c.prefetch_related('surveyors')
       c = c.filter(surveyors__pk=self.request.user.id)
       print c.count()
 
       for choice in Checklist.STATE_CHOICES:
-        temp = dict(value=c.filter(state=choice[0]).count(),label=choice[1])
-        data.append(temp)
+        if(c.filter(state=choice[0]).count() != 0):
+          temp = dict(value=c.filter(state=choice[0]).count(),label=choice[1],color=chartColours[count])
+          data.append(temp)
+          count = count + 1
       return Response(data=data, status=status.HTTP_200_OK)
 
 obtain_auth_token_user_type = ObtainAuthTokenAndUserType.as_view()

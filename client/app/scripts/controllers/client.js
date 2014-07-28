@@ -16,6 +16,8 @@ angular.module('clientApp')
     $scope.selectedChecklistDetails = '';
     $scope.clientLat = 0;
     $scope.clientLong = 0;
+    $scope.overviewChartRawData;
+    $scope.overviewChartParsedData;
 
     var geocoder = new google.maps.Geocoder();
 
@@ -52,7 +54,7 @@ angular.module('clientApp')
 
     $scope.retreiveSelectedChecklist = function(checklistID) {
       StateService.getClientChecklistById(checklistID).then(function() {
-        $scope.selectedChecklistDetails = StateService.getChecklistDetails();          
+        $scope.selectedChecklistDetails = StateService.getChecklistDetails();
       });
     };
 
@@ -62,7 +64,7 @@ angular.module('clientApp')
 
     $scope.saveChecklistQuestion = function(answer, id){
       var params = {};
-      
+
       params.id = id;
       params.answer = answer;
       if(answer !== "Unanswered"){
@@ -79,15 +81,15 @@ angular.module('clientApp')
     $scope.cleanUpPasswords = function() {
       $scope.editVerifyPassword = '';
       $scope.editNewPassword = '';
-      $scope.currentPassword = '';   
+      $scope.currentPassword = '';
     };
 
     $scope.cleanUpEditModal = function() {
       $scope.usernameEditPostError = false;
       $scope.usernameEditErrorMessage = '';
       $scope.emailEditPostError = false;
-      $scope.emailEditErrorMessage = ''; 
-      $scope.cleanUpPasswords();  
+      $scope.emailEditErrorMessage = '';
+      $scope.cleanUpPasswords();
     };
 
     $scope.setEditInformation = function(user) {
@@ -109,7 +111,7 @@ angular.module('clientApp')
         // If entered passwords don't match, we can error out early.
         if($scope.editNewPassword !== $scope.editVerifyPassword) {
           $scope.editSurveyorForm.verifyPassword.$error.passwordMatch = true;
-          $scope.editSurveyorForm.newPassword.$invalid = true;          
+          $scope.editSurveyorForm.newPassword.$invalid = true;
           $scope.editSurveyorForm.verifyPassword.$invalid = true;
           $scope.editSurveyorForm.password.$invalid = false;
           deferred.resolve(null); // We don't know whether or not we have to make a REST API call due to invalid data. Thus, we can return null (which will terminate execution of submitAccountUpdate())
@@ -119,17 +121,17 @@ angular.module('clientApp')
           .success(function(){
             // If so, set the appropriate form validation state and continue processing
             $scope.editSurveyorForm.verifyPassword.$error.passwordMatch = false;
-            $scope.editSurveyorForm.newPassword.$invalid = false;            
-            $scope.editSurveyorForm.verifyPassword.$invalid = false;          
+            $scope.editSurveyorForm.newPassword.$invalid = false;
+            $scope.editSurveyorForm.verifyPassword.$invalid = false;
             deferred.resolve(true); // We do need to make a request to the REST API in this case, so we can return true
           })
           .error(function() {
             // Otherwise, set the appropriate form validation state and error out
             $scope.editSurveyorForm.password.$error.passwordIncorrect = true;
             $scope.editSurveyorForm.password.$invalid = true;
-            $scope.editSurveyorForm.verifyPassword.$error.passwordMatch = false;          
-            $scope.editSurveyorForm.newPassword.$invalid = false;            
-            $scope.editSurveyorForm.verifyPassword.$invalid = false; 
+            $scope.editSurveyorForm.verifyPassword.$error.passwordMatch = false;
+            $scope.editSurveyorForm.newPassword.$invalid = false;
+            $scope.editSurveyorForm.verifyPassword.$invalid = false;
             deferred.resolve(null); // We don't know whether or not we have to make a REST API call due to invalid data. Thus, we can return null (which will terminate execution of submitAccountUpdate())
           });
         }
@@ -141,7 +143,7 @@ angular.module('clientApp')
 
     $scope.submitChecklistDetailsUpdate = function(id) {
       var params = {};
-      
+
       params.id = id;
       params.state = "Submitted";
 
@@ -156,6 +158,39 @@ angular.module('clientApp')
         $('#errorSubmitChecklist').modal('show');
       });
     };
+
+    $scope.updateOverviewData = function(user) {
+      //fetch initial data...
+      $http.get(StateService.getServerAddress() + 'surveyor/checklist_distribution/')
+      .success(function (data) {
+        console.log('Chart Data retrieved from surveyor.js');
+        //console.log(data);
+        $scope.overviewChartRawData = data;
+        $scope.parseOverviewData();
+      })
+      .error(function (data) {
+        console.log('Error grabbing chart data from endpoint.')
+      })
+    }
+
+    $scope.getParsedOverviewData = function(){
+      return $scope.overviewChartParsedData;
+    }
+
+    $scope.parseOverviewData = function(user) {
+      var obj = $scope.overviewChartRawData;
+      $scope.overviewChartParsedData = $scope.overviewChartRawData;
+      $scope.drawOverviewDoughnutChart();
+    }
+
+    $scope.drawOverviewDoughnutChart = function(user) {
+        //parse the string into something usable
+        var doughnutData = $scope.overviewChartParsedData;
+        //paint the chart.
+        document.getElementById("chart-area").outerHTML='<canvas id="chart-area" style="width: 100% !important;max-width: 300px;height: auto !important;" width="300" height="300" ng-init="updateOverviewData()"/>';
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        $scope.overviewChart = new Chart(ctx).Doughnut(doughnutData, {responsive : true, animateRotate : true, animateScale : false, legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"});
+    }
 
     $scope.submitSurveyorUpdate = function() {
       var params = {}; // Parameters to send to the REST API (only parameters specified will be updated)
@@ -172,7 +207,7 @@ angular.module('clientApp')
       $scope.editSurveyorForm.password.$error.passwordIncorrect = false;
 
       // If we're here, it means the Save Changes button has been clicked and the form has been submitted
-      $scope.editHasSubmitted = true; 
+      $scope.editHasSubmitted = true;
 
 
       if($scope.editSurveyorForm.$valid) {
@@ -194,16 +229,16 @@ angular.module('clientApp')
           // Check for new first name
           if($scope.edit_first_name !== StateService.getUserById($scope.edit_id).first_name) {
             params.first_name = $scope.edit_first_name;
-            StateService.getUserById($scope.edit_id).first_name = $scope.edit_first_name; // Set the new name in StateService           
+            StateService.getUserById($scope.edit_id).first_name = $scope.edit_first_name; // Set the new name in StateService
             makeRequest = true;
           }
 
           // Check for new last name
           if($scope.edit_last_name !== StateService.getUserById($scope.edit_id).last_name) {
             params.last_name = $scope.edit_last_name;
-            StateService.getUserById($scope.edit_id).last_name = $scope.edit_last_name; // Set the new name in StateService           
+            StateService.getUserById($scope.edit_id).last_name = $scope.edit_last_name; // Set the new name in StateService
             makeRequest = true;
-          }                    
+          }
 
           // Check for new email
           if($scope.edit_email !== StateService.getUserById($scope.edit_id).email) {
@@ -215,13 +250,13 @@ angular.module('clientApp')
           if($scope.edit_username !== StateService.getUserById($scope.edit_id).username) {
             params.username = $scope.edit_username;
             makeRequest = true;
-          }          
+          }
 
           // Make the profile change request if necessary
-          if(makeRequest) {           
+          if(makeRequest) {
             params.id = $scope.edit_id;
             $http.post(StateService.getServerAddress() + 'users/update/', params)
-            .success(function (status) {           
+            .success(function (status) {
               console.log("Changed user information");
 
               if($scope.edit_email !== undefined) {
@@ -235,9 +270,9 @@ angular.module('clientApp')
                 StateService.setProfileFromCookie();
               }
 
-              angular.element('#editSurveyorModal').modal('hide');  
-              
-              // Reset the modal UI so that anyone who clicks on the Edit Profile button again will be shown a fresh slate.            
+              angular.element('#editSurveyorModal').modal('hide');
+
+              // Reset the modal UI so that anyone who clicks on the Edit Profile button again will be shown a fresh slate.
               $scope.editHasSubmitted = false;
               $scope.editShowChangePassword = false;
             })
@@ -251,14 +286,14 @@ angular.module('clientApp')
                 $scope.emailEditPostError = true;
                 $scope.emailEditErrorMessage = h['error-message'];
               }
-            });                
+            });
           } else {
             // If we get here, it means there was no need to make a request. I'm unsure of what the best behaviour is, but for now, I'm going to say we should
             // maintain modal state and close the modal.
-            angular.element('#editSurveyorModal').modal('hide');           
+            angular.element('#editSurveyorModal').modal('hide');
           }
         });
-      }     
+      }
     };
   });
 

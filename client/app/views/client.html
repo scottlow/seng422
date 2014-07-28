@@ -67,25 +67,24 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-8">
               <h4>Legend</h4>
-                <table class="table table-manager table-striped">
-                  <thead>
-                    <tr>
-                      <th>Colour</th>
-                      <th>State</th>
-                      <th>Count</th>
-                    </tr>
-                  </thead>
-                  <tbody class="scrollContent">
-                    <tr ng-repeat-start="state in getParsedOverviewData()">
-                      <td><div style="width:30px;height:30px;border:1px solid #000;background-color: {{state.color}};"></div></td>
-                      <td>{{state.label}}</td>
-                      <td>{{state.value}}</td>
-                    </tr>
-                    <tr ng-repeat-end>
-                    </tr>
-                  </tbody>
-                </table>
-              <h4>Most Recently Modified</h4>
+              <table class="table table-manager table-striped">
+                <thead>
+                  <tr>
+                    <th>Colour</th>
+                    <th>State</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody class="scrollContent">
+                  <tr ng-repeat-start="state in getParsedOverviewData()">
+                    <td><div style="width:30px;height:30px;border:1px solid #000;background-color: {{state.color}};"></div></td>
+                    <td>{{state.label}}</td>
+                    <td>{{state.value}}</td>
+                  </tr>
+                  <tr ng-repeat-end>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

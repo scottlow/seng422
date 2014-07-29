@@ -66,6 +66,8 @@ angular.module('clientApp', [
           }
           event.preventDefault();
         }
+      } else if(StateService.getCurrentUser() === undefined) {
+          $state.transitionTo('main');
       } else if (toState.url === '/manager' && StateService.getUserType() === 'SUR') {
         $state.transitionTo('client', null, {location: 'replace'});
       } else if (toState.url === '/client' && StateService.getUserType() === 'MAN') {

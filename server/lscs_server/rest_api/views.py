@@ -270,12 +270,14 @@ class CreateChecklist(ManagerSecurityMixin, generics.CreateAPIView, generics.Upd
         checklist = Checklist(manager=request.user, dateCreated=datetime.now(), dateLastModified=datetime.now())
         serializer = ChecklistCreateSerializer(checklist, data=request.DATA, partial=True)
         if serializer.is_valid():
+            serializer.save()
+            
             if(checklist.surveyors == []):
                 checklist.state = Checklist.UNASSIGNED
             else:
                 checklist.state = Checklist.INPROGRESS
 
-            serializer.save()
+            checklist.save()
 
             checklist_questions = []
             for checklistType in checklist.checklistTypes.all():

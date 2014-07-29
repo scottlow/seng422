@@ -1,2 +1,10 @@
 *.pyc
 .DS_Store
+
+server/lscs_server/lscs_server/settings.py
+
+server/lscs_server/generate_questions.py
+
+server/lscs_server/db.sqlite3
+
+server/lscs_server/lscs_server/settings.py

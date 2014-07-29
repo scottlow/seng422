@@ -58,10 +58,11 @@ angular.module('clientApp')
           $timeout(function() {
             google.maps.event.trigger(map, 'resize');
             var center = new google.maps.LatLng($scope.lat, $scope.long);
+            console.log('resizing');
             marker = new google.maps.Marker({
               position: center,
               map: map
-            });        
+            }, 100);        
             map.setCenter(center);
           });
         });      

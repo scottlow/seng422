@@ -12,7 +12,7 @@ Group Members:
 * [Scott Low](http://scott-low.com)
 * Mikko Sanchez
 * Mark Roller
-* Bill Xiong
+* [Bill Xiong](http://billxiong.com)
 
 ##Questions?
 Create an issue! No guarentee on the response, though.
